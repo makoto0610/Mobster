@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "1001134041144",
+    "firebase_url": "https://mobster-3ba43.firebaseio.com",
+    "project_id": "mobster-3ba43",
+    "storage_bucket": "mobster-3ba43.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1001134041144:android:ba510a9e8273c93c",
+        "android_client_info": {
+          "package_name": "com.the_great_amoeba.mobster"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1001134041144-tkf8e7qeraqq85inmn2nh5h48gme95dq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.the_great_amoeba.mobster",
+            "certificate_hash": "5D927ED62180B0880292D8A0DF22C24A49E78E11"
+          }
+        },
+        {
+          "client_id": "1001134041144-58cdqk8bm8sdc31qtue7olhrdtol6g6u.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAUV57J-MjVILwL4c1gZfiqwYq0t6FbFzg"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1001134041144-58cdqk8bm8sdc31qtue7olhrdtol6g6u.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
