@@ -6,16 +6,15 @@ import android.content.Intent;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.Menu;
 import android.view.View;
 import android.widget.EditText;
 
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class Registration extends AppCompatActivity {
 
-    private StorageReference mStorageRef;
+    private DatabaseReference mDatabase;
     private EditText username;
     private EditText password;
     private EditText confirm;
@@ -24,10 +23,11 @@ public class Registration extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
-        mStorageRef = FirebaseStorage.getInstance().getReference();
+        mDatabase = FirebaseDatabase.getInstance().getReference();
         username = (EditText) findViewById(R.id.register_username);
         password = (EditText) findViewById(R.id.register_password);
         confirm = (EditText) findViewById(R.id.register_confirm_password);
+
     }
 
     public void onCreateAccountClick(View view) {
