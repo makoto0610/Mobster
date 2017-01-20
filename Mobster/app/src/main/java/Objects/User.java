@@ -1,4 +1,4 @@
-package com.the_great_amoeba.mobster;
+package Objects;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
