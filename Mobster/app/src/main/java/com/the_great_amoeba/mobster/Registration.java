@@ -14,6 +14,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class Registration extends AppCompatActivity {
 
+    public static final String DB_URL = "https://mobster-3ba43.firebaseio.com/";
     private DatabaseReference mDatabase;
     private EditText username;
     private EditText password;
@@ -23,7 +24,8 @@ public class Registration extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
-        mDatabase = FirebaseDatabase.getInstance().getReference();
+        mDatabase = FirebaseDatabase.getInstance()
+                .getReferenceFromUrl(DB_URL);
         username = (EditText) findViewById(R.id.register_username);
         password = (EditText) findViewById(R.id.register_password);
         confirm = (EditText) findViewById(R.id.register_confirm_password);
@@ -47,8 +49,15 @@ public class Registration extends AppCompatActivity {
                     .show();
             this.confirm.setText("");
         } else {
+            User user = new User(username, password);
+            addNewUser(user);
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
         }
+    }
+
+    private void addNewUser(User user) {
+        mDatabase.child("users").child(((Integer)user.getUserID()).toString())
+                .setValue(user);
     }
 }
