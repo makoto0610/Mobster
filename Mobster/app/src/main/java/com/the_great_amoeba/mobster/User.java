@@ -7,13 +7,10 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 
 public class User {
-    private static AtomicInteger ID_GENERATOR = new AtomicInteger(1);
-    private int userID;
     private String username;
     private String password;
 
     public User(String username, String password) {
-        this.userID = ID_GENERATOR.getAndIncrement();
         this.username = username;
         this.password = password;
     }
@@ -24,10 +21,6 @@ public class User {
 
     public String getPassword() {
         return password;
-    }
-
-    public int getUserID() {
-        return userID;
     }
 
     public void setPassword(String password) {

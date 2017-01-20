@@ -11,6 +11,7 @@ import android.widget.EditText;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 
 public class Registration extends AppCompatActivity {
 
@@ -36,6 +37,7 @@ public class Registration extends AppCompatActivity {
         String username = this.username.getText().toString();
         String password = this.password.getText().toString();
         String confirm = this.confirm.getText().toString();
+        Query contain = mDatabase.child("users").orderByKey().equalTo(username);
         if (!password.equals(confirm)) {
             new AlertDialog.Builder(this)
                     .setTitle("Not matching password")
@@ -48,7 +50,7 @@ public class Registration extends AppCompatActivity {
                     .setIcon(android.R.drawable.ic_dialog_alert)
                     .show();
             this.confirm.setText("");
-        } else {
+        }  else {
             User user = new User(username, password);
             addNewUser(user);
             Intent intent = new Intent(this, MainActivity.class);
@@ -57,7 +59,7 @@ public class Registration extends AppCompatActivity {
     }
 
     private void addNewUser(User user) {
-        mDatabase.child("users").child(((Integer)user.getUserID()).toString())
+        mDatabase.child("users").child(user.getUsername())
                 .setValue(user);
     }
 }
