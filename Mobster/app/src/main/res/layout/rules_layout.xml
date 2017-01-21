@@ -7,21 +7,21 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:entries="@array/rules_array"
-        android:id="@+id/rules_list"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="57dp" />
+        android:id="@+id/faq_list"
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/faq_textview"
+        android:layout_alignParentStart="true" />
 
     <TextView
-        android:text="RULES"
+        android:text="FAQ"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/rules_textview"
+        android:id="@+id/faq_textview"
         android:gravity="center"
-        android:textColor="@color/ruleTitle"
+        android:textColor="#FFFFFF"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display2"
         android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
-        android:textAppearance="@style/TextAppearance.AppCompat.Display2" />
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="15dp" />
 
 </RelativeLayout>
