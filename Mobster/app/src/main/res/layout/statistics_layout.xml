@@ -4,13 +4,65 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:text="STATISTICS TAB"
-        android:layout_width="match_parent"
+        android:text="STATISTICS"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/textView"
+        android:id="@+id/statistics_title"
         android:textAlignment="viewEnd"
         android:textSize="36sp"
+        android:layout_marginTop="18dp"
         android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="204dp" />
+        android:layout_centerHorizontal="true" />
+
+    <TableLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="62dp"
+        android:stretchColumns="0,1"
+        android:layout_marginStart="57dp"
+        android:layout_below="@+id/statistics_title"
+        android:layout_alignParentStart="true">
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/num_asked" >
+
+            <TextView
+                android:layout_column="0"
+                android:text="# questions asked: "
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:id="@+id/textView4" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:id="@+id/asked" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/num_answered" >
+
+            <TextView
+                android:layout_column="0"
+                android:text="# questions answered:"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:id="@+id/textView5" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:id="@+id/answered" />
+        </TableRow>
+
+    </TableLayout>
+
 </RelativeLayout>

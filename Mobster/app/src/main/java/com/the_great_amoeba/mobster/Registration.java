@@ -21,6 +21,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 
+import Objects.User;
+
 public class Registration extends AppCompatActivity {
 
     public static final String DB_URL = "https://mobster-3ba43.firebaseio.com/";
