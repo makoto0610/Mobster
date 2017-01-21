@@ -36,10 +36,9 @@
                 android:id="@+id/textView4" />
 
             <TextView
-                android:text="##"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/textView7" />
+                android:id="@+id/asked" />
         </TableRow>
 
         <TableRow
@@ -55,29 +54,9 @@
                 android:id="@+id/textView5" />
 
             <TextView
-                android:text="##"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/textView8" />
-        </TableRow>
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/num_best_ans" >
-
-            <TextView
-                android:layout_column="0"
-                android:text="# best answers:"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/textView6" />
-
-            <TextView
-                android:text="##"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/textView9" />
+                android:id="@+id/answered" />
         </TableRow>
 
     </TableLayout>

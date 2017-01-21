@@ -21,7 +21,7 @@ import java.util.List;
 
 public class RulesFragment extends Fragment {
 
-    HashMap<Integer, String> map;
+    private HashMap<Integer, String> map;
 
     @Nullable
     @Override
