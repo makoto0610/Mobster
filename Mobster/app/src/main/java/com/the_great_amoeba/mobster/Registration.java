@@ -17,9 +17,12 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import Objects.User;
 
@@ -33,7 +36,6 @@ public class Registration extends AppCompatActivity {
 
     private static final String AUTH_TAG = "AUTH";
     private static final String AUTH_FAIL = "AUTH_FAILED";
-
 
 
     private EditText username;
@@ -50,7 +52,8 @@ public class Registration extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
 
 
-        // [START auth_state_listener]
+        // [START auth_state_listener] - Firebase Auth State Listener that listens to changes
+        // in a user's logged in status
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -75,34 +78,90 @@ public class Registration extends AppCompatActivity {
 
     }
 
+    /**
+     * Method called after create button pressed.
+     * Handles input validation and displays appropriate error messages or if everything is fine,
+     * creates a new user and starts MainActivity.
+     */
     public void onCreateAccountClick(View view) {
+        /* ***************
+            1) Check if the username and password fields are non-zero in length
+            2) Check if the password matches the confirm password field
+            3) Check if the username is unique (i.e. there is no matching username in the users
+            table of the Firebase DB.
+
+            Display an error dialogue in case any of the checks do not pass.
+           *************** */
+
         String username = this.username.getText().toString();
         String password = this.password.getText().toString();
         String confirm = this.confirm.getText().toString();
         String email = this.email.getText().toString();
         Query contain = mDatabase.child("users").orderByKey().equalTo(username);
-        if (!password.equals(confirm)) {
-            new AlertDialog.Builder(this)
-                    .setTitle("Not matching password")
-                    .setMessage("Your password and confirmed password were different.")
-                    .setNegativeButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
 
-                        }
-                    })
-                    .setIcon(android.R.drawable.ic_dialog_alert)
-                    .show();
-            this.confirm.setText("");
-        }  else {
+        if(username.length()== 0) {
+            errorDialog("Username not entered",
+                    "You did not enter a username.");
+        } else if(password.length()== 0 ||  confirm.length()== 0){
+            errorDialog("Password or confirm password not entered",
+                    "You did not enter a password.");
+        } else if (!password.equals(confirm)) {
+            errorDialog("Not matching password",
+                    "Your password and confirmed password were different.");
+        } else if (checkUsernameExists(username)) {
+            errorDialog("Username invalid",
+                    "Username already exists");
+        } else {
             User user = new User(username, password, email);
             addNewUser(user);
-            //TODO: make sure username is unique (have to query)
-            Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
         }
     }
 
+    /**
+     * Method that queries Firebase DB to see if entered username matches an existing username.
+     */
+    public boolean checkUsernameExists(final String enteredUsername) {
+        final Boolean[] isExist = {false};
+        mDatabase.child("users").child(enteredUsername).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()){
+                    isExist[0] = true;
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+        return isExist[0];
+    }
+
+    /**
+     * Displays an error dialog.
+     * @param title - title of the dialogue
+     * @param message - message of the dialogue
+     */
+    private void errorDialog(String title, String message){
+        new AlertDialog.Builder(this)
+                .setTitle(title)
+                .setMessage(message)
+                .setNegativeButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
+        this.confirm.setText("");
+    }
+
+    /**
+     * Adds a new user by first authenticating through Firebase, and then adding to the
+     * users table in the DB.
+     * @param user - User object to be used for insertion in Firebase DB.
+     */
     private void addNewUser(User user) {
+        boolean success = false;
         mDatabase.child("users").child(user.getUsername())
                 .setValue(user);
         mAuth.createUserWithEmailAndPassword(user.getEmail(), user.getPassword())
@@ -115,11 +174,15 @@ public class Registration extends AppCompatActivity {
                         // the auth state listener will be notified and logic to handle the
                         // signed in user can be handled in the listener.
                         if (!task.isSuccessful()) {
-                            Toast.makeText(Registration.this, AUTH_FAIL
-                            , Toast.LENGTH_SHORT).show();
+                            errorDialog("Failed to register",
+                                    "Please make sure: 1) password is at least 6 chars. long.\n" +
+                                            "2) There are no illegal chars.\n" +
+                                            "3) Email is not already in use.");
+                        } else {
+                            Intent intent = new Intent(Registration.this, MainActivity.class);
+                            startActivity(intent);
                         }
 
-                        // ...
                     }
                 });
     }
