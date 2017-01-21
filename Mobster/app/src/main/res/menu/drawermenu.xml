@@ -13,7 +13,7 @@
         android:id="@+id/nav_item_statistics"
         android:icon="@drawable/ic_equalizer"/>
 
-    <item android:title="Rules"
+    <item android:title="FAQ"
         android:id="@+id/nav_item_rules"
         android:icon="@drawable/ic_info"/>
 
