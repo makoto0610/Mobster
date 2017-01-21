@@ -18,8 +18,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/faq_textview"
         android:gravity="center"
-        android:textColor="#FFFFFF"
-        android:textAppearance="@style/TextAppearance.AppCompat.Display2"
+        android:textAppearance="@android:style/TextAppearance.Material.Display2"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="15dp" />

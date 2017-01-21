@@ -64,7 +64,6 @@ public class RulesFragment extends Fragment {
         map.put(2, "Answer a question by selecting the question you want to answer " +
             ", choosing the option(s) that you want, and then pressing 'Submit'.");
         map.put(3, "You can upvote a question if you think it's intereseting and want it to "
-            + "gain visibility."
-            + "You can also downvote a question if ????");
+            + "gain visibility.");
     }
 }
