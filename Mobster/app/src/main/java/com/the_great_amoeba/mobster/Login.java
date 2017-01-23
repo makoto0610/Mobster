@@ -93,7 +93,7 @@ public class Login extends AppCompatActivity {
                    } else {
                        //User does not exist
                        errorDialog("Could not log in",
-                               "Invalid username/password");
+                               "User does not exist.");
                    }
                }
 
