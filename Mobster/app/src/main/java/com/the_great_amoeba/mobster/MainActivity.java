@@ -13,6 +13,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 public class MainActivity extends AppCompatActivity {
     DrawerLayout mDrawerLayout;
     NavigationView mNavigationView;
@@ -70,6 +72,8 @@ public class MainActivity extends AppCompatActivity {
 
                 if (menuItem.getItemId() == R.id.nav_item_logout) {
                     Intent intent = new Intent(getApplicationContext(), Login.class);
+                    //Log out from Firebase Auth
+                    FirebaseAuth.getInstance().signOut();
                     startActivity(intent);
                 }
 

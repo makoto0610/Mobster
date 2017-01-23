@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">Mobster</string>
+    <string-array name="rules_array">
+        <item>What are the rules? </item>
+        <item>How do I ask a question? </item>
+        <item>How do I answer a question? </item>
+        <item>What are the arrows next to each question? </item>
+    </string-array>
+    <string name="AUTH_TAG">AUTH></string>
+    <string name="AUTH_FAIL">AUTH_FAILED></string>
 </resources>
