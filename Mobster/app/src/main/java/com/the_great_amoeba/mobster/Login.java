@@ -68,6 +68,18 @@ public class Login extends AppCompatActivity {
         };
         this.username = (EditText) findViewById(R.id.login_username);
         this.password = (EditText) findViewById(R.id.login_password);
+
+        Log.d(AUTH_TAG, "IN ON_CREATE");
+
+        // Check shared preferences, if already logged in go directly to MainActivity
+        if(! (SaveSharedPreferences.getUserName(getApplicationContext()).length() == 0))
+        {
+            Log.d(AUTH_TAG, "Username is NOT empty in shared preferences");
+            Intent intent = new Intent(Login.this, MainActivity.class);
+            startActivity(intent);
+        } else {
+            Log.d(AUTH_TAG, "Username is empty in shared preferences");
+        }
     }
 
     /**
@@ -110,6 +122,7 @@ public class Login extends AppCompatActivity {
      * @param password
      */
     private void firebaseAuth(String email, String password){
+        final String _email = email;
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -124,6 +137,8 @@ public class Login extends AppCompatActivity {
                                     "Invalid username/password");
                         } else {
                             Intent intent = new Intent(Login.this, MainActivity.class);
+                            //Save shared preferences for persistence
+                            SaveSharedPreferences.setUserName(getApplicationContext(), _email);
                             startActivity(intent);
                         }
 

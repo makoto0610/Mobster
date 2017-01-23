@@ -74,6 +74,7 @@ public class MainActivity extends AppCompatActivity {
                     Intent intent = new Intent(getApplicationContext(), Login.class);
                     //Log out from Firebase Auth
                     FirebaseAuth.getInstance().signOut();
+                    SaveSharedPreferences.setUserName(getApplicationContext(),"");
                     startActivity(intent);
                 }
 
