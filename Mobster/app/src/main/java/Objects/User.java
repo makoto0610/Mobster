@@ -1,5 +1,10 @@
 package Objects;
 
+import android.util.Log;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -39,5 +44,9 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public static FirebaseUser getUserId() {
+        return FirebaseAuth.getInstance().getCurrentUser();
     }
 }
