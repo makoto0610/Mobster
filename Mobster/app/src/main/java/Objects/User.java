@@ -1,7 +1,5 @@
 package Objects;
 
-import java.util.concurrent.atomic.AtomicInteger;
-
 /**
  * Created by makoto on 1/19/17.
  */
@@ -13,6 +11,8 @@ public class User {
     private String username;
     private String password;
     private String email;
+    private int asked;
+    private int answered;
 
     public User(String username, String password, String email) {
         this.username = username;
@@ -39,5 +39,13 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public void incrementAsked() {
+        this.asked++;
+    }
+
+    public void incrementAnswered() {
+        this.answered++;
     }
 }
