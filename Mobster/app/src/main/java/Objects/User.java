@@ -1,10 +1,8 @@
 package Objects;
 
 import android.util.Log;
-
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -18,6 +16,8 @@ public class User {
     private String username;
     private String password;
     private String email;
+    private int asked;
+    private int answered;
 
     public User(String username, String password, String email) {
         this.username = username;
@@ -48,5 +48,13 @@ public class User {
 
     public static FirebaseUser getUserId() {
         return FirebaseAuth.getInstance().getCurrentUser();
+    }
+
+    public void incrementAsked() {
+        this.asked++;
+    }
+
+    public void incrementAnswered() {
+        this.answered++;
     }
 }

@@ -16,7 +16,7 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true">
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical" >
@@ -27,7 +27,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="20dp"
                 android:id="@+id/create_question_text"
                 android:textSize="36sp"
                 android:textAlignment="center" />
@@ -39,12 +39,62 @@
                 android:ems="10"
                 android:layout_below="@+id/create_question_text"
                 android:layout_alignEnd="@+id/create_question_text"
-                android:layout_marginTop="14dp"
+                android:layout_marginTop="50dp"
                 android:id="@+id/create_question"
                 android:hint="Write your question here!"
                 android:isScrollContainer="true"
                 android:minHeight="120dp"/>
-        </LinearLayout>
+
+            <Button
+                android:text="PICK THE END DATE"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/date_picker"
+                android:layout_below="@+id/create_question"
+                android:layout_alignEnd="@+id/time_picker"
+                android:layout_marginTop="18dp"
+                android:onClick="onDatePickerClick"/>
+
+            <EditText
+                android:text="END DATE"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/end_date_text"
+                android:textSize="25sp"
+                android:layout_alignTop="@+id/date_picker"
+                android:layout_alignParentEnd="true"
+                android:clickable="false"
+                android:cursorVisible="false"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                />
+
+            <Button
+                android:text="PICK THE END TIME"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/time_picker"
+                android:layout_marginStart="10dp"
+                android:layout_alignBaseline="@+id/end_time_text"
+                android:layout_alignBottom="@+id/end_time_text"
+                android:layout_alignParentStart="true"
+                android:onClick="onTimePicker"/>
+
+            <EditText
+                android:text="END TIME"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/end_time_text"
+                android:textSize="25sp"
+                android:layout_below="@+id/end_date_text"
+                android:layout_alignStart="@+id/end_date_text"
+                android:inputType="time"
+                android:clickable="false"
+                android:cursorVisible="false"
+                android:focusable="false"
+                android:focusableInTouchMode="false"/>
+
+        </RelativeLayout>
 
     </ScrollView>
 </RelativeLayout>

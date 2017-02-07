@@ -25,6 +25,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import Objects.User;
+import Helper.HelperMethods;
 
 public class Registration extends AppCompatActivity {
 
@@ -100,17 +101,21 @@ public class Registration extends AppCompatActivity {
         Query contain = mDatabase.child("users").orderByKey().equalTo(username);
 
         if(username.length()== 0) {
-            errorDialog("Username not entered",
+            HelperMethods.errorDialog(this, "Username not entered",
                     "You did not enter a username.");
+            this.confirm.setText("");
         } else if(password.length()== 0 ||  confirm.length()== 0){
-            errorDialog("Password or confirm password not entered",
+            HelperMethods.errorDialog(this, "Password or confirm password not entered",
                     "You did not enter a password.");
+            this.confirm.setText("");
         } else if (!password.equals(confirm)) {
-            errorDialog("Not matching password",
+            HelperMethods.errorDialog(this, "Not matching password",
                     "Your password and confirmed password were different.");
+            this.confirm.setText("");
         } else if (checkUsernameExists(username)) {
-            errorDialog("Username invalid",
+            HelperMethods.errorDialog(this, "Username invalid",
                     "Username already exists");
+            this.confirm.setText("");
         } else {
             User user = new User(username, password, email);
             addNewUser(user);
@@ -136,24 +141,7 @@ public class Registration extends AppCompatActivity {
         return isExist[0];
     }
 
-    /**
-     * Displays an error dialog.
-     * @param title - title of the dialogue
-     * @param message - message of the dialogue
-     */
-    private void errorDialog(String title, String message){
-        new AlertDialog.Builder(this)
-                .setTitle(title)
-                .setMessage(message)
-                .setNegativeButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
 
-                    }
-                })
-                .setIcon(android.R.drawable.ic_dialog_alert)
-                .show();
-        this.confirm.setText("");
-    }
 
     /**
      * Adds a new user by first authenticating through Firebase, and then adding to the
@@ -174,7 +162,7 @@ public class Registration extends AppCompatActivity {
                         // the auth state listener will be notified and logic to handle the
                         // signed in user can be handled in the listener.
                         if (!task.isSuccessful()) {
-                            errorDialog("Failed to register",
+                            HelperMethods.errorDialog(getApplicationContext(), "Failed to register",
                                     "Please make sure: 1) password is at least 6 chars. long.\n" +
                                             "2) There are no illegal chars.\n" +
                                             "3) Email is not already in use.");
