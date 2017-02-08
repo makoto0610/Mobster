@@ -11,90 +11,134 @@
     tools:context="com.the_great_amoeba.mobster.CreateQuestion">
 
     <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true">
 
         <RelativeLayout
+            android:id="@+id/relative_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" >
+            android:orientation="vertical">
 
             <TextView
-                android:text="Create Question"
+                android:id="@+id/create_question_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="20dp"
-                android:id="@+id/create_question_text"
-                android:textSize="36sp"
-                android:textAlignment="center" />
+                android:text="Create Question"
+                android:textAlignment="center"
+                android:textSize="36sp" />
 
             <EditText
-                android:layout_width="match_parent"
-                android:layout_height="94dp"
-                android:inputType="textMultiLine"
-                android:ems="10"
-                android:layout_below="@+id/create_question_text"
-                android:layout_alignEnd="@+id/create_question_text"
-                android:layout_marginTop="50dp"
-                android:id="@+id/create_question"
-                android:hint="Write your question here!"
-                android:isScrollContainer="true"
-                android:minHeight="120dp"/>
+                android:id="@+id/end_date_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignTop="@+id/date_picker"
+                android:clickable="false"
+                android:cursorVisible="false"
+                android:ems="5"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:text="END DATE"
+                android:textSize="25sp" />
 
             <Button
-                android:text="PICK THE END DATE"
+                android:id="@+id/time_picker"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/date_picker"
-                android:layout_below="@+id/create_question"
-                android:layout_alignEnd="@+id/time_picker"
-                android:layout_marginTop="18dp"
-                android:onClick="onDatePickerClick"/>
+                android:layout_alignBaseline="@+id/end_time_text"
+                android:layout_alignBottom="@+id/end_time_text"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="10dp"
+                android:onClick="onTimePicker"
+                android:text="PICK THE END TIME" />
 
             <EditText
-                android:text="END DATE"
+                android:id="@+id/end_time_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/end_date_text"
-                android:textSize="25sp"
-                android:layout_alignTop="@+id/date_picker"
                 android:layout_alignParentEnd="true"
+                android:layout_alignStart="@+id/end_date_text"
+                android:layout_below="@+id/end_date_text"
                 android:clickable="false"
                 android:cursorVisible="false"
                 android:focusable="false"
                 android:focusableInTouchMode="false"
-                />
+                android:inputType="time"
+                android:text="END TIME"
+                android:textSize="25sp" />
 
-            <Button
-                android:text="PICK THE END TIME"
-                android:layout_width="wrap_content"
+
+            <LinearLayout
+                android:id="@+id/container_list"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/time_picker"
-                android:layout_marginStart="10dp"
-                android:layout_alignBaseline="@+id/end_time_text"
-                android:layout_alignBottom="@+id/end_time_text"
-                android:layout_alignParentStart="true"
-                android:onClick="onTimePicker"/>
+                android:orientation="vertical"
+                android:layout_below="@+id/add_option_text">
+            </LinearLayout>
+
 
             <EditText
-                android:text="END TIME"
+                android:id="@+id/create_question"
+                android:layout_width="match_parent"
+                android:layout_height="94dp"
+                android:layout_marginTop="43dp"
+                android:ems="10"
+                android:hint="Write your question here!"
+                android:inputType="textMultiLine"
+                android:isScrollContainer="true"
+                android:minHeight="120dp"
+                android:layout_below="@+id/create_question_text"
+                android:layout_alignParentStart="true" />
+
+            <Button
+                android:id="@+id/date_picker"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/end_time_text"
-                android:textSize="25sp"
-                android:layout_below="@+id/end_date_text"
-                android:layout_alignStart="@+id/end_date_text"
-                android:inputType="time"
-                android:clickable="false"
-                android:cursorVisible="false"
-                android:focusable="false"
-                android:focusableInTouchMode="false"/>
+                android:layout_marginTop="26dp"
+                android:onClick="onDatePickerClick"
+                android:text="PICK THE END DATE"
+                android:layout_below="@+id/create_question"
+                android:layout_alignEnd="@+id/time_picker" />
+
+            <EditText
+                android:id="@+id/add_option_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="Write your option here!"
+                android:inputType="textPersonName"
+                android:layout_below="@+id/time_picker"
+                android:layout_alignParentStart="true"
+                android:layout_marginTop="25dp"
+                android:layout_toStartOf="@+id/add_option" />
+
+            <Button
+                android:id="@+id/add_option"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ADD"
+                android:layout_alignTop="@+id/add_option_text"
+                android:layout_alignParentEnd="true" />
+
+            <Button
+                android:id="@+id/submit_question"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="SUBMIT"
+                android:layout_below="@+id/container_list"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="19dp" />
 
         </RelativeLayout>
 
+
     </ScrollView>
+
+
 </RelativeLayout>
