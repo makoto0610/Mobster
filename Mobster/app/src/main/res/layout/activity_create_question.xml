@@ -94,7 +94,8 @@
                 android:isScrollContainer="true"
                 android:minHeight="120dp"
                 android:layout_below="@+id/create_question_text"
-                android:layout_alignParentStart="true" />
+                android:layout_alignParentStart="true"
+                android:textSize="24sp" />
 
             <Button
                 android:id="@+id/date_picker"
@@ -116,7 +117,8 @@
                 android:layout_below="@+id/time_picker"
                 android:layout_alignParentStart="true"
                 android:layout_marginTop="25dp"
-                android:layout_toStartOf="@+id/add_option" />
+                android:layout_toStartOf="@+id/add_option"
+                android:textSize="24sp" />
 
             <Button
                 android:id="@+id/add_option"

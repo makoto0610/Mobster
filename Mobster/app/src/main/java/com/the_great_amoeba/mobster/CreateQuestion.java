@@ -3,6 +3,7 @@ package com.the_great_amoeba.mobster;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -13,7 +14,9 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 
 import Helper.HelperMethods;
@@ -24,11 +27,15 @@ public class CreateQuestion extends AppCompatActivity {
     Button add;
     Button submit;
 
+    EditText question;
+
     TextView textDate;
     TextView textTime;
     TextView textIn;
 
     LinearLayout containerList;
+
+    ArrayList<String> options = new ArrayList<String>();
 
     private int year = -1;
     private int month = -1;
@@ -51,7 +58,7 @@ public class CreateQuestion extends AppCompatActivity {
         textDate = (EditText) findViewById(R.id.end_date_text);
         textTime = (EditText) findViewById(R.id.end_time_text);
         context = this;
-
+        question = (EditText) findViewById(R.id.create_question);
 
         textIn = (EditText) findViewById(R.id.add_option_text);
         add = (Button) findViewById(R.id.add_option);
@@ -60,22 +67,43 @@ public class CreateQuestion extends AppCompatActivity {
         add.setOnClickListener(new View.OnClickListener() {
 
             @Override
-            public void onClick(View arg0) {
-                LayoutInflater layoutInflater =
-                        (LayoutInflater) getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                final View addView = layoutInflater.inflate(R.layout.row, null);
-                TextView textOut = (TextView) addView.findViewById(R.id.option_text_view);
-                textOut.setText(textIn.getText().toString());
-                Button buttonRemove = (Button) addView.findViewById(R.id.remove_option);
-                buttonRemove.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                if (options.size() <= 9) {
+//                    if (question.getText().toString().trim().length() > 0) {
+                    LayoutInflater layoutInflater =
+                            (LayoutInflater) getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                    final View addView = layoutInflater.inflate(R.layout.row, null);
+                    final TextView addedOption = (TextView) addView.findViewById(R.id.option_text_view);
+                    addedOption.setText(textIn.getText().toString());
 
-                    @Override
-                    public void onClick(View v) {
+                    containerList.addView(addView);
+                    if (addedOption.getText().toString().trim().length() > 0) {
+
+                        options.add(addedOption.getText().toString());
+
+
+                        Button buttonRemove = (Button) addView.findViewById(R.id.remove_option);
+                        buttonRemove.setOnClickListener(new View.OnClickListener() {
+
+                            @Override
+                            public void onClick(View v) {
+                                String toRemove = addedOption.getText().toString();
+                                options.remove(toRemove);
+                                ((LinearLayout) addView.getParent()).removeView(addView);
+
+                            }
+                        });
+
+                    } else {
                         ((LinearLayout) addView.getParent()).removeView(addView);
+                        HelperMethods.errorDialog(context, "Empty option",
+                                "You cannot have an empty option");
                     }
-                });
 
-                containerList.addView(addView);
+                } else {
+                    HelperMethods.errorDialog(context, "Too many options!",
+                            "You can only have up to 10 options");
+                }
             }
         });
 
@@ -83,8 +111,7 @@ public class CreateQuestion extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                System.out.println("HERLLLO");
-
+                onSubmitButtonClick(v);
             }
         });
 
@@ -155,7 +182,27 @@ public class CreateQuestion extends AppCompatActivity {
                     }
                 }, 0, 0, false); // displays 12:00 AM
         tpd.show();
+    }
 
+    private void onSubmitButtonClick(View v) {
+        if (!(question.getText().toString().trim().length() > 0)) {
+            HelperMethods.errorDialog(context, "Invalid Question",
+                    "Question cannot be empty");
+        } else if (options.size() < 2) {
+            HelperMethods.errorDialog(context, "Not enough options",
+                    "There must be at least 2 options");
+        } else if (hour == -1 || day == -1) {
+            HelperMethods.errorDialog(context, "Empty Date/Time",
+                    "The end date and time must be chosen");
+        } else {
+            Toast.makeText(context, "Question Posted!",
+                    Toast.LENGTH_LONG).show();
+
+            // TODO: Need to store stuff in the database now
+
+            Intent intent = new Intent(CreateQuestion.this, MainActivity.class);
+            startActivity(intent);
+        }
     }
 
     private boolean isValidDate(int month, int day, int year) {

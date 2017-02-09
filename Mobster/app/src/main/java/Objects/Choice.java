@@ -23,4 +23,5 @@ public class Choice {
     public void incrementVote() {
         this.vote++;
     }
+
 }

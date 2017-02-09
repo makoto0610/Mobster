@@ -1,6 +1,7 @@
 package com.the_great_amoeba.mobster;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 
@@ -44,10 +45,13 @@ public class Registration extends AppCompatActivity {
     private EditText confirm;
     private EditText email;
 
+    private Context context;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
+        context = this;
         mDatabase = FirebaseDatabase.getInstance()
                 .getReferenceFromUrl(DB_URL);
         mAuth = FirebaseAuth.getInstance();
@@ -162,7 +166,7 @@ public class Registration extends AppCompatActivity {
                         // the auth state listener will be notified and logic to handle the
                         // signed in user can be handled in the listener.
                         if (!task.isSuccessful()) {
-                            HelperMethods.errorDialog(getApplicationContext(), "Failed to register",
+                            HelperMethods.errorDialog(context, "Failed to register",
                                     "Please make sure: 1) password is at least 6 chars. long.\n" +
                                             "2) There are no illegal chars.\n" +
                                             "3) Email is not already in use.");

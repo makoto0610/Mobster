@@ -15,6 +15,7 @@ public class Question {
     private DateTime start;
     private DateTime end;
     private Duration duration;
+    private String username;
 
     public Question(String question, LinkedList<String> choices, DateTime start, DateTime end) {
         this.question = question;
