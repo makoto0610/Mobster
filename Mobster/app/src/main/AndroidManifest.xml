@@ -19,6 +19,7 @@
         <activity android:name=".Voting" />
         <activity android:name=".Registration" />
         <activity android:name=".CreateQuestion"></activity>
+        <activity android:name=".Results"></activity>
     </application>
 
 </manifest>
