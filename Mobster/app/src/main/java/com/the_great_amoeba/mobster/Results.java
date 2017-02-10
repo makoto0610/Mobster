@@ -31,7 +31,7 @@ public class Results extends AppCompatActivity{
 
     private PieChart chart;
     private float[] yAxis = {2,4,6,8,10};
-    private String[] xAxis = {"A", "B", "C"};
+    private String[] xAxis = {"A", "B", "C", "D", "E"};
     private HashMap<String, Float> map;
 
     @Override
@@ -52,7 +52,7 @@ public class Results extends AppCompatActivity{
             entries.add(new PieEntry(map.get(m), m));
         }
 
-        PieDataSet dataSet = new PieDataSet(entries, "Label");
+        PieDataSet dataSet = new PieDataSet(entries, "Choices");
 
         // chart configs
         chart.setUsePercentValues(true);
@@ -91,13 +91,13 @@ public class Results extends AppCompatActivity{
 
         // dataset configs
         ArrayList<Integer> colors = new ArrayList<Integer>();
-        for (int c : ColorTemplate.VORDIPLOM_COLORS)
+        for (int c : ColorTemplate.COLORFUL_COLORS)
             colors.add(c);
 
         for (int c : ColorTemplate.JOYFUL_COLORS)
             colors.add(c);
 
-        for (int c : ColorTemplate.COLORFUL_COLORS)
+        for (int c : ColorTemplate.VORDIPLOM_COLORS)
             colors.add(c);
 
         for (int c : ColorTemplate.LIBERTY_COLORS)
