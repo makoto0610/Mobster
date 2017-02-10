@@ -16,8 +16,8 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -51,10 +51,16 @@ public class CreateQuestion extends AppCompatActivity {
 
     private Context context;
 
+    public static final String DB_URL = "https://mobster-3ba43.firebaseio.com/";
+    private DatabaseReference mDatabase;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_question);
+
+        mDatabase = FirebaseDatabase.getInstance()
+                .getReferenceFromUrl(DB_URL);
 
         // Initializes all of the needed elements from the UI
         datePicker = (Button) findViewById(R.id.date_picker);
@@ -254,6 +260,11 @@ public class CreateQuestion extends AppCompatActivity {
             Question questionToAdd = new Question(this.question.getText().toString(), choices,
                     current, end, username);
 
+            // TODO: Change the questionToAdd.getQuestion() to some method of getting questionId
+            // TODO: Add questionId to constructor
+            mDatabase.child("questions").child(questionToAdd.getQuestion())
+                    .setValue(questionToAdd);
+
             return true;
 
         } catch (Exception e) {
@@ -267,8 +278,8 @@ public class CreateQuestion extends AppCompatActivity {
      * Checks if the input date is valid
      *
      * @param month potential end month
-     * @param day potential end day
-     * @param year potential end year
+     * @param day   potential end day
+     * @param year  potential end year
      * @return true if the entered date is later than the current date
      */
     private boolean isValidDate(int month, int day, int year) {
@@ -281,10 +292,10 @@ public class CreateQuestion extends AppCompatActivity {
     /**
      * Checks if the input time is valid
      *
-     * @param month inputted month
-     * @param day inputted day
-     * @param year inputted year
-     * @param hour potential end hour
+     * @param month  inputted month
+     * @param day    inputted day
+     * @param year   inputted year
+     * @param hour   potential end hour
      * @param minute potential end minute
      * @return true it the time and date are all after the current date and time
      */
@@ -311,7 +322,7 @@ public class CreateQuestion extends AppCompatActivity {
     /**
      * Displays the time correctly
      *
-     * @param hours to be formatted
+     * @param hours   to be formatted
      * @param minutes to be formatted
      * @return String version of the final formatted time
      */

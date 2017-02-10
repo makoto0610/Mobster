@@ -17,6 +17,7 @@ public class Question {
     private Calendar end;
     private Duration duration;
     private String username;
+    private int questionId;
 
     public Question(String question, LinkedList<Choice> choices, Calendar start, Calendar end, String username) {
         this.question = question;
@@ -48,5 +49,13 @@ public class Question {
 
     public void setDuration(Duration duration) {
         this.duration = duration;
+    }
+
+    public String getUsername() {
+        return this.username;
+    }
+
+    public int getQuestionId() {
+        return this.questionId;
     }
 }

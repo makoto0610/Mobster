@@ -53,4 +53,12 @@ public class User {
     public void incrementAnswered() {
         this.answered++;
     }
+
+    public int getAsked() {
+        return this.asked;
+    }
+
+    public int getAnswered() {
+        return this.answered;
+    }
 }
