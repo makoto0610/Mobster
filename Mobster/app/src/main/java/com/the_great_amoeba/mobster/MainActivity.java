@@ -25,17 +25,10 @@ public class MainActivity extends AppCompatActivity {
     FragmentManager mFragmentManager;
     FragmentTransaction mFragmentTransaction;
 
-    private FirebaseUser user;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        /**
-         * Gets the user instance in case it is needed
-         */
-        user = User.getUserId();
 
         /**
          * Setup the DrawerLayout and NavigationView

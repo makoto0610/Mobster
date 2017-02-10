@@ -1,7 +1,6 @@
 package com.the_great_amoeba.mobster;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
+import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -9,7 +8,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -26,7 +24,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
 
-import Objects.User;
+import Helper.HelperMethods;
 
 public class Login extends AppCompatActivity {
 
@@ -42,11 +40,14 @@ public class Login extends AppCompatActivity {
     private EditText username;
     private EditText password;
 
+    private Context context;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        context = this;
         mDatabase = FirebaseDatabase.getInstance()
                 .getReferenceFromUrl(DB_URL);
 
@@ -72,8 +73,7 @@ public class Login extends AppCompatActivity {
         Log.d(AUTH_TAG, "IN ON_CREATE");
 
         // Check shared preferences, if already logged in go directly to MainActivity
-        if(! (SaveSharedPreferences.getUserName(getApplicationContext()).length() == 0))
-        {
+        if (!(SaveSharedPreferences.getUserName(getApplicationContext()).length() == 0)) {
             Log.d(AUTH_TAG, "Username is NOT empty in shared preferences");
             Intent intent = new Intent(Login.this, MainActivity.class);
             startActivity(intent);
@@ -86,6 +86,8 @@ public class Login extends AppCompatActivity {
      * Method called when the login button is pressed.
      * Handles input validation and displays appropriate error messages or if everything is fine,
      * logs the user in and starts MainActivity.
+     *
+     * @param view The current view (which is Login)
      */
     public void onLoginClick(View view) {
         final String username = this.username.getText().toString().trim();
@@ -95,34 +97,38 @@ public class Login extends AppCompatActivity {
         //Find the email associated with the username (required for Firebase Auth)
         Query contain = mDatabase.orderByKey().equalTo(username);
         contain.addListenerForSingleValueEvent(new ValueEventListener() {
-               @Override
-               public void onDataChange(DataSnapshot dataSnapshot) {
-                   if (dataSnapshot.exists()) {
-                       HashMap value = (HashMap) dataSnapshot.getValue();
-                       HashMap attributes = (HashMap) value.get(username);
-                       String stored_email = (String) attributes.get("email");
-                       firebaseAuth(stored_email, password);
-                   } else {
-                       //User does not exist
-                       errorDialog("Could not log in",
-                               "User does not exist.");
-                   }
-               }
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    HashMap value = (HashMap) dataSnapshot.getValue();
+                    HashMap attributes = (HashMap) value.get(username);
+                    String stored_email = (String) attributes.get("email");
+                    firebaseAuth(stored_email, username, password);
+                } else {
+                    //User does not exist
+                    HelperMethods.errorDialog(context, "Could not log in",
+                            "User does not exist.");
+                }
+            }
 
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
 
-                }});
+            }
+        });
     }
 
     /**
      * Method that calls Firebase's authentication method to log a user in and
      * starts MainActivity.
-     * @param email
-     * @param password
+     *
+     * @param email that corresponds to the user
+     * @param username the user's username
+     * @param password the user's password
      */
-    private void firebaseAuth(String email, String password){
+    private void firebaseAuth(String email, String username, String password) {
         final String _email = email;
+        final String _username = username;
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -133,12 +139,12 @@ public class Login extends AppCompatActivity {
                         // the auth state listener will be notified and logic to handle the
                         // signed in user can be handled in the listener.
                         if (!task.isSuccessful()) {
-                            errorDialog("Could not log in",
+                            HelperMethods.errorDialog(context, "Could not log in",
                                     "Invalid username/password");
                         } else {
                             Intent intent = new Intent(Login.this, MainActivity.class);
-                            //Save shared preferences for persistence
-                            SaveSharedPreferences.setUserName(getApplicationContext(), _email);
+                            // Save shared preferences for persistence, save specifically the username
+                            SaveSharedPreferences.setUserName(getApplicationContext(), _username);
                             startActivity(intent);
                         }
 
@@ -147,23 +153,10 @@ public class Login extends AppCompatActivity {
     }
 
     /**
-     * Displays an error dialog.
-     * @param title - title of the dialogue
-     * @param message - message of the dialogue
+     * Brings the user to the Registration Activity.
+     *
+     * @param view The current view (which is the Login View)
      */
-    private void errorDialog(String title, String message){
-        new AlertDialog.Builder(this)
-                .setTitle(title)
-                .setMessage(message)
-                .setNegativeButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-
-                    }
-                })
-                .setIcon(android.R.drawable.ic_dialog_alert)
-                .show();
-    }
-
     public void onCreateAccountClick(View view) {
         Intent intent = new Intent(this, Registration.class);
         startActivity(intent);

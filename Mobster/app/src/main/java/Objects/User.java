@@ -46,10 +46,6 @@ public class User {
         this.password = password;
     }
 
-    public static FirebaseUser getUserId() {
-        return FirebaseAuth.getInstance().getCurrentUser();
-    }
-
     public void incrementAsked() {
         this.asked++;
     }

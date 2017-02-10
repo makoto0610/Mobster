@@ -108,9 +108,13 @@ public class Registration extends AppCompatActivity {
             HelperMethods.errorDialog(this, "Username not entered",
                     "You did not enter a username.");
             this.confirm.setText("");
-        } else if(password.length()== 0 ||  confirm.length()== 0){
+        } else if(password.length()== 0 ||  confirm.length()== 0) {
             HelperMethods.errorDialog(this, "Password or confirm password not entered",
                     "You did not enter a password.");
+            this.confirm.setText("");
+        } else if (username.contains(" ")) {
+            HelperMethods.errorDialog(this, "Username invalid",
+                    "You cannot have any whitespace in username.");
             this.confirm.setText("");
         } else if (!password.equals(confirm)) {
             HelperMethods.errorDialog(this, "Not matching password",
@@ -154,6 +158,7 @@ public class Registration extends AppCompatActivity {
      */
     private void addNewUser(User user) {
         boolean success = false;
+        final String _username = user.getUsername();
         mDatabase.child("users").child(user.getUsername())
                 .setValue(user);
         mAuth.createUserWithEmailAndPassword(user.getEmail(), user.getPassword())
@@ -172,6 +177,7 @@ public class Registration extends AppCompatActivity {
                                             "3) Email is not already in use.");
                         } else {
                             Intent intent = new Intent(Registration.this, MainActivity.class);
+                            SaveSharedPreferences.setUserName(getApplicationContext(), _username);
                             startActivity(intent);
                         }
 

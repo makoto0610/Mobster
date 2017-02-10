@@ -13,10 +13,10 @@ public class HelperMethods {
 
     /**
      * Displays an error dialog.
+     *
      * @param title - title of the dialogue
      * @param message - message of the dialogue
      */
-
     public static void errorDialog(Context context, String title, String message){
         new AlertDialog.Builder(context)
                 .setTitle(title)
