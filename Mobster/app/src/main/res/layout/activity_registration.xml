@@ -54,6 +54,18 @@
         android:id="@+id/register_confirm_password"
         android:hint="Confirm Password" />
 
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textEmailAddress"
+        android:ems="10"
+        android:layout_below="@+id/register_confirm_password"
+        android:layout_alignEnd="@+id/register_confirm_password"
+        android:layout_marginTop="14dp"
+        android:id="@+id/register_email"
+        android:hint="Email (Optional)" />
+
+
     <Button
         android:text="Create Account"
         android:layout_width="wrap_content"
@@ -64,14 +76,4 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="48dp" />
 
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="textEmailAddress"
-        android:ems="10"
-        android:layout_marginBottom="20dp"
-        android:id="@+id/register_email"
-        android:layout_above="@+id/create_button"
-        android:layout_alignStart="@+id/register_confirm_password"
-        android:hint="Email(Optional)" />
 </RelativeLayout>

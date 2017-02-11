@@ -1,5 +1,10 @@
 package Objects;
 
+import android.util.Log;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import java.util.concurrent.atomic.AtomicInteger;
+
 /**
  * Created by makoto on 1/19/17.
  */
@@ -47,5 +52,13 @@ public class User {
 
     public void incrementAnswered() {
         this.answered++;
+    }
+
+    public int getAsked() {
+        return this.asked;
+    }
+
+    public int getAnswered() {
+        return this.answered;
     }
 }

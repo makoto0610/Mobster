@@ -1,0 +1,24 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <Button
+        android:id="@+id/remove_option"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:text="REMOVE"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:id="@+id/option_text_view"
+        android:minHeight="50dp"
+        android:layout_alignBottom="@+id/remove_option"
+        android:layout_alignParentStart="true"
+        android:layout_toStartOf="@+id/remove_option"
+        android:textSize="30sp" />
+
+</RelativeLayout>

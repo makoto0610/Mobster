@@ -3,6 +3,7 @@ package Objects;
 import org.joda.time.DateTime;
 import org.joda.time.Duration;
 
+import java.util.Calendar;
 import java.util.LinkedList;
 
 /**
@@ -12,19 +13,18 @@ import java.util.LinkedList;
 public class Question {
     private String question;
     private LinkedList<Choice> choices;
-    private DateTime start;
-    private DateTime end;
+    private Calendar start;
+    private Calendar end;
     private Duration duration;
+    private String username;
+    private int questionId;
 
-    public Question(String question, LinkedList<String> choices, DateTime start, DateTime end) {
+    public Question(String question, LinkedList<Choice> choices, Calendar start, Calendar end, String username) {
         this.question = question;
-        this.choices = new LinkedList<>();
-        for (String s : choices) {
-            this.choices.add(new Choice(s));
-
-        }
+        this.choices = choices;
         this.start = start;
         this.end = end;
+        this.username = username;
     }
 
     public String getQuestion() {
@@ -35,11 +35,11 @@ public class Question {
         return choices;
     }
 
-    public DateTime getStart() {
+    public Calendar getStart() {
         return start;
     }
 
-    public DateTime getEnd() {
+    public Calendar getEnd() {
         return end;
     }
 
@@ -49,5 +49,13 @@ public class Question {
 
     public void setDuration(Duration duration) {
         this.duration = duration;
+    }
+
+    public String getUsername() {
+        return this.username;
+    }
+
+    public int getQuestionId() {
+        return this.questionId;
     }
 }

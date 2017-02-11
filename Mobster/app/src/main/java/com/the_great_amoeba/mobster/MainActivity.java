@@ -9,11 +9,15 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
+import Objects.User;
 
 public class MainActivity extends AppCompatActivity {
     DrawerLayout mDrawerLayout;
@@ -27,24 +31,21 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         /**
-         *Setup the DrawerLayout and NavigationView
+         * Setup the DrawerLayout and NavigationView
          */
-
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
         mNavigationView = (NavigationView) findViewById(R.id.nav_view);
 
         /**
-         * Lets inflate the very first fragment
-         * Here , we are inflating the TabFragment as the first Fragment
+         * Inflating the HomeFragment as the first Fragment
          */
-
         mFragmentManager = getSupportFragmentManager();
         mFragmentTransaction = mFragmentManager.beginTransaction();
         mFragmentTransaction.replace(R.id.containerView, new HomeTabFragment()).commit();
+
         /**
          * Setup click events on the Navigation View Items.
          */
-
         mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(MenuItem menuItem) {
@@ -86,7 +87,6 @@ public class MainActivity extends AppCompatActivity {
         /**
          * Setup Drawer Toggle of the Toolbar
          */
-
         android.support.v7.widget.Toolbar toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBarDrawerToggle mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar, R.string.app_name,
@@ -112,8 +112,11 @@ public class MainActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.edit) {
+            Intent intent = new Intent(this, CreateQuestion.class);
+            startActivity(intent);
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
+
 }

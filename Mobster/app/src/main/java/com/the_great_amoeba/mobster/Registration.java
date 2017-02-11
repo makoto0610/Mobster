@@ -1,6 +1,7 @@
 package com.the_great_amoeba.mobster;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 
@@ -25,6 +26,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import Objects.User;
+import Helper.HelperMethods;
 
 public class Registration extends AppCompatActivity {
 
@@ -43,10 +45,13 @@ public class Registration extends AppCompatActivity {
     private EditText confirm;
     private EditText email;
 
+    private Context context;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
+        context = this;
         mDatabase = FirebaseDatabase.getInstance()
                 .getReferenceFromUrl(DB_URL);
         mAuth = FirebaseAuth.getInstance();
@@ -100,17 +105,25 @@ public class Registration extends AppCompatActivity {
         Query contain = mDatabase.child("users").orderByKey().equalTo(username);
 
         if(username.length()== 0) {
-            errorDialog("Username not entered",
+            HelperMethods.errorDialog(this, "Username not entered",
                     "You did not enter a username.");
-        } else if(password.length()== 0 ||  confirm.length()== 0){
-            errorDialog("Password or confirm password not entered",
+            this.confirm.setText("");
+        } else if(password.length()== 0 ||  confirm.length()== 0) {
+            HelperMethods.errorDialog(this, "Password or confirm password not entered",
                     "You did not enter a password.");
+            this.confirm.setText("");
+        } else if (username.contains(" ")) {
+            HelperMethods.errorDialog(this, "Username invalid",
+                    "You cannot have any whitespace in username.");
+            this.confirm.setText("");
         } else if (!password.equals(confirm)) {
-            errorDialog("Not matching password",
+            HelperMethods.errorDialog(this, "Not matching password",
                     "Your password and confirmed password were different.");
+            this.confirm.setText("");
         } else if (checkUsernameExists(username)) {
-            errorDialog("Username invalid",
+            HelperMethods.errorDialog(this, "Username invalid",
                     "Username already exists");
+            this.confirm.setText("");
         } else {
             User user = new User(username, password, email);
             addNewUser(user);
@@ -136,24 +149,7 @@ public class Registration extends AppCompatActivity {
         return isExist[0];
     }
 
-    /**
-     * Displays an error dialog.
-     * @param title - title of the dialogue
-     * @param message - message of the dialogue
-     */
-    private void errorDialog(String title, String message){
-        new AlertDialog.Builder(this)
-                .setTitle(title)
-                .setMessage(message)
-                .setNegativeButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
 
-                    }
-                })
-                .setIcon(android.R.drawable.ic_dialog_alert)
-                .show();
-        this.confirm.setText("");
-    }
 
     /**
      * Adds a new user by first authenticating through Firebase, and then adding to the
@@ -162,6 +158,7 @@ public class Registration extends AppCompatActivity {
      */
     private void addNewUser(User user) {
         boolean success = false;
+        final String _username = user.getUsername();
         mDatabase.child("users").child(user.getUsername())
                 .setValue(user);
         mAuth.createUserWithEmailAndPassword(user.getEmail(), user.getPassword())
@@ -174,12 +171,13 @@ public class Registration extends AppCompatActivity {
                         // the auth state listener will be notified and logic to handle the
                         // signed in user can be handled in the listener.
                         if (!task.isSuccessful()) {
-                            errorDialog("Failed to register",
+                            HelperMethods.errorDialog(context, "Failed to register",
                                     "Please make sure: 1) password is at least 6 chars. long.\n" +
                                             "2) There are no illegal chars.\n" +
                                             "3) Email is not already in use.");
                         } else {
                             Intent intent = new Intent(Registration.this, MainActivity.class);
+                            SaveSharedPreferences.setUserName(getApplicationContext(), _username);
                             startActivity(intent);
                         }
 
