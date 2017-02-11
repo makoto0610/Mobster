@@ -3,6 +3,8 @@ package com.the_great_amoeba.mobster;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.Toast;
 
 
@@ -20,8 +22,12 @@ import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by natalie on 2/6/2017.
@@ -33,6 +39,9 @@ public class Results extends AppCompatActivity{
     private float[] yAxis = {2,4,6,8,10};
     private String[] xAxis = {"A", "B", "C", "D", "E"};
     private HashMap<String, Float> map;
+
+    private ListView list;
+    private List<Map.Entry<String, Float>> ordered;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,11 +92,17 @@ public class Results extends AppCompatActivity{
 
         chart.setRotationEnabled(true);
         chart.setRotationAngle(0);
+        chart.setHighlightPerTapEnabled(true);
+
 
         // legend config
         Legend legend = chart.getLegend();
+        legend.setEnabled(false);
         legend.setPosition(Legend.LegendPosition.BELOW_CHART_CENTER);
+        legend.setOrientation(Legend.LegendOrientation.HORIZONTAL);
         legend.setTextColor(Color.WHITE);
+        legend.setTextSize(15);
+        legend.setWordWrapEnabled(true);
 
         // dataset configs
         ArrayList<Integer> colors = new ArrayList<Integer>();
@@ -111,9 +126,34 @@ public class Results extends AppCompatActivity{
         dataSet.setSelectionShift(10);
 
 
-        // set data
+        // set and config data
         PieData pieData = new PieData(dataSet);
+        pieData.setValueTextSize(20);
 
+
+        // statistics
+        // http://www.java2novice.com/java-interview-programs/sort-a-map-by-value/
+        Set<Map.Entry<String, Float>> set = map.entrySet();
+        ordered = new ArrayList<>(set);
+        Collections.sort(ordered, new Comparator<Map.Entry<String, Float>>() {
+            @Override
+            public int compare(Map.Entry<String, Float> o1, Map.Entry<String, Float> o2) {
+                return (o2.getValue().compareTo(o1.getValue()));
+            }
+        });
+//        for (Map.Entry<String, Float> entry: ordered) {
+//            System.out.println(entry.getKey() + ": " + entry.getValue());
+//        }
+
+        ArrayList<String> displayed = new ArrayList<>();
+        for (Map.Entry<String, Float> o : ordered) {
+            displayed.add(o.getKey() + ": " + Math.round(o.getValue()) + " votes");
+        }
+        list = (ListView) findViewById(R.id.results_list);
+        String[] displayed_arr =  new String[displayed.size()];
+        displayed_arr = displayed.toArray(displayed_arr);
+        list.setAdapter(new ArrayAdapter<String>(this,
+                android.R.layout.simple_list_item_1, displayed_arr));
 
 
         chart.setData(pieData);

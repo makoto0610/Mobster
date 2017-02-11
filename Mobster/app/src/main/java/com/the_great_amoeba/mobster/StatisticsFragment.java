@@ -34,7 +34,6 @@ public class StatisticsFragment extends Fragment {
     private TextView answeredText;
 
     private String username;
-    private FirebaseAuth mAuth;
 
     @Nullable
     @Override
@@ -43,7 +42,6 @@ public class StatisticsFragment extends Fragment {
         super.onCreate(savedInstanceState);
         mDatabase = FirebaseDatabase.getInstance().getReferenceFromUrl(DB_URL);
 
-        mAuth = FirebaseAuth.getInstance();
         username = SaveSharedPreferences.getUserName(getActivity().getApplicationContext());
         System.out.println("Username: " + username);
 
