@@ -18,6 +18,11 @@ public class Question {
     private Duration duration;
     private String username;
     private int questionId;
+    private Status status;
+
+    private enum Status {
+        CLOSED, NEW, TRENDING
+    }
 
     public Question(String question, LinkedList<Choice> choices, Calendar start, Calendar end, String username) {
         this.question = question;
@@ -25,6 +30,7 @@ public class Question {
         this.start = start;
         this.end = end;
         this.username = username;
+        this.status = Status.NEW;
     }
 
     public String getQuestion() {
@@ -57,5 +63,9 @@ public class Question {
 
     public int getQuestionId() {
         return this.questionId;
+    }
+
+    public String getStatus() {
+        return this.status.toString();
     }
 }
