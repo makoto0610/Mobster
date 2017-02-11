@@ -25,20 +25,16 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import Constants.Constant;
 import Objects.User;
 import Helper.HelperMethods;
 
 public class Registration extends AppCompatActivity {
 
-    public static final String DB_URL = "https://mobster-3ba43.firebaseio.com/";
     private DatabaseReference mDatabase;
 
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
-
-    private static final String AUTH_TAG = "AUTH";
-    private static final String AUTH_FAIL = "AUTH_FAILED";
-
 
     private EditText username;
     private EditText password;
@@ -53,7 +49,7 @@ public class Registration extends AppCompatActivity {
         setContentView(R.layout.activity_registration);
         context = this;
         mDatabase = FirebaseDatabase.getInstance()
-                .getReferenceFromUrl(DB_URL);
+                .getReferenceFromUrl(Constant.DB_URL);
         mAuth = FirebaseAuth.getInstance();
 
 
@@ -65,16 +61,16 @@ public class Registration extends AppCompatActivity {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
                     // User is signed in
-                    Log.d(AUTH_TAG, "onAuthStateChanged:signed_in:" + user.getUid());
+                    Log.d(Constant.AUTH_TAG, "onAuthStateChanged:signed_in:" + user.getUid());
                 } else {
                     // User is signed out
-                    Log.d(AUTH_TAG, "onAuthStateChanged:signed_out");
+                    Log.d(Constant.AUTH_TAG, "onAuthStateChanged:signed_out");
                 }
                 //updateUI(user);
             }
         };
 
-        Log.d(AUTH_TAG, "Testing log");
+        Log.d(Constant.AUTH_TAG, "Testing log");
 
         username = (EditText) findViewById(R.id.register_username);
         password = (EditText) findViewById(R.id.register_password);
@@ -165,7 +161,7 @@ public class Registration extends AppCompatActivity {
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        Log.d(AUTH_TAG, "createUserWithEmail:onComplete:" + task.isSuccessful());
+                        Log.d(Constant.AUTH_TAG, "createUserWithEmail:onComplete:" + task.isSuccessful());
 
                         // If sign in fails, display a message to the user. If sign in succeeds
                         // the auth state listener will be notified and logic to handle the

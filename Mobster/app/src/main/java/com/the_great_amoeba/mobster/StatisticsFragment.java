@@ -20,9 +20,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import Constants.Constant;
+
 public class StatisticsFragment extends Fragment {
 
-    public static final String DB_URL = "https://mobster-3ba43.firebaseio.com/";
     private DatabaseReference mDatabase;
 
     private static String asked;
@@ -34,7 +35,7 @@ public class StatisticsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.statistics_layout,container, false);
-        mDatabase = FirebaseDatabase.getInstance().getReferenceFromUrl(DB_URL);
+        mDatabase = FirebaseDatabase.getInstance().getReferenceFromUrl(Constant.DB_URL);
         DatabaseReference askedRef = mDatabase.child("users").child("jeff").child("asked");
         askedRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override

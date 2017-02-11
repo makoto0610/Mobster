@@ -24,6 +24,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
 
+import Constants.Constant;
 import Helper.HelperMethods;
 
 public class Login extends AppCompatActivity {
@@ -31,11 +32,8 @@ public class Login extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
 
-    public static final String DB_URL = "https://mobster-3ba43.firebaseio.com/users";
     private DatabaseReference mDatabase;
 
-    private static final String AUTH_TAG = "AUTH";
-    private static final String AUTH_FAIL = "AUTH_FAILED";
 
     private EditText username;
     private EditText password;
@@ -49,7 +47,7 @@ public class Login extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         context = this;
         mDatabase = FirebaseDatabase.getInstance()
-                .getReferenceFromUrl(DB_URL);
+                .getReferenceFromUrl(Constant.DB_URL);
 
         mAuth = FirebaseAuth.getInstance();
         // [START auth_state_listener] - Firebase Auth State Listener that listens to changes
@@ -60,25 +58,25 @@ public class Login extends AppCompatActivity {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
                     // User is signed in
-                    Log.d(AUTH_TAG, "onAuthStateChanged:signed_in:" + user.getUid());
+                    Log.d(Constant.AUTH_TAG, "onAuthStateChanged:signed_in:" + user.getUid());
                 } else {
                     // User is signed out
-                    Log.d(AUTH_TAG, "onAuthStateChanged:signed_out");
+                    Log.d(Constant.AUTH_TAG, "onAuthStateChanged:signed_out");
                 }
             }
         };
         this.username = (EditText) findViewById(R.id.login_username);
         this.password = (EditText) findViewById(R.id.login_password);
 
-        Log.d(AUTH_TAG, "IN ON_CREATE");
+        Log.d(Constant.AUTH_TAG, "IN ON_CREATE");
 
         // Check shared preferences, if already logged in go directly to MainActivity
         if (!(SaveSharedPreferences.getUserName(getApplicationContext()).length() == 0)) {
-            Log.d(AUTH_TAG, "Username is NOT empty in shared preferences");
+            Log.d(Constant.AUTH_TAG, "Username is NOT empty in shared preferences");
             Intent intent = new Intent(Login.this, MainActivity.class);
             startActivity(intent);
         } else {
-            Log.d(AUTH_TAG, "Username is empty in shared preferences");
+            Log.d(Constant.AUTH_TAG, "Username is empty in shared preferences");
         }
     }
 
@@ -133,7 +131,7 @@ public class Login extends AppCompatActivity {
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        Log.d(AUTH_TAG, "signInWithEmail:onComplete:" + task.isSuccessful());
+                        Log.d(Constant.AUTH_TAG, "signInWithEmail:onComplete:" + task.isSuccessful());
 
                         // If sign in fails, display a message to the user. If sign in succeeds
                         // the auth state listener will be notified and logic to handle the
