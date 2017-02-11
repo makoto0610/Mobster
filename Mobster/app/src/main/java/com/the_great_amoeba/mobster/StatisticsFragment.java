@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -32,12 +33,21 @@ public class StatisticsFragment extends Fragment {
     private TextView askedText;
     private TextView answeredText;
 
+    private String username;
+    private FirebaseAuth mAuth;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.statistics_layout,container, false);
+        super.onCreate(savedInstanceState);
         mDatabase = FirebaseDatabase.getInstance().getReferenceFromUrl(DB_URL);
-        DatabaseReference askedRef = mDatabase.child("users").child("jeff").child("asked");
+
+        mAuth = FirebaseAuth.getInstance();
+        username = SaveSharedPreferences.getUserName(getActivity().getApplicationContext());
+        System.out.println("Username: " + username);
+
+        DatabaseReference askedRef = mDatabase.child("users").child(username).child("asked");
         askedRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -53,7 +63,7 @@ public class StatisticsFragment extends Fragment {
 
             }
         });
-        DatabaseReference answeredRef = mDatabase.child("users").child("jeff").child("answered");
+        DatabaseReference answeredRef = mDatabase.child("users").child(username).child("answered");
         answeredRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
