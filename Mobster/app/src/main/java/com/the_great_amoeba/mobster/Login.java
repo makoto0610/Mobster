@@ -93,7 +93,7 @@ public class Login extends AppCompatActivity {
 
 
         //Find the email associated with the username (required for Firebase Auth)
-        Query contain = mDatabase.orderByKey().equalTo(username);
+        Query contain = mDatabase.child("users").orderByKey().equalTo(username);
         contain.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
