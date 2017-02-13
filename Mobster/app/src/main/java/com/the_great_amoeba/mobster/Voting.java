@@ -41,6 +41,10 @@ import com.google.firebase.database.ValueEventListener;
 
 import com.google.firebase.database.DatabaseReference;
 
+import java.util.LinkedList;
+
+import Objects.Choice;
+
 public class Voting extends Activity implements OnClickListener{
 
     private static final int MY_BUTTON = 9000;
@@ -48,13 +52,16 @@ public class Voting extends Activity implements OnClickListener{
     private DatabaseReference mDatabase;
     private static String asked;
     private TextView questionText;
+    private String[] choices; //choices/options provided in the question
+    private float[] votes; //votes on each choice
+    private LinearLayout ll;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.vote_layout);
 
-        LinearLayout ll = (LinearLayout)findViewById(R.id.linearLayout2);
+        ll = (LinearLayout)findViewById(R.id.linearLayout2);
 
         Button b = new Button(this);
         b.setText("Submit!");
@@ -63,25 +70,33 @@ public class Voting extends Activity implements OnClickListener{
         b.setOnClickListener(this);
         ll.addView(b);
 
-        //add radio buttons
-        final RadioButton[] rb = new RadioButton[5];
-        RadioGroup rg = new RadioGroup(this);
-        rg.setOrientation(RadioGroup.VERTICAL);
-        for(int i=0; i<5; i++){
-            rb[i]  = new RadioButton(this);
-            rb[i].setText("Dynamic Radio Button " + i);
-            rb[i].setId(i);
-            rg.addView(rb[i]); //the RadioButtons are added to the radioGroup instead of the layout
+        mDatabase = FirebaseDatabase.getInstance().getReferenceFromUrl(DB_URL);
+        DatabaseReference choicesRef = mDatabase.child("questions").child("How are you?").child("choices");
+        choicesRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                int index = 0;
+                int childCount = (int)(dataSnapshot.getChildrenCount());
+                choices = new String[childCount];
+                votes = new float[childCount];
+                for (DataSnapshot d : dataSnapshot.getChildren()) {
+                    choices[index] = (String)d.child("option").getValue();
+                    votes[index] = ((Long)d.child("vote").getValue()).floatValue();
+                    index++;
+                }
+                createRadioButtons(childCount, choices, votes);
+            }
 
-        }
-        ll.addView(rg);//you add the whole RadioGroup to the layout
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
 
         mDatabase = FirebaseDatabase.getInstance().getReferenceFromUrl(DB_URL);
 
-        // DatabaseReference askedRef = mDatabase.child("questions").child("question").child();//put the question id passed from the view page
-        //pull question from database instead of question
-        DatabaseReference askedRef = mDatabase.child("users").child("bob").child("email");
-//        Query query = mDatabase.child("issue").orderByChild("id").equalTo(0);
+        DatabaseReference askedRef = mDatabase.child("questions").child("How are you?").child("question");
         askedRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -96,6 +111,21 @@ public class Voting extends Activity implements OnClickListener{
 
             }
         });
+    }
+
+    private void createRadioButtons(int num, String[] x, float[] y) {
+        //add radio buttons
+        final RadioButton[] rb = new RadioButton[num];
+        RadioGroup rg = new RadioGroup(this);
+        rg.setOrientation(RadioGroup.VERTICAL);
+        for(int i=0; i<num; i++){
+            rb[i]  = new RadioButton(this);
+            rb[i].setText(x[i]);
+            rb[i].setId(i);
+            rg.addView(rb[i]);
+
+        }
+        ll.addView(rg);
     }
 
     public void onClick(View v) {
@@ -135,7 +165,8 @@ public class Voting extends Activity implements OnClickListener{
 
     private void storeAnswer(int question, int answer) {
         Log.w("ANDROID DYNAMIC VIEWS:", "Question: " + String.valueOf(question) + " * "+ "Answer: " + String.valueOf(answer) );
-
+        //add answer in database
+        //mDatabase.child("questions").child("How are you?").child("choices").child(choices[Integer.parseInt(String.valueOf(answer))]).setValue(votes[Integer.parseInt(String.valueOf(answer))]++);
         Toast toast = Toast.makeText(this,"Answer: " + String.valueOf(answer), Toast.LENGTH_LONG);
         toast.setGravity(Gravity.TOP, 25, 400);
         toast.show();
