@@ -1,6 +1,7 @@
 package com.the_great_amoeba.mobster;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -138,6 +139,8 @@ public class Voting extends Activity implements OnClickListener{
                 toast.setGravity(Gravity.TOP, 25, 400);
                 toast.show();
                 saveAnswers();
+                Intent intent = new Intent(this, Results.class);
+                startActivity(intent);
                 break;
 
         }
@@ -171,9 +174,7 @@ public class Voting extends Activity implements OnClickListener{
         ob.setVote((int)votes[Integer.parseInt(String.valueOf(answer))]);
         ob.incrementVote();
         mDatabase.child("questions").child("How are you?").child("choices").child(String.valueOf(answer)).setValue(ob);
-        Toast toast = Toast.makeText(this,"Answer: " + String.valueOf(answer), Toast.LENGTH_LONG);
-        toast.setGravity(Gravity.TOP, 25, 400);
-        toast.show();
+
 
 
     }
