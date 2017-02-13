@@ -48,8 +48,22 @@ public class NewFragment extends Fragment {
         mDatabase = FirebaseDatabase.getInstance()
                 .getReferenceFromUrl(Constant.DB_URL);
         this.view = inflater.inflate(R.layout.new_layout, null);
+        Log.d(Constant.DEBUG, "in OncreateView");
         getNewQuestions();
         return view;
+    }
+
+    /**
+     * Get all of the new questions using task threading
+     */
+    public void getNewQuestions() {
+        Task[] task = new Task[]{loadingNewQuestion()};
+        Tasks.whenAll(task).addOnCompleteListener(new OnCompleteListener() {
+            @Override
+            public void onComplete(@NonNull Task task) {
+                init_questions();
+            }
+        });
     }
 
     /**
@@ -72,18 +86,6 @@ public class NewFragment extends Fragment {
         });
     }
 
-    /**
-     * Get all of the new questions using task threading
-     */
-    public void getNewQuestions() {
-        Task[] task = new Task[]{loadingNewQuestion()};
-        Tasks.whenAll(task).addOnCompleteListener(new OnCompleteListener() {
-            @Override
-            public void onComplete(@NonNull Task task) {
-                init_questions();
-            }
-        });
-    }
 
     public Task<String> loadingNewQuestion() {
         final TaskCompletionSource<String> tcs = new TaskCompletionSource<>();
@@ -92,20 +94,22 @@ public class NewFragment extends Fragment {
                 .limitToFirst(Constant.NUM_OF_QUESTIONS);
         final LinkedList<String> questions = new LinkedList<>();
 
-        contain.addValueEventListener(new ValueEventListener() {
+        contain.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
                     HashMap value = (HashMap) postSnapshot.getValue();
-                    Log.d(Constant.AUTH_TAG, "keys:" + value.keySet().toString());
-                    Log.d(Constant.AUTH_TAG, "values: " + value.values().toString());
-                    if (value.get("status").equals(Question.Status.CLOSED)) {
+                    Log.d(Constant.DEBUG, "keys:" + value.keySet().toString());
+                    Log.d(Constant.DEBUG, "values: " + value.values().toString());
+                    String status = (String) value.get("status");
+//                    if (status.equals(Question.Status.NEW)) {
                         String question = (String) value.get("question");
                         questions.add(question);
-                    }
+//                    }
                 }
                 array = new String[questions.size()];
                 array = questions.toArray(array);
+
                 tcs.setResult(null);
             }
 

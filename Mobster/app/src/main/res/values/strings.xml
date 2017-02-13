@@ -8,4 +8,5 @@
     </string-array>
     <string name="AUTH_TAG">AUTH></string>
     <string name="AUTH_FAIL">AUTH_FAILED></string>
+    <string name="title_activity_location">Map</string>
 </resources>
