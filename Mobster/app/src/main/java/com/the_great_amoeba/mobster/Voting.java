@@ -53,6 +53,7 @@ public class Voting extends Activity implements OnClickListener{
     private static String asked;
     private TextView questionText;
     private String[] choices; //choices/options provided in the question
+    private Choice[] choiceObjects;
     private float[] votes; //votes on each choice
     private LinearLayout ll;
 
@@ -166,7 +167,10 @@ public class Voting extends Activity implements OnClickListener{
     private void storeAnswer(int question, int answer) {
         Log.w("ANDROID DYNAMIC VIEWS:", "Question: " + String.valueOf(question) + " * "+ "Answer: " + String.valueOf(answer) );
         //add answer in database
-        //mDatabase.child("questions").child("How are you?").child("choices").child(choices[Integer.parseInt(String.valueOf(answer))]).setValue(votes[Integer.parseInt(String.valueOf(answer))]++);
+        Choice ob = new Choice(choices[Integer.parseInt(String.valueOf(answer))]);
+        ob.setVote((int)votes[Integer.parseInt(String.valueOf(answer))]);
+        ob.incrementVote();
+        mDatabase.child("questions").child("How are you?").child("choices").child(String.valueOf(answer)).setValue(ob);
         Toast toast = Toast.makeText(this,"Answer: " + String.valueOf(answer), Toast.LENGTH_LONG);
         toast.setGravity(Gravity.TOP, 25, 400);
         toast.show();
