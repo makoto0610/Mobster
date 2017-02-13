@@ -23,9 +23,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import Constants.Constant;
+
 public class StatisticsFragment extends Fragment {
 
-    public static final String DB_URL = "https://mobster-3ba43.firebaseio.com/";
     private DatabaseReference mDatabase;
 
     private static String asked;
@@ -39,8 +40,9 @@ public class StatisticsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.statistics_layout,container, false);
+
         super.onCreate(savedInstanceState);
-        mDatabase = FirebaseDatabase.getInstance().getReferenceFromUrl(DB_URL);
+        mDatabase = FirebaseDatabase.getInstance().getReferenceFromUrl(Constant.DB_URL);
 
         username = SaveSharedPreferences.getUserName(getActivity().getApplicationContext());
         System.out.println("Username: " + username);

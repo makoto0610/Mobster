@@ -4,6 +4,7 @@ import org.joda.time.DateTime;
 import org.joda.time.Duration;
 
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.LinkedList;
 
 /**
@@ -18,6 +19,16 @@ public class Question {
     private Duration duration;
     private String username;
     private int questionId;
+    private Status status;
+    private int num_access;
+
+    public enum Status {
+        CLOSED, NEW, TRENDING
+    }
+
+    public Question(HashMap<String, String> map) {
+
+    }
 
     public Question(String question, LinkedList<Choice> choices, Calendar start, Calendar end, String username) {
         this.question = question;
@@ -25,6 +36,7 @@ public class Question {
         this.start = start;
         this.end = end;
         this.username = username;
+        this.status = Status.NEW;
     }
 
     public String getQuestion() {
@@ -57,5 +69,17 @@ public class Question {
 
     public int getQuestionId() {
         return this.questionId;
+    }
+
+    public String getStatus() {
+        return this.status.toString();
+    }
+
+    public int getNum_access() {
+        return this.num_access;
+    }
+
+    public void incrementAccess() {
+        this.num_access++;
     }
 }

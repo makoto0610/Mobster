@@ -79,6 +79,10 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(intent);
                 }
 
+                if (menuItem.getItemId() == R.id.nav_item_Location) {
+                    // start Google Maps activity
+                }
+
                 return false;
             }
 
