@@ -15,6 +15,9 @@ public class Choice {
     public String getOption() {
         return option;
     }
+    public void setVote(int value) {
+        vote = value;
+    }
 
     public int getVote() {
         return vote;

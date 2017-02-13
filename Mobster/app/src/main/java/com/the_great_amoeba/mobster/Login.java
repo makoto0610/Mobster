@@ -160,6 +160,13 @@ public class Login extends AppCompatActivity {
         startActivity(intent);
     }
 
+
+    //Remove this when trending questions complete
+    public void onbuttonClick(View view) {
+        Intent intent = new Intent(this, Voting.class);
+        startActivity(intent);
+    }
+
     @Override
     public void onStart() {
         super.onStart();
