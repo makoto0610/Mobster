@@ -22,7 +22,7 @@ public class Question {
     private Status status;
     private int num_access;
 
-    private enum Status {
+    public enum Status {
         CLOSED, NEW, TRENDING
     }
 
