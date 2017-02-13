@@ -19,6 +19,12 @@ import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.listener.PieRadarChartTouchListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
+import com.google.android.gms.common.data.DataBuffer;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -36,12 +42,19 @@ import java.util.Set;
 public class Results extends AppCompatActivity{
 
     private PieChart chart;
-    private float[] yAxis = {2,4,6,8,10};
-    private String[] xAxis = {"A", "B", "C", "D", "E"};
+    private String[] xAxis; //= {"A", "B", "C", "D", "E"};
+    private float[] yAxis; //= {2,4,6,8,10};
     private HashMap<String, Float> map;
 
     private ListView list;
     private List<Map.Entry<String, Float>> ordered;
+
+
+    public static final String DB_URL = "https://mobster-3ba43.firebaseio.com/";
+    private DatabaseReference mDatabase;
+    private Map<String, Integer> choices;
+//    private String[] options;
+//    private float[] votes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +62,33 @@ public class Results extends AppCompatActivity{
         setContentView(R.layout.activity_results);
 
         // get all data
+        mDatabase = FirebaseDatabase.getInstance().getReferenceFromUrl(DB_URL);
+        DatabaseReference choicesRef = mDatabase.child("questions")
+                .child("How are you?").child("choices");
+        choicesRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                int index = 0;
+                int childCount = (int)(dataSnapshot.getChildrenCount());
+                xAxis = new String[childCount];
+                yAxis = new float[childCount];
+                for (DataSnapshot d : dataSnapshot.getChildren()) {
+                    xAxis[index] = (String)d.child("option").getValue();
+                    yAxis[index] = ((Long)d.child("vote").getValue()).floatValue();
+                    index++;
+
+                }
+                createGraph();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void createGraph() {
         map = new HashMap<>();
         for (int i = 0; i < xAxis.length; i++) {
             map.put(xAxis[i], yAxis[i]);
@@ -80,7 +120,7 @@ public class Results extends AppCompatActivity{
             public void onValueSelected(Entry e, Highlight h) {
                 PieEntry slice = (PieEntry) e;
                 Toast.makeText(Results.this, slice.getLabel() +
-                        ": " + Math.round(slice.getValue()) + " votes",
+                                ": " + Math.round(slice.getValue()) + " votes",
                         Toast.LENGTH_SHORT).show();
             }
 
@@ -158,6 +198,9 @@ public class Results extends AppCompatActivity{
 
         chart.setData(pieData);
         chart.invalidate();
-
     }
+
+
+
+
 }
