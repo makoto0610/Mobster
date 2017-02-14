@@ -1,12 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent" android:layout_height="match_parent">
 
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/label"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:padding="10dip"
-    android:textSize="16dip"
-    android:textStyle="bold"
-    tools:ignore="SpUsage">
-</TextView>
+    <TextView
+        android:text="TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView_Question"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="25dp"
+        android:id="@+id/textView_Duration" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/ic_down_vote"
+        android:id="@+id/imageView_downVote"
+        android:layout_below="@+id/imageView_upVote"
+        android:layout_alignStart="@+id/imageView_upVote" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/ic_up_vote"
+        android:layout_marginEnd="13dp"
+        android:id="@+id/imageView_upVote"
+        android:layout_alignBottom="@+id/textView_Question"
+        android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:text="TextView"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView_Question"
+        android:textSize="24sp"
+        android:textAlignment="center"
+        android:scrollHorizontally="false"
+        android:layout_width="150dp"
+        android:layout_centerVertical="true"
+        android:layout_toEndOf="@+id/textView_Duration"
+        android:layout_marginStart="10dp" />
+
+    <TextView
+        android:text="TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView_Rating"
+        android:layout_above="@+id/imageView_downVote"
+        android:layout_toStartOf="@+id/imageView_downVote" />
+
+
+</RelativeLayout>

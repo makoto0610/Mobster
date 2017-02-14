@@ -25,10 +25,15 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import org.joda.time.Duration;
+
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 
 import Constants.Constant;
+import Objects.CustomListViewAdapter;
+import Objects.DisplayQuestion;
 import Objects.Question;
 
 
@@ -36,7 +41,7 @@ public class NewFragment extends Fragment {
 
     private DatabaseReference mDatabase;
     private View view;
-    private String[] array;
+    private DisplayQuestion[] array;
 
     @Nullable
     @Override
@@ -57,22 +62,28 @@ public class NewFragment extends Fragment {
     public void getNewQuestionsFromFirebase() {
         Query contain = mDatabase.child("questions").orderByKey()
                 .limitToFirst(Constant.NUM_OF_QUESTIONS);
-        final LinkedList<String> questions = new LinkedList<>();
+        final LinkedList<DisplayQuestion> questions = new LinkedList<>();
 
         contain.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
                     HashMap value = (HashMap) postSnapshot.getValue();
-                    Log.d(Constant.DEBUG, "keys:" + value.keySet().toString());
-                    Log.d(Constant.DEBUG, "values: " + value.values().toString());
                     String status = (String) value.get("status");
-//                    if (status.equals(Question.Status.NEW)) {
-                    String question = (String) value.get("question");
-                    questions.add(question);
-//                    }
+                    if (status.equals("NEW")) {
+                        Log.d(Constant.DEBUG, "keys:" + value.keySet().toString());
+                        Log.d(Constant.DEBUG, "values: " + value.values().toString());
+                        long upvotes =  (long) value.get("num_upvotes");
+                        long downvotes = (long) value.get("num_downvotes");
+                        long rating = upvotes - downvotes;
+                        DisplayQuestion question = new DisplayQuestion((String) (value.get("question")),
+                                new Duration(6000000),
+                                rating);
+
+                        questions.add(question);
+                    }
                 }
-                array = new String[questions.size()];
+                array = new DisplayQuestion[questions.size()];
                 array = questions.toArray(array);
                 init_Questions_Display();
             }
@@ -90,8 +101,9 @@ public class NewFragment extends Fragment {
      * Initialize all of the questions for display on the ListView
      */
     public void init_Questions_Display() {
-        ArrayAdapter<String> questions =
-                new ArrayAdapter<>(getContext(), R.layout.list_view, this.array);
+
+        CustomListViewAdapter questions = new CustomListViewAdapter(getContext(), R.layout.list_view,
+                Arrays.asList(this.array));
 
         ListView listView = (ListView) this.view.findViewById(R.id.mobile_list);
         listView.setAdapter(questions);

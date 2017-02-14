@@ -21,6 +21,9 @@ public class Question {
     private int questionId;
     private Status status;
     private int num_access;
+    private long num_upvotes;
+    private long num_downvotes;
+
 
     public enum Status {
         CLOSED, NEW, TRENDING
@@ -81,5 +84,22 @@ public class Question {
 
     public void incrementAccess() {
         this.num_access++;
+    }
+
+    public void setNum_upvotes(long num_upvotes) {
+        this.num_upvotes = num_upvotes;
+    }
+
+    public void setNum_downvotes(long num_downvotes) {
+        this.num_downvotes = num_downvotes;
+    }
+
+    public long getNum_upvotes() {
+
+        return num_upvotes;
+    }
+
+    public long getNum_downvotes() {
+        return num_downvotes;
     }
 }
