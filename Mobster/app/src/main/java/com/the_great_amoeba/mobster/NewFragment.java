@@ -17,10 +17,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.TaskCompletionSource;
-import com.google.android.gms.tasks.Tasks;
+
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -49,27 +46,50 @@ public class NewFragment extends Fragment {
                 .getReferenceFromUrl(Constant.DB_URL);
         this.view = inflater.inflate(R.layout.new_layout, null);
         Log.d(Constant.DEBUG, "in OncreateView");
-        getNewQuestions();
+        getNewQuestionsFromFirebase();
         return view;
     }
 
-    /**
-     * Get all of the new questions using task threading
-     */
-    public void getNewQuestions() {
-        Task[] task = new Task[]{loadingNewQuestion()};
-        Tasks.whenAll(task).addOnCompleteListener(new OnCompleteListener() {
-            @Override
-            public void onComplete(@NonNull Task task) {
-                init_questions();
-            }
-        });
-    }
 
     /**
-     * Initialize all of the questions for display
+     * Get new questions from Firebase (async)
      */
-    public void init_questions() {
+    public void getNewQuestionsFromFirebase() {
+        Query contain = mDatabase.child("questions").orderByKey()
+                .limitToFirst(Constant.NUM_OF_QUESTIONS);
+        final LinkedList<String> questions = new LinkedList<>();
+
+        contain.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
+                    HashMap value = (HashMap) postSnapshot.getValue();
+                    Log.d(Constant.DEBUG, "keys:" + value.keySet().toString());
+                    Log.d(Constant.DEBUG, "values: " + value.values().toString());
+                    String status = (String) value.get("status");
+//                    if (status.equals(Question.Status.NEW)) {
+                    String question = (String) value.get("question");
+                    questions.add(question);
+//                    }
+                }
+                array = new String[questions.size()];
+                array = questions.toArray(array);
+                init_Questions_Display();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                //TODO: questions not loading error message
+            }
+        });
+
+    }
+
+
+    /**
+     * Initialize all of the questions for display on the ListView
+     */
+    public void init_Questions_Display() {
         ArrayAdapter<String> questions =
                 new ArrayAdapter<>(getContext(), R.layout.list_view, this.array);
 
@@ -86,40 +106,6 @@ public class NewFragment extends Fragment {
         });
     }
 
-
-    public Task<String> loadingNewQuestion() {
-        final TaskCompletionSource<String> tcs = new TaskCompletionSource<>();
-
-        Query contain = mDatabase.child("questions").orderByKey()
-                .limitToFirst(Constant.NUM_OF_QUESTIONS);
-        final LinkedList<String> questions = new LinkedList<>();
-
-        contain.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
-                    HashMap value = (HashMap) postSnapshot.getValue();
-                    Log.d(Constant.DEBUG, "keys:" + value.keySet().toString());
-                    Log.d(Constant.DEBUG, "values: " + value.values().toString());
-                    String status = (String) value.get("status");
-//                    if (status.equals(Question.Status.NEW)) {
-                        String question = (String) value.get("question");
-                        questions.add(question);
-//                    }
-                }
-                array = new String[questions.size()];
-                array = questions.toArray(array);
-
-                tcs.setResult(null);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                //TODO: questions not loading error message
-            }
-        });
-        return tcs.getTask();
-    }
 
 
 
