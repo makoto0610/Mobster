@@ -58,7 +58,8 @@ public class CustomListViewAdapter extends ArrayAdapter<DisplayQuestion> {
 
         holder.textQuestion.setText(question.getQuestion());
         holder.textRating.setText(question.getRating() + "");
-        holder.textDuration.setText(question.getDuration().toStandardHours().toString());
+        holder.textDuration.setText(question.getDuration().toStandardHours().toString()
+        .substring(2));
 
         return convertView;
     }
