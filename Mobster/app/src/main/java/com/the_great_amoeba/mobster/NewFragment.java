@@ -82,8 +82,8 @@ public class NewFragment extends Fragment {
                         DisplayQuestion question = new DisplayQuestion((String) (value.get("question")),
                                 new Duration(6000000),
                                 rating, keyQuestion);
-                        Toast.makeText(view.getContext(),(String)value.get("key") ,
-                                Toast.LENGTH_LONG).show();
+//                        Toast.makeText(view.getContext(),(String)value.get("key") ,
+//                                Toast.LENGTH_LONG).show();
 
                         questions.add(question);
                     }
