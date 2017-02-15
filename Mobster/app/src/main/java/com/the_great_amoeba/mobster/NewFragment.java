@@ -79,9 +79,10 @@ public class NewFragment extends Fragment {
                         long upvotes =  (long) value.get("num_upvotes");
                         long downvotes = (long) value.get("num_downvotes");
                         long rating = upvotes - downvotes;
+                        long access = (long) value.get("num_access");
                         DisplayQuestion question = new DisplayQuestion((String) (value.get("question")),
                                 new Duration(6000000),
-                                rating, keyQuestion);
+                                rating, keyQuestion, access);
                         questions.add(question);
                     }
                 }

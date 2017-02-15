@@ -25,6 +25,8 @@ import com.google.firebase.database.ValueEventListener;
 import org.joda.time.Duration;
 
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedList;
 
@@ -73,11 +75,18 @@ public class TrendingFragment extends Fragment {
                     long upvotes =  (long) value.get("num_upvotes");
                     long downvotes = (long) value.get("num_downvotes");
                     long rating = upvotes - downvotes;
+                    long access = (long) value.get("num_access");
                     DisplayQuestion question = new DisplayQuestion((String) (value.get("question")),
                             new Duration(6000000),
-                            rating, keyQuestion);
+                            rating, keyQuestion, access);
                     questions.add(question);
                 }
+                Collections.sort(questions, new Comparator<DisplayQuestion>() {
+                    @Override
+                    public int compare(DisplayQuestion o1, DisplayQuestion o2) {
+                        return (int) (o2.getNum_access() - o1.getNum_access());
+                    }
+                });
                 array = new DisplayQuestion[questions.size()];
                 array = questions.toArray(array);
                 init_Questions_Display();

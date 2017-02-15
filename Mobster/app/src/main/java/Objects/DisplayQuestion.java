@@ -11,12 +11,15 @@ public class DisplayQuestion {
     private Duration duration;
     private long rating;
     private String questionId;
+    private long num_access;
 
-    public DisplayQuestion(String question, Duration duration, long rating, String questionId) {
+    public DisplayQuestion(String question, Duration duration, long rating, String questionId,
+                           long num_access) {
         this.question = question;
         this.duration = duration;
         this.rating = rating;
         this.questionId = questionId;
+        this.num_access = num_access;
     }
 
     public String getQuestionId() {
@@ -45,5 +48,9 @@ public class DisplayQuestion {
 
     public void setDuration(Duration duration) {
         this.duration = duration;
+    }
+
+    public long getNum_access() {
+        return num_access;
     }
 }
