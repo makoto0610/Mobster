@@ -65,17 +65,5 @@
 
     </TableLayout>
 
-    <Button
-        android:text="Button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignStart="@+id/statistics_title"
-        android:layout_marginStart="34dp"
-        android:layout_marginBottom="19dp"
-        android:id="@+id/to_results_temp"
-
-        />
-
 
 </RelativeLayout>

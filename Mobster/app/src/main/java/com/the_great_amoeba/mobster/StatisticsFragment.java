@@ -93,8 +93,8 @@ public class StatisticsFragment extends Fragment {
                 startActivity(i);
             }
         };
-        Button button = (Button) view.findViewById(R.id.to_results_temp);
-        button.setOnClickListener(listener);
+//        Button button = (Button) view.findViewById(R.id.to_results_temp);
+//        button.setOnClickListener(listener);
 
         return view;
 //        return inflater.inflate(R.layout.statistics_layout,null);
