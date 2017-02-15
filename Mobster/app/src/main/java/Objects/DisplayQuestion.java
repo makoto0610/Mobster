@@ -10,11 +10,17 @@ public class DisplayQuestion {
     private String question;
     private Duration duration;
     private long rating;
+    private String questionId;
 
-    public DisplayQuestion(String question, Duration duration, long rating) {
+    public DisplayQuestion(String question, Duration duration, long rating, String questionId) {
         this.question = question;
         this.duration = duration;
         this.rating = rating;
+        this.questionId = questionId;
+    }
+
+    public String getQuestionId() {
+        return questionId;
     }
 
     public String getQuestion() {

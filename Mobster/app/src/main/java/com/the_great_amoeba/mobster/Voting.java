@@ -54,7 +54,6 @@ public class Voting extends Activity implements OnClickListener{
     private static String asked;
     private TextView questionText;
     private String[] choices; //choices/options provided in the question
-    private Choice[] choiceObjects;
     private float[] votes; //votes on each choice
     private LinearLayout ll;
     private String questionKey;
@@ -63,7 +62,8 @@ public class Voting extends Activity implements OnClickListener{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.vote_layout);
-
+        Bundle bundle = getIntent().getExtras();
+        questionKey = bundle.getString("questionPassed");
         ll = (LinearLayout)findViewById(R.id.linearLayout2);
 
         Button b = new Button(this);
@@ -72,8 +72,6 @@ public class Voting extends Activity implements OnClickListener{
         b.setId(MY_BUTTON);
         b.setOnClickListener(this);
         ll.addView(b);
-
-        questionKey = "-Kcz3zAN4ojx8Zyy90P9";
 
         mDatabase = FirebaseDatabase.getInstance().getReferenceFromUrl(DB_URL);
         DatabaseReference choicesRef = mDatabase.child("questions").child(questionKey).child("choices");

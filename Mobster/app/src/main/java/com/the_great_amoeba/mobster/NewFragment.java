@@ -16,6 +16,8 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 
 import com.google.firebase.database.DataSnapshot;
@@ -68,6 +70,7 @@ public class NewFragment extends Fragment {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
+                    String keyQuestion = postSnapshot.getKey();
                     HashMap value = (HashMap) postSnapshot.getValue();
                     String status = (String) value.get("status");
                     if (status.equals("NEW")) {
@@ -78,7 +81,9 @@ public class NewFragment extends Fragment {
                         long rating = upvotes - downvotes;
                         DisplayQuestion question = new DisplayQuestion((String) (value.get("question")),
                                 new Duration(6000000),
-                                rating);
+                                rating, keyQuestion);
+                        Toast.makeText(view.getContext(),(String)value.get("key") ,
+                                Toast.LENGTH_LONG).show();
 
                         questions.add(question);
                     }
@@ -111,9 +116,12 @@ public class NewFragment extends Fragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parentAdapter, View view, int position,
                                     long id) {
-//                Intent intent = new Intent(NewFragment.this, QuestionDetail.class);
-//                intent.putExtra("userIndex", id);
-//                startActivity(intent);
+                DisplayQuestion data = (DisplayQuestion) parentAdapter.getItemAtPosition(position);
+                Intent intent = new Intent(view.getContext(), Voting.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("questionPassed", data.getQuestionId());
+                intent.putExtras(bundle);
+                startActivity(intent);
             }
         });
     }
