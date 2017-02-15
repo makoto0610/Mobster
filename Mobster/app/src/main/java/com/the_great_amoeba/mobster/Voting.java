@@ -61,6 +61,7 @@ public class Voting extends Activity implements OnClickListener{
     private float[] votes; //votes on each choice
     private LinearLayout ll;
     private String questionKey;
+    private boolean selected;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -153,16 +154,22 @@ public class Voting extends Activity implements OnClickListener{
     public void onClick(View v) {
         Toast toast;
         Log.w("ANDROID DYNAMIC VIEWS:", "View Id: " + v.getId());
-
-        toast = Toast.makeText(this, "Answer Submitted", Toast.LENGTH_LONG);
-        toast.setGravity(Gravity.TOP, 25, 400);
-        toast.show();
+        System.out.print(selected);
+        selected = false;
         saveAnswers();
-        Intent i = new Intent(this, Results.class);
-        Bundle bundle = new Bundle();
-        bundle.putString("questionPassed", questionKey);
-        i.putExtras(bundle);
-        startActivity(i);
+        if(selected) {
+            toast = Toast.makeText(this, "Answer Submitted", Toast.LENGTH_LONG);
+            toast.setGravity(Gravity.TOP, 25, 400);
+            toast.show();
+            Intent i = new Intent(this, Results.class);
+            Bundle bundle = new Bundle();
+            bundle.putString("questionPassed", questionKey);
+            i.putExtras(bundle);
+            startActivity(i);
+        } else {
+            Toast.makeText(this, "Invalid option. Please select and option before submitting",
+                    Toast.LENGTH_LONG).show();
+        }
     }
 
     public void saveAnswers() {
@@ -175,7 +182,10 @@ public class Voting extends Activity implements OnClickListener{
             View child = parent.getChildAt(i);
             if(child instanceof RadioGroup ) {
                 RadioGroup radio = (RadioGroup)child;
-                storeAnswer(radio.getId(), radio.getCheckedRadioButtonId());
+                if(radio.getCheckedRadioButtonId() != -1){
+                    selected = true;
+                    storeAnswer(radio.getId(), radio.getCheckedRadioButtonId());
+                }
             }
 
 
