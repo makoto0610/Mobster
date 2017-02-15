@@ -38,12 +38,15 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.MutableData;
+import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 
 import com.google.firebase.database.DatabaseReference;
 
 import java.util.LinkedList;
 
+import Constants.Constant;
 import Objects.Choice;
 
 public class Voting extends Activity implements OnClickListener{
@@ -77,8 +80,24 @@ public class Voting extends Activity implements OnClickListener{
         DatabaseReference choicesRef = mDatabase.child("questions").child(questionKey).child("choices");
 
 
-//        DatabaseReference access = mDatabase.child("questions").child(questionKey).child("num_access");
-//
+        DatabaseReference access = mDatabase.child("questions").child(questionKey).child("num_access");
+        access.runTransaction(new Transaction.Handler() {
+            @Override
+            public Transaction.Result doTransaction(MutableData mutableData) {
+                Long currentValue = (Long) mutableData.getValue();
+                if (currentValue == null) {
+                    mutableData.setValue(1);
+                } else {
+                    mutableData.setValue(currentValue + 1);
+                }
+                return Transaction.success(mutableData);
+            }
+
+            @Override
+            public void onComplete(DatabaseError databaseError, boolean b, DataSnapshot dataSnapshot) {
+                Log.d(Constant.AUTH_TAG, "Transaction finished.");
+            }
+        });
 
         choicesRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
