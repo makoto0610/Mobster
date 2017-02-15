@@ -167,7 +167,7 @@ public class Voting extends Activity implements OnClickListener{
             i.putExtras(bundle);
             startActivity(i);
         } else {
-            Toast.makeText(this, "Invalid option. Please select and option before submitting",
+            Toast.makeText(this, "Invalid option. Please select an option before submitting",
                     Toast.LENGTH_LONG).show();
         }
     }
