@@ -179,7 +179,27 @@ public class Voting extends Activity implements OnClickListener{
         ob.incrementVote();
         mDatabase.child("questions").child(questionKey).child("choices").child(String.valueOf(answer)).setValue(ob);
 
+        // Updating the "answered" value for the current user
+        final String username = SaveSharedPreferences.getUserName(getApplicationContext());
+        DatabaseReference answered = mDatabase.child("users").child(username).child("answered");;
+        answered.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                int currentAnswered = dataSnapshot.getValue(Integer.class);
+                updateAnswered(currentAnswered + 1, username);
+            }
 
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
+    private void updateAnswered(int current, String username) {
+        DatabaseReference toUpdate = mDatabase.child("users").child(username).child("answered");
+        toUpdate.setValue(current);
 
     }
 
