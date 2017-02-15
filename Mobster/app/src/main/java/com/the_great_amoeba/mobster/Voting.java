@@ -57,6 +57,7 @@ public class Voting extends Activity implements OnClickListener{
     private Choice[] choiceObjects;
     private float[] votes; //votes on each choice
     private LinearLayout ll;
+    private String questionKey;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -72,8 +73,10 @@ public class Voting extends Activity implements OnClickListener{
         b.setOnClickListener(this);
         ll.addView(b);
 
+        questionKey = "-Kcz3zAN4ojx8Zyy90P9";
+
         mDatabase = FirebaseDatabase.getInstance().getReferenceFromUrl(DB_URL);
-        DatabaseReference choicesRef = mDatabase.child("questions").child("How are you?").child("choices");
+        DatabaseReference choicesRef = mDatabase.child("questions").child(questionKey).child("choices");
         choicesRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -98,7 +101,7 @@ public class Voting extends Activity implements OnClickListener{
 
         mDatabase = FirebaseDatabase.getInstance().getReferenceFromUrl(DB_URL);
 
-        DatabaseReference askedRef = mDatabase.child("questions").child("How are you?").child("question");
+        DatabaseReference askedRef = mDatabase.child("questions").child(questionKey).child("question");
         askedRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -139,8 +142,11 @@ public class Voting extends Activity implements OnClickListener{
                 toast.setGravity(Gravity.TOP, 25, 400);
                 toast.show();
                 saveAnswers();
-                Intent intent = new Intent(this, Results.class);
-                startActivity(intent);
+                Intent i = new Intent(this, Results.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("questionPassed", questionKey);
+                i.putExtras(bundle);
+                startActivity(i);
                 break;
 
         }
@@ -173,7 +179,7 @@ public class Voting extends Activity implements OnClickListener{
         Choice ob = new Choice(choices[Integer.parseInt(String.valueOf(answer))]);
         ob.setVote((int)votes[Integer.parseInt(String.valueOf(answer))]);
         ob.incrementVote();
-        mDatabase.child("questions").child("How are you?").child("choices").child(String.valueOf(answer)).setValue(ob);
+        mDatabase.child("questions").child(questionKey).child("choices").child(String.valueOf(answer)).setValue(ob);
 
 
 

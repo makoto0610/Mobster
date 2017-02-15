@@ -60,11 +60,11 @@ public class Results extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_results);
-
-        // get all data
+        Bundle bundle = getIntent().getExtras();
+        String questionPassed = bundle.getString("questionPassed");
         mDatabase = FirebaseDatabase.getInstance().getReferenceFromUrl(DB_URL);
         DatabaseReference choicesRef = mDatabase.child("questions")
-                .child("How are you?").child("choices");
+                .child(questionPassed).child("choices");
         choicesRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
