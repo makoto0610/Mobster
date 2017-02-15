@@ -262,8 +262,6 @@ public class CreateQuestion extends AppCompatActivity {
 
             // TODO: Change the questionToAdd.getQuestion() to some method of getting questionId
             // TODO: Add questionId to constructor
-//            mDatabase.child("questions").child(questionToAdd.getQuestion())
-//                    .setValue(questionToAdd);
             DatabaseReference choicesRef = mDatabase.child("questions");
             choicesRef.push().setValue(questionToAdd);
 
