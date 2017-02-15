@@ -2,6 +2,7 @@ package com.the_great_amoeba.mobster;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -69,13 +70,6 @@ public class Voting extends Activity implements OnClickListener{
         questionKey = bundle.getString("questionPassed");
         ll = (LinearLayout)findViewById(R.id.linearLayout2);
 
-        Button b = new Button(this);
-        b.setText("Submit!");
-        b.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
-        b.setId(MY_BUTTON);
-        b.setOnClickListener(this);
-        ll.addView(b);
-
         mDatabase = FirebaseDatabase.getInstance().getReferenceFromUrl(DB_URL);
         DatabaseReference choicesRef = mDatabase.child("questions").child(questionKey).child("choices");
 
@@ -128,7 +122,7 @@ public class Voting extends Activity implements OnClickListener{
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 asked = String.valueOf(dataSnapshot.getValue());
-                questionText = (TextView)findViewById(R.id.textView5);
+                questionText = (TextView)findViewById(R.id.viewQuestion);
                 questionText.setText(asked);
 
             }
@@ -149,6 +143,7 @@ public class Voting extends Activity implements OnClickListener{
             rb[i]  = new RadioButton(this);
             rb[i].setText(x[i]);
             rb[i].setId(i);
+            rb[i].setTextSize(30);
             rg.addView(rb[i]);
 
         }
@@ -158,24 +153,20 @@ public class Voting extends Activity implements OnClickListener{
     public void onClick(View v) {
         Toast toast;
         Log.w("ANDROID DYNAMIC VIEWS:", "View Id: " + v.getId());
-        switch (v.getId()) {
-            case MY_BUTTON:
-                toast = Toast.makeText(this, "Answer Submitted", Toast.LENGTH_LONG);
-                toast.setGravity(Gravity.TOP, 25, 400);
-                toast.show();
-                saveAnswers();
-                Intent i = new Intent(this, Results.class);
-                Bundle bundle = new Bundle();
-                bundle.putString("questionPassed", questionKey);
-                i.putExtras(bundle);
-                startActivity(i);
-                break;
 
-        }
+        toast = Toast.makeText(this, "Answer Submitted", Toast.LENGTH_LONG);
+        toast.setGravity(Gravity.TOP, 25, 400);
+        toast.show();
+        saveAnswers();
+        Intent i = new Intent(this, Results.class);
+        Bundle bundle = new Bundle();
+        bundle.putString("questionPassed", questionKey);
+        i.putExtras(bundle);
+        startActivity(i);
     }
 
     public void saveAnswers() {
-        LinearLayout root = (LinearLayout) findViewById(R.id.linearLayout1);
+        LinearLayout root = (LinearLayout) findViewById(R.id.linearLayout2);
         loopQuestions(root);
     }
 
