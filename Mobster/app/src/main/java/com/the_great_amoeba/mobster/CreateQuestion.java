@@ -16,8 +16,11 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -265,6 +268,23 @@ public class CreateQuestion extends AppCompatActivity {
             DatabaseReference choicesRef = mDatabase.child("questions");
             choicesRef.push().setValue(questionToAdd);
 
+            DatabaseReference asked = mDatabase.child("users").child(username).child("asked");
+            final String finalUsername = username;
+            asked.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    int currentAsked = dataSnapshot.getValue(Integer.class);
+                    updateAsked(currentAsked + 1, finalUsername);
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+
+
+            });
+
             return true;
 
         } catch (Exception e) {
@@ -272,6 +292,11 @@ public class CreateQuestion extends AppCompatActivity {
                     "Could not post your question.");
             return false;
         }
+    }
+
+    private void updateAsked(int current, String username) {
+        DatabaseReference toUpdate = mDatabase.child("users").child(username).child("asked");
+        toUpdate.setValue(current);
     }
 
     /**
