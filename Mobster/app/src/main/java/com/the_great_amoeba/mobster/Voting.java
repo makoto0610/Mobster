@@ -75,6 +75,11 @@ public class Voting extends Activity implements OnClickListener{
 
         mDatabase = FirebaseDatabase.getInstance().getReferenceFromUrl(DB_URL);
         DatabaseReference choicesRef = mDatabase.child("questions").child(questionKey).child("choices");
+
+
+//        DatabaseReference access = mDatabase.child("questions").child(questionKey).child("num_access");
+//
+
         choicesRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -172,12 +177,14 @@ public class Voting extends Activity implements OnClickListener{
     }
 
     private void storeAnswer(int question, int answer) {
-        Log.w("ANDROID DYNAMIC VIEWS:", "Question: " + String.valueOf(question) + " * "+ "Answer: " + String.valueOf(answer) );
+        Log.w("ANDROID DYNAMIC VIEWS:", "Question: " + String.valueOf(question) + " * "+ "Answer: "
+                + String.valueOf(answer) );
         //add answer in database
         Choice ob = new Choice(choices[Integer.parseInt(String.valueOf(answer))]);
         ob.setVote((int)votes[Integer.parseInt(String.valueOf(answer))]);
         ob.incrementVote();
-        mDatabase.child("questions").child(questionKey).child("choices").child(String.valueOf(answer)).setValue(ob);
+        mDatabase.child("questions").child(questionKey).child("choices")
+                .child(String.valueOf(answer)).setValue(ob);
 
         // Updating the "answered" value for the current user
         final String username = SaveSharedPreferences.getUserName(getApplicationContext());
