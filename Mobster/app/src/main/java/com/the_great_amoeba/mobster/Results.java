@@ -1,9 +1,12 @@
 package com.the_great_amoeba.mobster;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -86,6 +89,18 @@ public class Results extends AppCompatActivity{
 
             }
         });
+
+        View.OnClickListener listener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Results.this, MainActivity.class);
+                startActivity(intent);
+            }
+        };
+
+        Button button = (Button) findViewById(R.id.back_to_main);
+        button.setOnClickListener(listener);
+
     }
 
     private void createGraph() {

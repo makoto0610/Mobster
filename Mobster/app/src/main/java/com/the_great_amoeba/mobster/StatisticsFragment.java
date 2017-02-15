@@ -86,13 +86,13 @@ public class StatisticsFragment extends Fragment {
 //        answeredText = (TextView)view.findViewById(R.id.answered);
 //        answeredText.setText(answered);
 
-        View.OnClickListener listener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(getActivity(), Results.class);
-                startActivity(i);
-            }
-        };
+//        View.OnClickListener listener = new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent i = new Intent(getActivity(), Results.class);
+//                startActivity(i);
+//            }
+//        };
 //        Button button = (Button) view.findViewById(R.id.to_results_temp);
 //        button.setOnClickListener(listener);
 
