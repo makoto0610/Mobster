@@ -1,9 +1,16 @@
 package com.the_great_amoeba.mobster;
 
+import android.Manifest;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -16,21 +23,29 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.security.Security;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.LinkedList;
 
+import Constants.Constant;
 import Helper.HelperMethods;
 import Objects.Choice;
 import Objects.Question;
 
-public class CreateQuestion extends AppCompatActivity {
+public class CreateQuestion extends AppCompatActivity implements
+    GoogleApiClient.ConnectionCallbacks,
+    GoogleApiClient.OnConnectionFailedListener {
+
     Button timePicker;
     Button datePicker;
     private Button add;
@@ -56,6 +71,10 @@ public class CreateQuestion extends AppCompatActivity {
 
     public static final String DB_URL = "https://mobster-3ba43.firebaseio.com/";
     private DatabaseReference mDatabase;
+
+    private Location loc;
+    private GoogleApiClient client;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -133,6 +152,90 @@ public class CreateQuestion extends AppCompatActivity {
             }
         });
 
+        initializeGoogleApi();
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        /** If location permissions enabled, add location to the question (else loc will be null) **/
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) !=
+                PackageManager.PERMISSION_GRANTED) {
+            Helper.Log.d(Constant.DEBUG, "onStart() Location permission not granted. Requesting permission.");
+            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    Constant.LOC_PERMISSION);
+        } else {
+            client.connect();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch(requestCode) {
+            case Constant.LOC_PERMISSION: {
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Helper.Log.d(Constant.DEBUG, "Location permission granted.");
+                    client.connect();
+                } else {
+                    Helper.Log.d(Constant.DEBUG, "Location permission NOT granted.");
+                }
+                break;
+            }
+
+            default: {
+                Helper.Log.d(Constant.DEBUG, "Unknown permission request.");
+            }
+        }
+
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        client.disconnect();
+    }
+
+    /**
+     * Initialize Google Api Client needed for location services
+     */
+    public void initializeGoogleApi() {
+        if (client == null) {
+            client = new GoogleApiClient.Builder(this)
+                    .addConnectionCallbacks(this)
+                    .addOnConnectionFailedListener(this)
+                    .addApi(LocationServices.API)
+                    .build();
+        }
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+        return;
+    }
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        try {
+            loc = LocationServices.FusedLocationApi.getLastLocation(
+                    client);
+        } catch(SecurityException e) {
+            Helper.Log.d(Constant.DEBUG, "Location permission not granted.");
+        }
+
+        if (loc != null) {
+            Helper.Log.d(Constant.DEBUG, "Location marked at: \n" + loc.toString());
+        } else {
+            Helper.Log.d(Constant.DEBUG, "LocationServices returned null location.");
+        }
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+        Helper.Log.d(Constant.DEBUG, "Connection to Google API client failed.");
+        return;
     }
 
 
@@ -261,7 +364,7 @@ public class CreateQuestion extends AppCompatActivity {
             String username = SaveSharedPreferences.getUserName(getApplicationContext());
 
             Question questionToAdd = new Question(this.question.getText().toString(), choices,
-                    current, end, username);
+                    current, end, username, loc);
 
             DatabaseReference choicesRef = mDatabase.child("questions");
             choicesRef.push().setValue(questionToAdd);
@@ -360,4 +463,7 @@ public class CreateQuestion extends AppCompatActivity {
             return Integer.toString(hours) + ":" + displayMinutes(minutes) + " AM";
         }
     }
+
 }
+
+

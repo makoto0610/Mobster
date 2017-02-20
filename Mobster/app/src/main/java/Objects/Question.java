@@ -1,5 +1,7 @@
 package Objects;
 
+import android.location.Location;
+
 import org.joda.time.DateTime;
 import org.joda.time.Duration;
 
@@ -24,22 +26,27 @@ public class Question {
     private long num_upvotes;
     private long num_downvotes;
 
+    private Location loc;
+
 
     public enum Status {
         CLOSED, NEW, TRENDING
     }
 
-    public Question(HashMap<String, String> map) {
-
+    public Question() {
     }
 
-    public Question(String question, LinkedList<Choice> choices, Calendar start, Calendar end, String username) {
+
+    public Question(String question, LinkedList<Choice> choices, Calendar start, Calendar end, String username,
+                    Location loc) {
         this.question = question;
         this.choices = choices;
         this.start = start;
         this.end = end;
         this.username = username;
         this.status = Status.NEW;
+        this.loc = loc;
+
     }
 
     public String getQuestion() {
@@ -101,5 +108,9 @@ public class Question {
 
     public long getNum_downvotes() {
         return num_downvotes;
+    }
+
+    public Location getLoc() {
+        return loc;
     }
 }

@@ -1,4 +1,4 @@
-package Objects;
+package Objects.Adapters;
 
 import android.app.Activity;
 import android.content.Context;
@@ -7,12 +7,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.the_great_amoeba.mobster.R;
 
 import java.util.List;
+
+import Objects.DisplayQuestion;
 
 /**
  * Created by anireddy on 2/14/17.
@@ -49,7 +50,7 @@ public class CustomListViewAdapter extends ArrayAdapter<DisplayQuestion> {
             holder = new ViewHolder();
             holder.imageUpVote = (ImageView) convertView.findViewById(R.id.imageView_upVote);
             holder.imageDownVote = (ImageView) convertView.findViewById(R.id.imageView_downVote);
-            holder.textQuestion = (TextView) convertView.findViewById(R.id.textView_Question);
+            holder.textQuestion = (TextView) convertView.findViewById(R.id.tv_Map_Question);
             holder.textDuration = (TextView) convertView.findViewById(R.id.textView_Duration);
             holder.textRating = (TextView) convertView.findViewById(R.id.textView_Rating);
             convertView.setTag(holder);
