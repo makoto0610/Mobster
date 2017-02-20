@@ -2,6 +2,9 @@ package Objects.Adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -28,8 +31,8 @@ public class CustomInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
 
     /*private view holder class*/
     private class ViewHolder {
-        RelativeLayout rl;
         TextView textQuestion;
+        TextView snippet;
     }
 
     public void setDq(DisplayQuestion dq) {
@@ -46,15 +49,15 @@ public class CustomInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
 
     @Override
     public View getInfoWindow(Marker marker) {
-        Helper.Log.d(Constant.DEBUG, "in getInfoWindow()");
-        populateLayout();
-        return layout;
+//        Helper.Log.d(Constant.DEBUG, "in getInfoWindow()");
+//        populateLayout();
+//        return layout;
+        return null;
     }
 
     public void populateLayout() {
         vh = new ViewHolder();
-        vh.rl = (RelativeLayout) layout.findViewById(R.id.rl_map);
-        vh.textQuestion = (TextView) vh.rl.findViewById(R.id.tv_Map_Question);
+//        vh.textQuestion = (TextView) ...
 
 
         if (this.dq == null) {
@@ -72,6 +75,21 @@ public class CustomInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
     @Override
     public View getInfoContents(Marker marker) {
         Helper.Log.d(Constant.DEBUG, "in getInfoContents()");
-        return null;
+        vh = new ViewHolder();
+
+        String title = marker.getTitle();
+        String snippet = marker.getSnippet();
+
+        vh.textQuestion = (TextView) layout.findViewById(R.id.tv_Map_Question);
+        SpannableString spannableTitle = new SpannableString(marker.getTitle());
+        spannableTitle.setSpan(new ForegroundColorSpan(Color.rgb(13, 93, 90)), 0, spannableTitle.length(), 0);
+        vh.textQuestion.setText(spannableTitle);
+
+        vh.snippet = (TextView) layout.findViewById(R.id.tv_Map_Duration);
+        vh.snippet.setText(marker.getSnippet());
+        vh.snippet.setTextColor(Color.BLACK);
+        layout.setTag(vh);
+
+        return layout;
     }
 }

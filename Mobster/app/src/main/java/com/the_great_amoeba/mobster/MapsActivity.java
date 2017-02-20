@@ -128,7 +128,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             String question = e.getKey();
             LocationWrapper locWrap = e.getValue();
             LatLng ll = new LatLng(locWrap.getLatitude(), locWrap.getLongitude());
-            mMap.addMarker(new MarkerOptions().position(ll).title(question));
+            mMap.addMarker(new MarkerOptions().position(ll).title(question).snippet("Duration: 1h"));
         }
 
 
@@ -142,8 +142,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      */
     @Override
     public boolean onMarkerClick(Marker marker) {
-        getQuestionInfoFromFB(marker);
-        return true;
+//        getQuestionInfoFromFB(marker);
+//        return true;
+        return false;
     }
 
     public void getQuestionInfoFromFB(final Marker marker) {
