@@ -31,7 +31,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 
 import Constants.Constant;
-import Objects.CustomListViewAdapter;
+import Objects.Adapters.CustomListViewAdapter;
 import Objects.DisplayQuestion;
 
 
@@ -70,8 +70,8 @@ public class TrendingFragment extends Fragment {
                     HashMap value = (HashMap) postSnapshot.getValue();
                     String status = (String) value.get("status");
                     //TODO: sort by accesses
-                    Log.d(Constant.DEBUG, "keys:" + value.keySet().toString());
-                    Log.d(Constant.DEBUG, "values: " + value.values().toString());
+                    Helper.Log.i(Constant.DEBUG, "keys:" + value.keySet().toString());
+                    Helper.Log.i(Constant.DEBUG, "values: " + value.values().toString());
                     long upvotes =  (long) value.get("num_upvotes");
                     long downvotes = (long) value.get("num_downvotes");
                     long rating = upvotes - downvotes;

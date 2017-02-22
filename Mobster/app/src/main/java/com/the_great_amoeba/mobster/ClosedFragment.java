@@ -29,7 +29,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 
 import Constants.Constant;
-import Objects.CustomListViewAdapter;
+import Objects.Adapters.CustomListViewAdapter;
 import Objects.DisplayQuestion;
 
 
@@ -46,7 +46,7 @@ public class ClosedFragment extends Fragment {
         mDatabase = FirebaseDatabase.getInstance()
                 .getReferenceFromUrl(Constant.DB_URL);
         this.view = inflater.inflate(R.layout.new_layout, null);
-        Log.d(Constant.DEBUG, "in OncreateView");
+        Log.d(Constant.DEBUG, "in OncreateView of ClosedFragment");
         getNewQuestionsFromFirebase();
         return view;
     }
@@ -68,8 +68,8 @@ public class ClosedFragment extends Fragment {
                     HashMap value = (HashMap) postSnapshot.getValue();
                     String status = (String) value.get("status");
                     if (status.equals("CLOSED")) {
-                        Log.d(Constant.DEBUG, "keys:" + value.keySet().toString());
-                        Log.d(Constant.DEBUG, "values: " + value.values().toString());
+                        Helper.Log.i(Constant.DEBUG, "keys:" + value.keySet().toString());
+                        Helper.Log.i(Constant.DEBUG, "values: " + value.values().toString());
                         long upvotes =  (long) value.get("num_upvotes");
                         long downvotes = (long) value.get("num_downvotes");
                         long rating = upvotes - downvotes;

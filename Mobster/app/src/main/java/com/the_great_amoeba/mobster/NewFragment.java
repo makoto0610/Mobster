@@ -6,18 +6,13 @@ package com.the_great_amoeba.mobster;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 
 import com.google.firebase.database.DataSnapshot;
@@ -34,9 +29,9 @@ import java.util.HashMap;
 import java.util.LinkedList;
 
 import Constants.Constant;
-import Objects.CustomListViewAdapter;
+import Objects.Adapters.CustomListViewAdapter;
 import Objects.DisplayQuestion;
-import Objects.Question;
+
 
 
 public class NewFragment extends Fragment {
@@ -52,7 +47,7 @@ public class NewFragment extends Fragment {
         mDatabase = FirebaseDatabase.getInstance()
                 .getReferenceFromUrl(Constant.DB_URL);
         this.view = inflater.inflate(R.layout.new_layout, null);
-        Log.d(Constant.DEBUG, "in OncreateView");
+        Helper.Log.d(Constant.DEBUG, "in OncreateView of NewFragment");
         getNewQuestionsFromFirebase();
         return view;
     }
@@ -74,12 +69,14 @@ public class NewFragment extends Fragment {
                     HashMap value = (HashMap) postSnapshot.getValue();
                     String status = (String) value.get("status");
                     if (status.equals("NEW")) {
-                        Log.d(Constant.DEBUG, "keys:" + value.keySet().toString());
-                        Log.d(Constant.DEBUG, "values: " + value.values().toString());
+//                        Helper.Log.i(Constant.DEBUG, "keys:" + value.keySet().toString());
+//                        Helper.Log.i(Constant.DEBUG, "values: " + value.values().toString());
+                        Object start = value.get("start");
                         long upvotes =  (long) value.get("num_upvotes");
                         long downvotes = (long) value.get("num_downvotes");
                         long rating = upvotes - downvotes;
                         long access = (long) value.get("num_access");
+                        //TODO: calculate rating instead of hard coded value
                         DisplayQuestion question = new DisplayQuestion((String) (value.get("question")),
                                 new Duration(6000000),
                                 rating, keyQuestion, access);
@@ -96,6 +93,11 @@ public class NewFragment extends Fragment {
                 //TODO: questions not loading error message
             }
         });
+
+    }
+
+    //TODO: !!
+    public void setDurationForQuestion(){
 
     }
 
