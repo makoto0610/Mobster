@@ -51,4 +51,14 @@
         android:layout_marginBottom="65dp"
         android:id="@+id/register_button"
         android:onClick="onCreateAccountClick" />
+
+    <Button
+        android:text="Button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignStart="@+id/register_button"
+        android:layout_marginTop="69dp"
+        android:id="@+id/button3"
+        android:onClick="onButtonClick" />
 </RelativeLayout>

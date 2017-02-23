@@ -160,6 +160,11 @@ public class Login extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void onButtonClick(View view) {
+        Intent intent = new Intent(this, BanUser.class);
+        startActivity(intent);
+    }
+
     @Override
     public void onStart() {
         super.onStart();
