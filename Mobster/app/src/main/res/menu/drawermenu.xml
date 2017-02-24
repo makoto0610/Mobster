@@ -9,6 +9,10 @@
         android:id="@+id/nav_item_my_questions"
         android:icon="@drawable/ic_person"/>
 
+    <item android:title="Search"
+        android:id="@+id/nav_search_questions"
+        android:icon="@drawable/places_ic_search"/>
+
     <item android:title="Statistics"
         android:id="@+id/nav_item_statistics"
         android:icon="@drawable/ic_equalizer"/>

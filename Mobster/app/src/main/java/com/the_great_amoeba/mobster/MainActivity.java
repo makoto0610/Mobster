@@ -1,6 +1,9 @@
 package com.the_great_amoeba.mobster;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -9,11 +12,14 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.InputType;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 
+import com.github.mikephil.charting.data.PieEntry;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -24,6 +30,10 @@ public class MainActivity extends AppCompatActivity {
     NavigationView mNavigationView;
     FragmentManager mFragmentManager;
     FragmentTransaction mFragmentTransaction;
+
+    String searchedText;
+    int searchedArea;
+    boolean searching;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +60,51 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(MenuItem menuItem) {
                 mDrawerLayout.closeDrawers();
+
+                if (menuItem.getItemId() == R.id.nav_search_questions) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                    builder.setTitle("Search");
+
+                    // text inpus
+                    final EditText input = new EditText(MainActivity.this);
+                    if (searching) {
+                        input.setText(searchedText);
+                    }
+                    input.setInputType(InputType.TYPE_CLASS_TEXT);
+                    builder.setView(input);
+
+                    // radio buttons
+                    final String[] choices = {"My Questions", "All Questions"};
+                    builder.setSingleChoiceItems(choices, searchedArea, new DialogInterface.OnClickListener() {
+
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            searchedArea = which;
+                        }
+                    });
+
+                    // search and cancel buttons
+                    builder.setPositiveButton("Search", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            searchedText = input.getText().toString();
+                            if (searchedText.equals("")) {
+                                searching = false;
+                            } else {
+                                searching = true;
+                            }
+                            System.out.println("SEARCHING: " + searching);
+                        }
+                    });
+                    builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    });
+                    builder.setIcon(R.drawable.places_ic_search);
+                    builder.show();
+                }
 
                 if (menuItem.getItemId() == R.id.nav_item_home) {
                     FragmentTransaction xfragmentTransaction = mFragmentManager.beginTransaction();
@@ -110,6 +165,7 @@ public class MainActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
