@@ -72,7 +72,17 @@ public class NewFragment extends Fragment {
                     HashMap value = (HashMap) postSnapshot.getValue();
                     String status = (String) value.get("status");
                     String username = (String) value.get("username");
-                    if (status.equals("NEW")) {
+                    String questionTitle = (String) value.get("question");
+                    boolean searchStatus = false;
+                    if (((MainActivity)getActivity()).isSearching() &&
+                            (((MainActivity)getActivity()).getSearchedArea() == 1)) {
+                        searchStatus = true;
+                    }
+                    String searchText = "";
+                    if (searchStatus) {
+                        searchText = ((MainActivity)getActivity()).getSearchedText();
+                    }
+                    if (status.equals("NEW") && questionTitle.contains(searchText)) {
 //                        Helper.Log.i(Constant.DEBUG, "keys:" + value.keySet().toString());
 //                        Helper.Log.i(Constant.DEBUG, "values: " + value.values().toString());
                         if (isHomeFragment()) {
@@ -89,6 +99,8 @@ public class NewFragment extends Fragment {
                 array = new DisplayQuestion[questions.size()];
                 array = questions.toArray(array);
                 init_Questions_Display();
+
+                
             }
 
             @Override

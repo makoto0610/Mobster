@@ -31,9 +31,9 @@ public class MainActivity extends AppCompatActivity {
     FragmentManager mFragmentManager;
     FragmentTransaction mFragmentTransaction;
 
-    String searchedText;
-    int searchedArea;
-    boolean searching;
+    private String searchedText;
+    private int searchedArea;
+    private boolean searching;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +69,10 @@ public class MainActivity extends AppCompatActivity {
                     final EditText input = new EditText(MainActivity.this);
                     if (searching) {
                         input.setText(searchedText);
+                    } else {
+                        input.setHint("Enter text here");
                     }
+
                     input.setInputType(InputType.TYPE_CLASS_TEXT);
                     builder.setView(input);
 
@@ -93,7 +96,13 @@ public class MainActivity extends AppCompatActivity {
                             } else {
                                 searching = true;
                             }
-                            System.out.println("SEARCHING: " + searching);
+                            FragmentTransaction xfragmentTransaction = mFragmentManager.beginTransaction();
+                            if (searchedArea == 0) {
+                                xfragmentTransaction.replace(R.id.containerView, new MyQuestionsTabFragment()).commit();
+
+                            } else {
+                                xfragmentTransaction.replace(R.id.containerView, new HomeTabFragment()).commit();
+                            }
                         }
                     });
                     builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -181,4 +190,19 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+
+    // methods for searching
+    public boolean isSearching() {
+        return searching;
+    }
+
+    public String getSearchedText() {
+        return searchedText;
+    }
+
+    // 1 = all questions
+    // 0 = my questions
+    public int getSearchedArea() {
+        return searchedArea;
+    }
 }
