@@ -32,6 +32,9 @@
         <activity android:name=".Results" />
         <activity android:name=".BanUser" />
         <activity android:name=".Ban" />
+        <activity android:name=".AdminHome" />
+        <activity android:name=".deleteFlaggedQuestions" />
+        <activity android:name=".AdminDeleteFlagged" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").

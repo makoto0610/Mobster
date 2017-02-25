@@ -21,6 +21,7 @@ public class Question {
     private Duration duration;
     private String username;
     private int questionId;
+    private int isFlagged;
     private Status status;
     private int num_access;
     private long num_upvotes;
@@ -46,6 +47,7 @@ public class Question {
         this.username = username;
         this.status = Status.NEW;
         this.loc = loc;
+        isFlagged = 0;
 
     }
 
@@ -95,6 +97,14 @@ public class Question {
 
     public void setNum_upvotes(long num_upvotes) {
         this.num_upvotes = num_upvotes;
+    }
+
+    public void setIsFlagged(int isFlagged) {
+        this.isFlagged = isFlagged;
+    }
+
+    public int getIsFlagged() {
+        return this.isFlagged;
     }
 
     public void setNum_downvotes(long num_downvotes) {

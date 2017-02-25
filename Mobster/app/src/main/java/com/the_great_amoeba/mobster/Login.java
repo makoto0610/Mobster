@@ -91,29 +91,35 @@ public class Login extends AppCompatActivity {
         final String username = this.username.getText().toString().trim();
         final String password = this.password.getText().toString().trim();
 
+        if(username.equals("admin") && password.equals("password")) {
+            Intent intent = new Intent(Login.this, AdminHome.class);
+            startActivity(intent);
+        } else {
 
-        //Find the email associated with the username (required for Firebase Auth)
-        Query contain = mDatabase.child("users").orderByKey().equalTo(username);
-        contain.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    HashMap value = (HashMap) dataSnapshot.getValue();
-                    HashMap attributes = (HashMap) value.get(username);
-                    String stored_email = (String) attributes.get("email");
-                    firebaseAuth(stored_email, username, password);
-                } else {
-                    //User does not exist
-                    HelperMethods.errorDialog(context, "Could not log in",
-                            "User does not exist.");
+
+            //Find the email associated with the username (required for Firebase Auth)
+            Query contain = mDatabase.child("users").orderByKey().equalTo(username);
+            contain.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.exists()) {
+                        HashMap value = (HashMap) dataSnapshot.getValue();
+                        HashMap attributes = (HashMap) value.get(username);
+                        String stored_email = (String) attributes.get("email");
+                        firebaseAuth(stored_email, username, password);
+                    } else {
+                        //User does not exist
+                        HelperMethods.errorDialog(context, "Could not log in",
+                                "User does not exist.");
+                    }
                 }
-            }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
 
-            }
-        });
+                }
+            });
+        }
     }
 
     /**
@@ -157,11 +163,6 @@ public class Login extends AppCompatActivity {
      */
     public void onCreateAccountClick(View view) {
         Intent intent = new Intent(this, Registration.class);
-        startActivity(intent);
-    }
-
-    public void onButtonClick(View view) {
-        Intent intent = new Intent(this, BanUser.class);
         startActivity(intent);
     }
 

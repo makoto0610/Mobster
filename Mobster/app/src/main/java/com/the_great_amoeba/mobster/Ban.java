@@ -1,28 +1,28 @@
 package com.the_great_amoeba.mobster;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.view.View;
-import android.widget.TextView;
-import android.widget.Toast;
+        import android.content.Intent;
+        import android.os.Bundle;
+        import android.support.v7.app.AppCompatActivity;
+        import android.view.View;
+        import android.widget.TextView;
+        import android.widget.Toast;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
+        import com.google.firebase.database.DataSnapshot;
+        import com.google.firebase.database.DatabaseError;
+        import com.google.firebase.database.DatabaseReference;
+        import com.google.firebase.database.FirebaseDatabase;
+        import com.google.firebase.database.Query;
+        import com.google.firebase.database.ValueEventListener;
 
-import org.joda.time.Duration;
+        import org.joda.time.Duration;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.LinkedList;
+        import java.util.Collections;
+        import java.util.Comparator;
+        import java.util.HashMap;
+        import java.util.LinkedList;
 
-import Constants.Constant;
-import Objects.DisplayQuestion;
+        import Constants.Constant;
+        import Objects.DisplayQuestion;
 
 /**
  * Created by singh on 2/22/2017.
@@ -63,7 +63,7 @@ public class Ban extends AppCompatActivity {
                     HashMap value = (HashMap) postSnapshot.getValue();
                     String username = (String) value.get("username");
                     if (userToBanPassed == username) {
-                       questionsToDelete[index] = keyQuestion;
+                        questionsToDelete[index] = keyQuestion;
                     }
                 }
                 userBanned();
