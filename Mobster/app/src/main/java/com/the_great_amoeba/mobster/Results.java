@@ -1,8 +1,10 @@
 package com.the_great_amoeba.mobster;
 
+import android.app.FragmentManager;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -65,6 +67,7 @@ public class Results extends AppCompatActivity{
         setContentView(R.layout.activity_results);
         Bundle bundle = getIntent().getExtras();
         String questionPassed = bundle.getString("questionPassed");
+        final char home = bundle.getChar("homeTabPassed");
         mDatabase = FirebaseDatabase.getInstance().getReferenceFromUrl(DB_URL);
         DatabaseReference choicesRef = mDatabase.child("questions")
                 .child(questionPassed).child("choices");
@@ -97,9 +100,13 @@ public class Results extends AppCompatActivity{
                 startActivity(intent);
             }
         };
-
-        Button button = (Button) findViewById(R.id.back_to_main);
-        button.setOnClickListener(listener);
+        if (home == 'm') {
+            View b = findViewById(R.id.back_to_main);
+            b.setVisibility(View.GONE);
+        } else {
+            Button button = (Button) findViewById(R.id.back_to_main);
+            button.setOnClickListener(listener);
+        }
 
     }
 
@@ -160,7 +167,7 @@ public class Results extends AppCompatActivity{
         legend.setWordWrapEnabled(true);
 
         // dataset configs
-        ArrayList<Integer> colors = new ArrayList<Integer>();
+        ArrayList<Integer> colors = new ArrayList<>();
         for (int c : ColorTemplate.COLORFUL_COLORS)
             colors.add(c);
 
@@ -207,7 +214,7 @@ public class Results extends AppCompatActivity{
         list = (ListView) findViewById(R.id.results_list);
         String[] displayed_arr =  new String[displayed.size()];
         displayed_arr = displayed.toArray(displayed_arr);
-        list.setAdapter(new ArrayAdapter<String>(this,
+        list.setAdapter(new ArrayAdapter<>(this,
                 android.R.layout.simple_list_item_1, displayed_arr));
 
 

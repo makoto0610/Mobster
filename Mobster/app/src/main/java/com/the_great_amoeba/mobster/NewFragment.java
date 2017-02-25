@@ -31,6 +31,7 @@ import java.util.LinkedList;
 import Constants.Constant;
 import Objects.Adapters.CustomListViewAdapter;
 import Objects.DisplayQuestion;
+import Helper.HelperMethods;
 
 public class NewFragment extends Fragment {
 
@@ -75,11 +76,11 @@ public class NewFragment extends Fragment {
 //                        Helper.Log.i(Constant.DEBUG, "keys:" + value.keySet().toString());
 //                        Helper.Log.i(Constant.DEBUG, "values: " + value.values().toString());
                         if (isHomeFragment()) {
-                            DisplayQuestion question = getQuestion(postSnapshot, value, keyQuestion);
+                            DisplayQuestion question = HelperMethods.getQuestion(postSnapshot, value, keyQuestion);
                             questions.add(question);
                         } else { // else it is to be displayed in the My Questions Fragment
                             if (username.equals(user)) {
-                                DisplayQuestion question = getQuestion(postSnapshot, value, keyQuestion);
+                                DisplayQuestion question = HelperMethods.getQuestion(postSnapshot, value, keyQuestion);
                                 questions.add(question);
                             }
                         }
@@ -119,11 +120,21 @@ public class NewFragment extends Fragment {
             public void onItemClick(AdapterView<?> parentAdapter, View view, int position,
                                     long id) {
                 DisplayQuestion data = (DisplayQuestion) parentAdapter.getItemAtPosition(position);
-                Intent intent = new Intent(view.getContext(), Voting.class);
                 Bundle bundle = new Bundle();
                 bundle.putString("questionPassed", data.getQuestionId());
-                intent.putExtras(bundle);
-                startActivity(intent);
+                if (isHomeFragment()) {
+                    bundle.putChar("homeTabPassed", 'h');
+                    Intent intent = new Intent(view.getContext(), Voting.class);
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                } else {
+                    bundle.putChar("homeTabPassed", 'm');
+                    Intent intent = new Intent(view.getContext(), Results.class);
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                }
+
+
             }
         });
     }
@@ -138,25 +149,6 @@ public class NewFragment extends Fragment {
         return getParentFragment().getClass().equals(new HomeTabFragment().getClass());
     }
 
-
-    /**
-     * Returns a Question Object to be added to a list
-     *
-     * @param postSnapshot to get the Question from
-     * @return the Question object to add
-     */
-    private DisplayQuestion getQuestion(DataSnapshot postSnapshot, HashMap value, String keyQuestion) {
-        Object start = value.get("start");
-        long upvotes = (long) value.get("num_upvotes");
-        long downvotes = (long) value.get("num_downvotes");
-        long rating = upvotes - downvotes;
-        long access = (long) value.get("num_access");
-        //TODO: calculate rating instead of hard coded value
-        DisplayQuestion question = new DisplayQuestion((String) (value.get("question")),
-                new Duration(6000000),
-                rating, keyQuestion, access);
-        return question;
-    }
 
 
 
