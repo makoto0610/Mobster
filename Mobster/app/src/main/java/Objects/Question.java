@@ -1,10 +1,12 @@
 package Objects;
 
 import android.location.Location;
+import android.widget.LinearLayout;
 
 import org.joda.time.DateTime;
 import org.joda.time.Duration;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -16,6 +18,7 @@ import java.util.LinkedList;
 public class Question {
     private String question;
     private LinkedList<Choice> choices;
+    private LinkedList<String> keywords;
     private Calendar start;
     private Calendar end;
     private Duration duration;
@@ -37,10 +40,11 @@ public class Question {
     }
 
 
-    public Question(String question, LinkedList<Choice> choices, Calendar start, Calendar end, String username,
-                    Location loc) {
+    public Question(String question, LinkedList<Choice> choices, LinkedList<String> keywords,
+                    Calendar start, Calendar end, String username, Location loc) {
         this.question = question;
         this.choices = choices;
+        this.keywords = keywords;
         this.start = start;
         this.end = end;
         this.username = username;
@@ -55,6 +59,10 @@ public class Question {
 
     public LinkedList<Choice> getChoices() {
         return choices;
+    }
+
+    public LinkedList<String> getKeywords() {
+        return keywords;
     }
 
     public Calendar getStart() {
