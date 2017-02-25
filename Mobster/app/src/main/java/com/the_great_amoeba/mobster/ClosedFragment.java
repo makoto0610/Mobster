@@ -72,7 +72,18 @@ public class ClosedFragment extends Fragment {
                     HashMap value = (HashMap) postSnapshot.getValue();
                     String username = (String) value.get("username");
                     String status = (String) value.get("status");
-                    if (status.equals("CLOSED")) {
+
+                    String questionTitle = (String) value.get("question");
+                    boolean searchStatus = false;
+                    if (((MainActivity)getActivity()).isSearching() &&
+                            (((MainActivity)getActivity()).getSearchedArea() == 1)) {
+                        searchStatus = true;
+                    }
+                    String searchText = "";
+                    if (searchStatus) {
+                        searchText = ((MainActivity)getActivity()).getSearchedText();
+                    }
+                    if (status.equals("CLOSED") && questionTitle.contains(searchText)) {
                         Helper.Log.i(Constant.DEBUG, "keys:" + value.keySet().toString());
                         Helper.Log.i(Constant.DEBUG, "values: " + value.values().toString());
                         if (isHomeFragment()) {

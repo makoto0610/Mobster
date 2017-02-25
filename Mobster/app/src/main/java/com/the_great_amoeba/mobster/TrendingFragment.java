@@ -69,17 +69,31 @@ public class TrendingFragment extends Fragment {
                     String keyQuestion = postSnapshot.getKey();
                     HashMap value = (HashMap) postSnapshot.getValue();
                     String status = (String) value.get("status");
-                    //TODO: sort by accesses
-                    Helper.Log.i(Constant.DEBUG, "keys:" + value.keySet().toString());
-                    Helper.Log.i(Constant.DEBUG, "values: " + value.values().toString());
-                    long upvotes =  (long) value.get("num_upvotes");
-                    long downvotes = (long) value.get("num_downvotes");
-                    long rating = upvotes - downvotes;
-                    long access = (long) value.get("num_access");
-                    DisplayQuestion question = new DisplayQuestion((String) (value.get("question")),
-                            new Duration(6000000),
-                            rating, keyQuestion, access);
-                    questions.add(question);
+
+                    String questionTitle = (String) value.get("question");
+                    boolean searchStatus = false;
+                    if (((MainActivity)getActivity()).isSearching() &&
+                            (((MainActivity)getActivity()).getSearchedArea() == 1)) {
+                        searchStatus = true;
+                    }
+                    String searchText = "";
+                    if (searchStatus) {
+                        searchText = ((MainActivity)getActivity()).getSearchedText();
+                    }
+                    if (questionTitle.contains(searchText)) {
+                        //TODO: sort by accesses
+                        Helper.Log.i(Constant.DEBUG, "keys:" + value.keySet().toString());
+                        Helper.Log.i(Constant.DEBUG, "values: " + value.values().toString());
+                        long upvotes =  (long) value.get("num_upvotes");
+                        long downvotes = (long) value.get("num_downvotes");
+                        long rating = upvotes - downvotes;
+                        long access = (long) value.get("num_access");
+                        DisplayQuestion question = new DisplayQuestion((String) (value.get("question")),
+                                new Duration(6000000),
+                                rating, keyQuestion, access);
+                        questions.add(question);
+
+                    }
                 }
                 Collections.sort(questions, new Comparator<DisplayQuestion>() {
                     @Override
