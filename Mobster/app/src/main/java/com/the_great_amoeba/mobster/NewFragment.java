@@ -32,13 +32,14 @@ import Constants.Constant;
 import Objects.Adapters.CustomListViewAdapter;
 import Objects.DisplayQuestion;
 
-
-
 public class NewFragment extends Fragment {
 
     private DatabaseReference mDatabase;
     private View view;
     private DisplayQuestion[] array;
+
+    private String user;
+
 
     @Nullable
     @Override
@@ -49,6 +50,7 @@ public class NewFragment extends Fragment {
         this.view = inflater.inflate(R.layout.new_layout, null);
         Helper.Log.d(Constant.DEBUG, "in OncreateView of NewFragment");
         getNewQuestionsFromFirebase();
+        this.user = SaveSharedPreferences.getUserName(getActivity().getApplicationContext());
         return view;
     }
 
@@ -68,19 +70,19 @@ public class NewFragment extends Fragment {
                     String keyQuestion = postSnapshot.getKey();
                     HashMap value = (HashMap) postSnapshot.getValue();
                     String status = (String) value.get("status");
+                    String username = (String) value.get("username");
                     if (status.equals("NEW")) {
 //                        Helper.Log.i(Constant.DEBUG, "keys:" + value.keySet().toString());
 //                        Helper.Log.i(Constant.DEBUG, "values: " + value.values().toString());
-                        Object start = value.get("start");
-                        long upvotes =  (long) value.get("num_upvotes");
-                        long downvotes = (long) value.get("num_downvotes");
-                        long rating = upvotes - downvotes;
-                        long access = (long) value.get("num_access");
-                        //TODO: calculate rating instead of hard coded value
-                        DisplayQuestion question = new DisplayQuestion((String) (value.get("question")),
-                                new Duration(6000000),
-                                rating, keyQuestion, access);
-                        questions.add(question);
+                        if (isHomeFragment()) {
+                            DisplayQuestion question = getQuestion(postSnapshot, value, keyQuestion);
+                            questions.add(question);
+                        } else { // else it is to be displayed in the My Questions Fragment
+                            if (username.equals(user)) {
+                                DisplayQuestion question = getQuestion(postSnapshot, value, keyQuestion);
+                                questions.add(question);
+                            }
+                        }
                     }
                 }
                 array = new DisplayQuestion[questions.size()];
@@ -126,6 +128,35 @@ public class NewFragment extends Fragment {
         });
     }
 
+    /**
+     * Returns whether or not the parent fragment is the Home Tab Fragment (or the My Questions Tab)
+     *
+     * @return true if the current fragment's parent is the HomeTabFragment. False if the parent
+     *          is the MyQuestionsFragment
+     */
+    private boolean isHomeFragment() {
+        return getParentFragment().getClass().equals(new HomeTabFragment().getClass());
+    }
+
+
+    /**
+     * Returns a Question Object to be added to a list
+     *
+     * @param postSnapshot to get the Question from
+     * @return the Question object to add
+     */
+    private DisplayQuestion getQuestion(DataSnapshot postSnapshot, HashMap value, String keyQuestion) {
+        Object start = value.get("start");
+        long upvotes = (long) value.get("num_upvotes");
+        long downvotes = (long) value.get("num_downvotes");
+        long rating = upvotes - downvotes;
+        long access = (long) value.get("num_access");
+        //TODO: calculate rating instead of hard coded value
+        DisplayQuestion question = new DisplayQuestion((String) (value.get("question")),
+                new Duration(6000000),
+                rating, keyQuestion, access);
+        return question;
+    }
 
 
 
