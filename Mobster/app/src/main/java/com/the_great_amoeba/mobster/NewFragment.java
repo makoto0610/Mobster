@@ -67,22 +67,57 @@ public class NewFragment extends Fragment {
         contain.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                // search questions
+                boolean searchStatus = false;
+                String searchText = "";
+                if (((MainActivity)getActivity()).isSearching() &&
+                        (((MainActivity)getActivity()).getSearchedArea() == 1)) {
+                    searchStatus = true;
+                    searchText = ((MainActivity)getActivity()).getSearchedText();
+                }
+
+                // search keywords
+                boolean keywordStatus = false;
+                if (((MainActivity)getActivity()).isSearchingKeyword() &&
+                        (((MainActivity)getActivity()).getSearchedArea() == 1)) {
+                    keywordStatus = true;
+                }
+                System.out.println("ORIGINAL");
+                System.out.println(searchStatus);
+                System.out.println(keywordStatus);
+                System.out.println("---------------");
+
                 for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
                     String keyQuestion = postSnapshot.getKey();
                     HashMap value = (HashMap) postSnapshot.getValue();
                     String status = (String) value.get("status");
                     String username = (String) value.get("username");
                     String questionTitle = (String) value.get("question");
-                    boolean searchStatus = false;
-                    if (((MainActivity)getActivity()).isSearching() &&
-                            (((MainActivity)getActivity()).getSearchedArea() == 1)) {
-                        searchStatus = true;
+
+                    boolean containsAll = false;
+                    if (keywordStatus) {
+                        String[] searchedKeywords = ((MainActivity)getActivity()).getKeywords();
+                        String[] questionKeywords = new String[(int)postSnapshot.child("keywords").getChildrenCount()];
+                        int arrayCount = 0;
+                        for (DataSnapshot k : postSnapshot.child("keywords").getChildren()) {
+                            questionKeywords[arrayCount] = (String)k.getValue();
+                            arrayCount++;
+                        }
+                        containsAll = Arrays.asList(questionKeywords)
+                                .containsAll(Arrays.asList(searchedKeywords));
                     }
-                    String searchText = "";
-                    if (searchStatus) {
-                        searchText = ((MainActivity)getActivity()).getSearchedText();
+                    boolean noSearch = true;
+                    if (searchStatus || keywordStatus) {
+                        noSearch = false;
                     }
-                    if (status.equals("NEW") && questionTitle.contains(searchText)) {
+                    System.out.println(questionTitle);
+                    System.out.println(noSearch);
+                    System.out.println(searchStatus);
+                    System.out.println(keywordStatus);
+                    System.out.println("---------------");
+                    if (status.equals("NEW")
+                            && ((searchStatus && questionTitle.contains(searchText))
+                            || (containsAll)) || noSearch) {
 //                        Helper.Log.i(Constant.DEBUG, "keys:" + value.keySet().toString());
 //                        Helper.Log.i(Constant.DEBUG, "values: " + value.values().toString());
                         if (isHomeFragment()) {

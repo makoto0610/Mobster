@@ -34,6 +34,8 @@ public class MainActivity extends AppCompatActivity {
     private String searchedText;
     private int searchedArea;
     private boolean searching;
+    private boolean searchingKeyword;
+    private String[] keywords;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,9 +67,9 @@ public class MainActivity extends AppCompatActivity {
                     AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                     builder.setTitle("Search");
 
-                    // text inpus
+                    // text inputs
                     final EditText input = new EditText(MainActivity.this);
-                    if (searching) {
+                    if (searching || searchingKeyword) {
                         input.setText(searchedText);
                     } else {
                         input.setHint("Enter text here");
@@ -86,8 +88,9 @@ public class MainActivity extends AppCompatActivity {
                         }
                     });
 
+
                     // search and cancel buttons
-                    builder.setPositiveButton("Search", new DialogInterface.OnClickListener() {
+                    builder.setPositiveButton("Search Question Name", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             searchedText = input.getText().toString();
@@ -96,6 +99,7 @@ public class MainActivity extends AppCompatActivity {
                             } else {
                                 searching = true;
                             }
+                            searchingKeyword = false;
                             FragmentTransaction xfragmentTransaction = mFragmentManager.beginTransaction();
                             if (searchedArea == 0) {
                                 xfragmentTransaction.replace(R.id.containerView, new MyQuestionsTabFragment()).commit();
@@ -105,7 +109,33 @@ public class MainActivity extends AppCompatActivity {
                             }
                         }
                     });
-                    builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    builder.setNegativeButton("Search Keywords (separate by commas)", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            searchedText = input.getText().toString();
+                            if (searchedText.equals("")) {
+                                searchingKeyword = false;
+                                keywords = new String[0];
+                            } else {
+                                String[] keywordsRaw = searchedText.split(",");
+                                keywords = new String[keywordsRaw.length];
+                                for (int i = 0 ; i < keywordsRaw.length; i++) {
+                                    keywords[i] = keywordsRaw[i].trim();
+                                }
+                                searchingKeyword = true;
+                            }
+                            searching = false;
+                            FragmentTransaction xfragmentTransaction = mFragmentManager.beginTransaction();
+                            if (searchedArea == 0) {
+                                xfragmentTransaction.replace(R.id.containerView, new MyQuestionsTabFragment()).commit();
+
+                            } else {
+                                xfragmentTransaction.replace(R.id.containerView, new HomeTabFragment()).commit();
+                            }
+                        }
+                    });
+                    //neutral is actually is negative
+                    builder.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.cancel();
@@ -196,8 +226,16 @@ public class MainActivity extends AppCompatActivity {
         return searching;
     }
 
+    public boolean isSearchingKeyword() {
+        return searchingKeyword;
+    }
+
     public String getSearchedText() {
         return searchedText;
+    }
+
+    public String[] getKeywords() {
+        return keywords;
     }
 
     // 1 = all questions
