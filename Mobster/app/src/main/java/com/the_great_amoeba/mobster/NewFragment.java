@@ -82,10 +82,6 @@ public class NewFragment extends Fragment {
                         (((MainActivity)getActivity()).getSearchedArea() == 1)) {
                     keywordStatus = true;
                 }
-                System.out.println("ORIGINAL");
-                System.out.println(searchStatus);
-                System.out.println(keywordStatus);
-                System.out.println("---------------");
 
                 for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
                     String keyQuestion = postSnapshot.getKey();
@@ -110,11 +106,7 @@ public class NewFragment extends Fragment {
                     if (searchStatus || keywordStatus) {
                         noSearch = false;
                     }
-                    System.out.println(questionTitle);
-                    System.out.println(noSearch);
-                    System.out.println(searchStatus);
-                    System.out.println(keywordStatus);
-                    System.out.println("---------------");
+
                     if (status.equals("NEW")
                             && ((searchStatus && questionTitle.contains(searchText))
                             || (containsAll)) || noSearch) {
