@@ -131,6 +131,8 @@ public class CreateQuestion extends AppCompatActivity implements
                             }
                         });
 
+                    textIn.setText("");
+
                     } else {
                         ((LinearLayout) addView.getParent()).removeView(addView);
                         HelperMethods.errorDialog(context, "Empty option",
@@ -280,7 +282,7 @@ public class CreateQuestion extends AppCompatActivity implements
     }
 
     /**
-     * Retreives the time based on what the user has chosen using the time picker widget
+     * Retrieves the time based on what the user has chosen using the time picker widget
      *
      * @param v The view to use (mainly the Create Question Activity)
      */
@@ -335,7 +337,6 @@ public class CreateQuestion extends AppCompatActivity implements
             Toast.makeText(context, "Question Posted!",
                     Toast.LENGTH_LONG).show();
 
-            // TODO: Need to store stuff in the database now
             storeQuestion();
 
             Intent intent = new Intent(CreateQuestion.this, MainActivity.class);
