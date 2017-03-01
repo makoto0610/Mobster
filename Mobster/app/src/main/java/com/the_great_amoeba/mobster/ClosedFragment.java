@@ -29,6 +29,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 
 import Constants.Constant;
+import Helper.HelperMethods;
 import Objects.Adapters.CustomListViewAdapter;
 import Objects.DisplayQuestion;
 
@@ -39,6 +40,8 @@ public class ClosedFragment extends Fragment {
     private View view;
     private DisplayQuestion[] array;
 
+    private String user;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater,
@@ -48,6 +51,7 @@ public class ClosedFragment extends Fragment {
         this.view = inflater.inflate(R.layout.new_layout, null);
         Log.d(Constant.DEBUG, "in OncreateView of ClosedFragment");
         getNewQuestionsFromFirebase();
+        this.user = SaveSharedPreferences.getUserName(getActivity().getApplicationContext());
         return view;
     }
 
@@ -66,18 +70,20 @@ public class ClosedFragment extends Fragment {
                 for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
                     String keyQuestion = postSnapshot.getKey();
                     HashMap value = (HashMap) postSnapshot.getValue();
+                    String username = (String) value.get("username");
                     String status = (String) value.get("status");
                     if (status.equals("CLOSED")) {
                         Helper.Log.i(Constant.DEBUG, "keys:" + value.keySet().toString());
                         Helper.Log.i(Constant.DEBUG, "values: " + value.values().toString());
-                        long upvotes =  (long) value.get("num_upvotes");
-                        long downvotes = (long) value.get("num_downvotes");
-                        long rating = upvotes - downvotes;
-                        long access = (long) value.get("num_access");
-                        DisplayQuestion question = new DisplayQuestion((String) (value.get("question")),
-                                new Duration(6000000),
-                                rating, keyQuestion, access);
-                        questions.add(question);
+                        if (isHomeFragment()) {
+                            DisplayQuestion question = HelperMethods.getQuestion(postSnapshot, value, keyQuestion);
+                            questions.add(question);
+                        } else {
+                            if (username.equals(user)) {
+                                DisplayQuestion question = HelperMethods.getQuestion(postSnapshot, value, keyQuestion);
+                                questions.add(question);
+                            }
+                        }
                     }
                 }
                 array = new DisplayQuestion[questions.size()];
@@ -108,12 +114,28 @@ public class ClosedFragment extends Fragment {
             public void onItemClick(AdapterView<?> parentAdapter, View view, int position,
                                     long id) {
                 DisplayQuestion data = (DisplayQuestion) parentAdapter.getItemAtPosition(position);
-                Intent intent = new Intent(view.getContext(), Voting.class);
                 Bundle bundle = new Bundle();
                 bundle.putString("questionPassed", data.getQuestionId());
+                if (isHomeFragment()) {
+                    bundle.putChar("homeTabPassed", 'h');
+                } else {
+                    bundle.putChar("homeTabPassed", 'm');
+                }
+                Intent intent = new Intent(view.getContext(), Results.class);
                 intent.putExtras(bundle);
                 startActivity(intent);
             }
         });
+    }
+
+
+    /**
+     * Returns whether or not the parent fragment is the Home Tab Fragment (or the My Questions Tab)
+     *
+     * @return true if the current fragment's parent is the HomeTabFragment. False if the parent
+     *          is the MyQuestionsFragment
+     */
+    private boolean isHomeFragment() {
+        return getParentFragment().getClass().equals(new HomeTabFragment().getClass());
     }
 }

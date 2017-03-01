@@ -31,14 +31,16 @@ import java.util.LinkedList;
 import Constants.Constant;
 import Objects.Adapters.CustomListViewAdapter;
 import Objects.DisplayQuestion;
-
-
+import Helper.HelperMethods;
 
 public class NewFragment extends Fragment {
 
     private DatabaseReference mDatabase;
     private View view;
     private DisplayQuestion[] array;
+
+    private String user;
+
 
     @Nullable
     @Override
@@ -49,6 +51,7 @@ public class NewFragment extends Fragment {
         this.view = inflater.inflate(R.layout.new_layout, null);
         Helper.Log.d(Constant.DEBUG, "in OncreateView of NewFragment");
         getNewQuestionsFromFirebase();
+        this.user = SaveSharedPreferences.getUserName(getActivity().getApplicationContext());
         return view;
     }
 
@@ -68,19 +71,19 @@ public class NewFragment extends Fragment {
                     String keyQuestion = postSnapshot.getKey();
                     HashMap value = (HashMap) postSnapshot.getValue();
                     String status = (String) value.get("status");
+                    String username = (String) value.get("username");
                     if (status.equals("NEW")) {
 //                        Helper.Log.i(Constant.DEBUG, "keys:" + value.keySet().toString());
 //                        Helper.Log.i(Constant.DEBUG, "values: " + value.values().toString());
-                        Object start = value.get("start");
-                        long upvotes =  (long) value.get("num_upvotes");
-                        long downvotes = (long) value.get("num_downvotes");
-                        long rating = upvotes - downvotes;
-                        long access = (long) value.get("num_access");
-                        //TODO: calculate rating instead of hard coded value
-                        DisplayQuestion question = new DisplayQuestion((String) (value.get("question")),
-                                new Duration(6000000),
-                                rating, keyQuestion, access);
-                        questions.add(question);
+                        if (isHomeFragment()) {
+                            DisplayQuestion question = HelperMethods.getQuestion(postSnapshot, value, keyQuestion);
+                            questions.add(question);
+                        } else { // else it is to be displayed in the My Questions Fragment
+                            if (username.equals(user)) {
+                                DisplayQuestion question = HelperMethods.getQuestion(postSnapshot, value, keyQuestion);
+                                questions.add(question);
+                            }
+                        }
                     }
                 }
                 array = new DisplayQuestion[questions.size()];
@@ -117,13 +120,33 @@ public class NewFragment extends Fragment {
             public void onItemClick(AdapterView<?> parentAdapter, View view, int position,
                                     long id) {
                 DisplayQuestion data = (DisplayQuestion) parentAdapter.getItemAtPosition(position);
-                Intent intent = new Intent(view.getContext(), Voting.class);
                 Bundle bundle = new Bundle();
                 bundle.putString("questionPassed", data.getQuestionId());
-                intent.putExtras(bundle);
-                startActivity(intent);
+                if (isHomeFragment()) {
+                    bundle.putChar("homeTabPassed", 'h');
+                    Intent intent = new Intent(view.getContext(), Voting.class);
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                } else {
+                    bundle.putChar("homeTabPassed", 'm');
+                    Intent intent = new Intent(view.getContext(), Results.class);
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                }
+
+
             }
         });
+    }
+
+    /**
+     * Returns whether or not the parent fragment is the Home Tab Fragment (or the My Questions Tab)
+     *
+     * @return true if the current fragment's parent is the HomeTabFragment. False if the parent
+     *          is the MyQuestionsFragment
+     */
+    private boolean isHomeFragment() {
+        return getParentFragment().getClass().equals(new HomeTabFragment().getClass());
     }
 
 

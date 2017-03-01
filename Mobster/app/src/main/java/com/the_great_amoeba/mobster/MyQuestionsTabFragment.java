@@ -25,14 +25,14 @@ public class MyQuestionsTabFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         /**
-         *Inflate home_tab_layout and setup Views.
+         * Inflate home_tab_layout and setup Views.
          */
-        View x = inflater.inflate(R.layout.home_tab_layout, null);
-        tabLayout = (TabLayout) x.findViewById(R.id.tabs);
-        viewPager = (ViewPager) x.findViewById(R.id.viewpager);
+        View x = inflater.inflate(R.layout.my_questions_tab_layout, null);
+        tabLayout = (TabLayout) x.findViewById(R.id.tabs_myquestions);
+        viewPager = (ViewPager) x.findViewById(R.id.viewpager_myquestions);
 
         /**
-         *Set an Apater for the View Pager
+         * Set an Adapater for the View Pager
          */
         viewPager.setAdapter(new MyAdapter(getChildFragmentManager()));
 
