@@ -5,7 +5,14 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.view.View;
 
+import com.google.firebase.database.DataSnapshot;
+
+import org.joda.time.Duration;
+
 import java.util.Calendar;
+import java.util.HashMap;
+
+import Objects.DisplayQuestion;
 
 /**
  * Created by christineshih on 2/6/17.
@@ -69,4 +76,22 @@ public class HelperMethods {
 
         return returned;
     }
+
+    /**
+     * Returns a Question Object to be added to a list
+     *
+     * @param postSnapshot to get the Question from
+     * @return the Question object to add
+     */
+    public static DisplayQuestion getQuestion(DataSnapshot postSnapshot, HashMap value, String keyQuestion) {
+        Object start = value.get("start");
+        long upvotes = (long) value.get("num_upvotes");
+        long downvotes = (long) value.get("num_downvotes");
+        long rating = upvotes - downvotes;
+        long access = (long) value.get("num_access");
+        //TODO: calculate rating instead of hard coded value
+        return new DisplayQuestion((String) (value.get("question")), new Duration(6000000),
+                rating, keyQuestion, access);
+    }
 }
+
