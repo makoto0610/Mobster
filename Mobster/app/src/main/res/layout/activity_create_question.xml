@@ -132,7 +132,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ems="10"
-                android:hint="Write your keyword here!"
+                android:hint="@string/keywordsHelp"
                 android:inputType="textPersonName"
                 android:layout_below="@+id/container_list"
                 android:layout_alignParentStart="true"

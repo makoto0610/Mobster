@@ -67,21 +67,17 @@ public class ClosedFragment extends Fragment {
         contain.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+
                 // search questions
                 boolean searchStatus = false;
-                String searchText = "";
-                if (((MainActivity)getActivity()).isSearching() &&
-                        (((MainActivity)getActivity()).getSearchedArea() == 1)) {
+                String searchText = getSearchText();
+                if (!searchText.equals("")) {
                     searchStatus = true;
-                    searchText = ((MainActivity)getActivity()).getSearchedText();
                 }
 
                 // search keywords
-                boolean keywordStatus = false;
-                if (((MainActivity)getActivity()).isSearchingKeyword() &&
-                        (((MainActivity)getActivity()).getSearchedArea() == 1)) {
-                    keywordStatus = true;
-                }
+                boolean keywordStatus = getKeywordSearchStatus();
+
                 for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
                     String keyQuestion = postSnapshot.getKey();
                     HashMap value = (HashMap) postSnapshot.getValue();
@@ -90,22 +86,10 @@ public class ClosedFragment extends Fragment {
 
                     String questionTitle = (String) value.get("question");
 
-                    boolean containsAll = false;
-                    if (keywordStatus) {
-                        String[] searchedKeywords = ((MainActivity)getActivity()).getKeywords();
-                        String[] questionKeywords = new String[(int)postSnapshot.child("keywords").getChildrenCount()];
-                        int arrayCount = 0;
-                        for (DataSnapshot k : postSnapshot.child("keywords").getChildren()) {
-                            questionKeywords[arrayCount] = (String)k.getValue();
-                            arrayCount++;
-                        }
-                        containsAll = Arrays.asList(questionKeywords)
-                                .containsAll(Arrays.asList(searchedKeywords));
-                    }
-                    boolean noSearch = true;
-                    if (searchStatus || keywordStatus) {
-                        noSearch = false;
-                    }
+                    boolean containsAll = keywordsMatch(keywordStatus, postSnapshot);
+
+                    boolean noSearch = noSearchStatus(searchStatus, keywordStatus);
+
                     if (status.equals("CLOSED") &&
                             ((searchStatus && questionTitle.contains(searchText))
                             || (containsAll)) || noSearch) {
@@ -173,5 +157,45 @@ public class ClosedFragment extends Fragment {
      */
     private boolean isHomeFragment() {
         return getParentFragment().getClass().equals(new HomeTabFragment().getClass());
+    }
+
+    // Searching Helpers
+    private String getSearchText() {
+        String toReturn = "";
+        if (((MainActivity)getActivity()).isSearching() &&
+                (((MainActivity)getActivity()).getSearchedArea() == 1)) {
+            toReturn = ((MainActivity)getActivity()).getSearchedText();
+        }
+        return toReturn;
+    }
+
+    private boolean getKeywordSearchStatus() {
+        if (((MainActivity)getActivity()).isSearchingKeyword() &&
+                (((MainActivity)getActivity()).getSearchedArea() == 1)) {
+            return true;
+        }
+        return false;
+    }
+
+    private boolean keywordsMatch(boolean keywordStatus, DataSnapshot postSnapshot) {
+        if (keywordStatus) {
+            String[] searchedKeywords = ((MainActivity)getActivity()).getKeywords();
+            String[] questionKeywords = new String[(int)postSnapshot.child("keywords").getChildrenCount()];
+            int arrayCount = 0;
+            for (DataSnapshot k : postSnapshot.child("keywords").getChildren()) {
+                questionKeywords[arrayCount] = (String)k.getValue();
+                arrayCount++;
+            }
+            return Arrays.asList(questionKeywords)
+                    .containsAll(Arrays.asList(searchedKeywords));
+        }
+        return false;
+    }
+
+    private boolean noSearchStatus(boolean searchText, boolean searchKeyword) {
+        if (searchText || searchKeyword) {
+            return false;
+        }
+        return true;
     }
 }
