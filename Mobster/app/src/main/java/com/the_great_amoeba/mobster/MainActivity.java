@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
                     builder.setView(input);
 
                     // radio buttons
-                    final String[] choices = {"My Questions", "All Questions"};
+                    final String[] choices = {"Go to My Questions", "Go to Home"};
                     builder.setSingleChoiceItems(choices, searchedArea, new DialogInterface.OnClickListener() {
 
                         @Override

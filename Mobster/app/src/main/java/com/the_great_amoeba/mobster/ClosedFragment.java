@@ -90,21 +90,54 @@ public class ClosedFragment extends Fragment {
 
                     boolean noSearch = noSearchStatus(searchStatus, keywordStatus);
 
-                    if (status.equals("CLOSED") &&
-                            ((searchStatus && questionTitle.contains(searchText))
-                            || (containsAll)) || noSearch) {
-                        Helper.Log.i(Constant.DEBUG, "keys:" + value.keySet().toString());
-                        Helper.Log.i(Constant.DEBUG, "values: " + value.values().toString());
-                        if (isHomeFragment()) {
-                            DisplayQuestion question = HelperMethods.getQuestion(postSnapshot, value, keyQuestion);
-                            questions.add(question);
-                        } else {
-                            if (username.equals(user)) {
+                    if (status.equals("CLOSED")) {
+                        if (noSearch) {
+                            if (isHomeFragment()) {
                                 DisplayQuestion question = HelperMethods.getQuestion(postSnapshot, value, keyQuestion);
                                 questions.add(question);
+                            } else { // else it is to be displayed in the My Questions Fragment
+                                if (username.equals(user)) {
+                                    DisplayQuestion question = HelperMethods.getQuestion(postSnapshot, value, keyQuestion);
+                                    questions.add(question);
+                                }
+                            }
+                        } else if (searchStatus && questionTitle.contains(searchText)) {
+                            if (isHomeFragment()) {
+                                DisplayQuestion question = HelperMethods.getQuestion(postSnapshot, value, keyQuestion);
+                                questions.add(question);
+                            } else { // else it is to be displayed in the My Questions Fragment
+                                if (username.equals(user)) {
+                                    DisplayQuestion question = HelperMethods.getQuestion(postSnapshot, value, keyQuestion);
+                                    questions.add(question);
+                                }
+                            }
+                        } else if (containsAll) {
+                            if (isHomeFragment()) {
+                                DisplayQuestion question = HelperMethods.getQuestion(postSnapshot, value, keyQuestion);
+                                questions.add(question);
+                            } else { // else it is to be displayed in the My Questions Fragment
+                                if (username.equals(user)) {
+                                    DisplayQuestion question = HelperMethods.getQuestion(postSnapshot, value, keyQuestion);
+                                    questions.add(question);
+                                }
                             }
                         }
                     }
+//                    if (status.equals("CLOSED")/* &&
+//                            ((searchStatus && questionTitle.contains(searchText))
+//                            || (containsAll)) || noSearch*/) {
+//                        Helper.Log.i(Constant.DEBUG, "keys:" + value.keySet().toString());
+//                        Helper.Log.i(Constant.DEBUG, "values: " + value.values().toString());
+//                        if (isHomeFragment()) {
+//                            DisplayQuestion question = HelperMethods.getQuestion(postSnapshot, value, keyQuestion);
+//                            questions.add(question);
+//                        } else {
+//                            if (username.equals(user)) {
+//                                DisplayQuestion question = HelperMethods.getQuestion(postSnapshot, value, keyQuestion);
+//                                questions.add(question);
+//                            }
+//                        }
+//                    }
                 }
                 array = new DisplayQuestion[questions.size()];
                 array = questions.toArray(array);
