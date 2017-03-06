@@ -46,6 +46,8 @@ public class Ban extends AppCompatActivity {
         myTextView.setText("Are you sure you want to ban user "+ userToBanPassed + "?");
     }
 
+
+
     public void onBanButtonClick(View view) {
         mDatabase.child("users").child(userToBanPassed).removeValue();
         Query contain = mDatabase.child("questions").orderByKey()
@@ -87,4 +89,7 @@ public class Ban extends AppCompatActivity {
         Intent intent = new Intent(this, BanUser.class);
         startActivity(intent);
     }
+
+
 }
+

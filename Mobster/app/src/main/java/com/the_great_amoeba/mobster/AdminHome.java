@@ -26,4 +26,9 @@ public class AdminHome extends Activity {
         startActivity(intent);
     }
 
+    public void onLogoutButtonClick(View view) {
+        Intent intent = new Intent(this, Login.class);
+        startActivity(intent);
+    }
+
 }
