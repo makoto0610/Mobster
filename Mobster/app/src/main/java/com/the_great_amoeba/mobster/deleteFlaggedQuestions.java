@@ -34,7 +34,7 @@ public class deleteFlaggedQuestions extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_ban_user);
+        setContentView(R.layout.activity_flagged_questions);
         getFlaggedQuestionsFirebase();
 
     }

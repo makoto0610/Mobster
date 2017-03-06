@@ -112,7 +112,7 @@ public class BanUser extends Activity {
         });
     }
 
-    public void onLogoutButtonClick(View view) {
+    public void onBackButtonClickBan(View view) {
         Intent intent = new Intent(this, AdminHome.class);
         startActivity(intent);
     }
