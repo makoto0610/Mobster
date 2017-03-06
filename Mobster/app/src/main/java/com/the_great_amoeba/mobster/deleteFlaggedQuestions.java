@@ -55,12 +55,14 @@ public class deleteFlaggedQuestions extends AppCompatActivity {
                     String keyQuestion = postSnapshot.getKey();
                     HashMap value = (HashMap) postSnapshot.getValue();
                     String question = (String) value.get("question");
-                    Long isFlagged = (Long) value.get("isFlagged");
-                    if (isFlagged == 1) {
-                        array[index] = question;
-                        length++;
+                    if(value.get("isFlagged")!= null) {
+                        Long isFlagged = (Long) value.get("isFlagged");
+                        if (isFlagged == 1) {
+                            array[index] = question;
+                            length++;
+                        }
+                        index++;
                     }
-                    index++;
                 }
                 init_FlaggedQuestions_Display();
             }
@@ -123,6 +125,11 @@ public class deleteFlaggedQuestions extends AppCompatActivity {
 
             });
         }
+    }
+
+    public void  onBackButtonClickFlagged(View view) {
+        Intent intent = new Intent(this, AdminHome.class);
+        startActivity(intent);
     }
 
 }
