@@ -122,19 +122,7 @@ public class NewFragment extends Fragment {
                             }
                         }
                     }
-//                    if (status.equals("NEW") && noSearch
-//                            /*&& ((searchStatus && questionTitle.contains(searchText))
-//                            || (containsAll)) || noSearch*/) {
-//                        if (isHomeFragment()) {
-//                            DisplayQuestion question = HelperMethods.getQuestion(postSnapshot, value, keyQuestion);
-//                            questions.add(question);
-//                        } else { // else it is to be displayed in the My Questions Fragment
-//                            if (username.equals(user)) {
-//                                DisplayQuestion question = HelperMethods.getQuestion(postSnapshot, value, keyQuestion);
-//                                questions.add(question);
-//                            }
-//                        }
-//                    }
+
                 }
                 array = new DisplayQuestion[questions.size()];
                 array = questions.toArray(array);

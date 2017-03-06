@@ -123,21 +123,7 @@ public class ClosedFragment extends Fragment {
                             }
                         }
                     }
-//                    if (status.equals("CLOSED")/* &&
-//                            ((searchStatus && questionTitle.contains(searchText))
-//                            || (containsAll)) || noSearch*/) {
-//                        Helper.Log.i(Constant.DEBUG, "keys:" + value.keySet().toString());
-//                        Helper.Log.i(Constant.DEBUG, "values: " + value.values().toString());
-//                        if (isHomeFragment()) {
-//                            DisplayQuestion question = HelperMethods.getQuestion(postSnapshot, value, keyQuestion);
-//                            questions.add(question);
-//                        } else {
-//                            if (username.equals(user)) {
-//                                DisplayQuestion question = HelperMethods.getQuestion(postSnapshot, value, keyQuestion);
-//                                questions.add(question);
-//                            }
-//                        }
-//                    }
+
                 }
                 array = new DisplayQuestion[questions.size()];
                 array = questions.toArray(array);
