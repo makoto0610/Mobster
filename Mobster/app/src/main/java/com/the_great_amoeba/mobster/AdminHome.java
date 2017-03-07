@@ -31,4 +31,9 @@ public class AdminHome extends Activity {
         startActivity(intent);
     }
 
+    public void onStatisticsButtonClick(View view) {
+        Intent intent = new Intent(this, AdminStatistics.class);
+        startActivity(intent);
+    }
+
 }

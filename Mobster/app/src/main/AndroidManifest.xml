@@ -33,6 +33,7 @@
         <activity android:name=".BanUser" />
         <activity android:name=".Ban" />
         <activity android:name=".AdminHome" />
+        <activity android:name=".AdminStatistics" />
         <activity android:name=".deleteFlaggedQuestions" />
         <activity android:name=".AdminDeleteFlagged" />
         <!--
