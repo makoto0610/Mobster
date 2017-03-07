@@ -50,16 +50,20 @@ public class CreateQuestion extends AppCompatActivity implements
     Button datePicker;
     private Button add;
     private Button submit;
+    private Button addKeyword;
 
     private EditText question;
 
     private TextView textDate;
     private TextView textTime;
     private TextView textIn;
+    private TextView textInKeyword;
 
     private LinearLayout containerList;
+    private LinearLayout containerKeywordList;
 
     private ArrayList<String> options = new ArrayList<String>();
+    private ArrayList<String> keywords = new ArrayList<>();
 
     private int year = -1;
     private int month = -1;
@@ -88,6 +92,7 @@ public class CreateQuestion extends AppCompatActivity implements
         datePicker = (Button) findViewById(R.id.date_picker);
         timePicker = (Button) findViewById(R.id.time_picker);
         add = (Button) findViewById(R.id.add_option);
+        addKeyword = (Button) findViewById(R.id.add_keyword);
         submit = (Button) findViewById(R.id.submit_question);
 
         textDate = (EditText) findViewById(R.id.end_date_text);
@@ -96,8 +101,10 @@ public class CreateQuestion extends AppCompatActivity implements
         question = (EditText) findViewById(R.id.create_question);
 
         textIn = (EditText) findViewById(R.id.add_option_text);
+        textInKeyword = (EditText) findViewById(R.id.add_keyword_text);
         add = (Button) findViewById(R.id.add_option);
         containerList = (LinearLayout) findViewById(R.id.container_list);
+        containerKeywordList = (LinearLayout) findViewById(R.id.container_keyword_list);
 
         add.setOnClickListener(new View.OnClickListener() {
 
@@ -143,8 +150,57 @@ public class CreateQuestion extends AppCompatActivity implements
                     HelperMethods.errorDialog(context, "Too many options!",
                             "You can only have up to 10 options");
                 }
+
             }
         });
+
+        addKeyword.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                if (keywords.size() <= 5) {
+
+                    // Creates the potential view (which is a row with the added textview and remove button
+                    LayoutInflater layoutInflater =
+                            (LayoutInflater) getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                    final View addView = layoutInflater.inflate(R.layout.row, null);
+                    final TextView addedKeyword = (TextView) addView.findViewById(R.id.option_text_view);
+                    addedKeyword.setText(textInKeyword.getText().toString());
+
+                    containerKeywordList.addView(addView);
+                    // Adds the view and logic for the remove button
+                    if (addedKeyword.getText().toString().trim().length() > 0) {
+
+                        keywords.add(addedKeyword.getText().toString());
+
+
+                        Button buttonRemove = (Button) addView.findViewById(R.id.remove_option);
+                        buttonRemove.setOnClickListener(new View.OnClickListener() {
+
+                            @Override
+                            public void onClick(View v) {
+                                String toRemove = addedKeyword.getText().toString();
+                                keywords.remove(toRemove);
+                                ((LinearLayout) addView.getParent()).removeView(addView);
+
+                            }
+                        });
+
+                    } else {
+                        ((LinearLayout) addView.getParent()).removeView(addView);
+                        HelperMethods.errorDialog(context, "Empty option",
+                                "You cannot have an empty option");
+                    }
+
+                } else {
+                    HelperMethods.errorDialog(context, "Too many keywords!",
+                            "You can only have up to 5 keywords");
+                }
+
+            }
+        });
+
+
 
         // Logic for the submit button
         submit.setOnClickListener(new View.OnClickListener() {
@@ -356,6 +412,10 @@ public class CreateQuestion extends AppCompatActivity implements
                 Choice choice = new Choice(option);
                 choices.add(choice);
             }
+            LinkedList<String> keywordLL = new LinkedList<>();
+            for (String k : keywords) {
+                keywordLL.add(k);
+            }
 
             final Calendar current = Calendar.getInstance();
 
@@ -365,8 +425,7 @@ public class CreateQuestion extends AppCompatActivity implements
             String username = SaveSharedPreferences.getUserName(getApplicationContext());
 
             Question questionToAdd = new Question(this.question.getText().toString(), choices,
-                    current, end, username, loc);
-
+                    keywordLL, current, end, username, loc);
             DatabaseReference choicesRef = mDatabase.child("questions");
             choicesRef.push().setValue(questionToAdd);
 
@@ -390,6 +449,7 @@ public class CreateQuestion extends AppCompatActivity implements
             return true;
 
         } catch (Exception e) {
+            e.printStackTrace();
             HelperMethods.errorDialog(context, "Posted Question Error",
                     "Could not post your question.");
             return false;
