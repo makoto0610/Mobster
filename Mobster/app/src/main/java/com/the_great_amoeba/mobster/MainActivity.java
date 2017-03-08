@@ -1,6 +1,9 @@
 package com.the_great_amoeba.mobster;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -9,11 +12,14 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.InputType;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 
+import com.github.mikephil.charting.data.PieEntry;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -24,6 +30,12 @@ public class MainActivity extends AppCompatActivity {
     NavigationView mNavigationView;
     FragmentManager mFragmentManager;
     FragmentTransaction mFragmentTransaction;
+
+    private String searchedText;
+    private int searchedArea;
+    private boolean searching;
+    private boolean searchingKeyword;
+    private String[] keywords;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +62,88 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(MenuItem menuItem) {
                 mDrawerLayout.closeDrawers();
+
+                if (menuItem.getItemId() == R.id.nav_search_questions) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                    builder.setTitle("Search");
+
+                    // text inputs
+                    final EditText input = new EditText(MainActivity.this);
+                    if (searching || searchingKeyword) {
+                        input.setText(searchedText);
+                    } else {
+                        input.setHint("Enter text here");
+                    }
+
+                    input.setInputType(InputType.TYPE_CLASS_TEXT);
+                    builder.setView(input);
+
+                    // radio buttons
+                    final String[] choices = {"Go to My Questions", "Go to Home"};
+                    builder.setSingleChoiceItems(choices, searchedArea, new DialogInterface.OnClickListener() {
+
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            searchedArea = which;
+                        }
+                    });
+
+
+                    // search and cancel buttons
+                    builder.setPositiveButton("Search Question Name", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            searchedText = input.getText().toString();
+                            if (searchedText.equals("")) {
+                                searching = false;
+                            } else {
+                                searching = true;
+                            }
+                            searchingKeyword = false;
+                            FragmentTransaction xfragmentTransaction = mFragmentManager.beginTransaction();
+                            if (searchedArea == 0) {
+                                xfragmentTransaction.replace(R.id.containerView, new MyQuestionsTabFragment()).commit();
+
+                            } else {
+                                xfragmentTransaction.replace(R.id.containerView, new HomeTabFragment()).commit();
+                            }
+                        }
+                    });
+                    builder.setNegativeButton("Search Keywords (separate by commas)", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            searchedText = input.getText().toString();
+                            if (searchedText.equals("")) {
+                                searchingKeyword = false;
+                                keywords = new String[0];
+                            } else {
+                                String[] keywordsRaw = searchedText.split(",");
+                                keywords = new String[keywordsRaw.length];
+                                for (int i = 0 ; i < keywordsRaw.length; i++) {
+                                    keywords[i] = keywordsRaw[i].trim();
+                                }
+                                searchingKeyword = true;
+                            }
+                            searching = false;
+                            FragmentTransaction xfragmentTransaction = mFragmentManager.beginTransaction();
+                            if (searchedArea == 0) {
+                                xfragmentTransaction.replace(R.id.containerView, new MyQuestionsTabFragment()).commit();
+
+                            } else {
+                                xfragmentTransaction.replace(R.id.containerView, new HomeTabFragment()).commit();
+                            }
+                        }
+                    });
+                    //neutral is actually is negative
+                    builder.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    });
+                    builder.setIcon(R.drawable.places_ic_search);
+                    builder.show();
+                }
 
                 if (menuItem.getItemId() == R.id.nav_item_home) {
                     FragmentTransaction xfragmentTransaction = mFragmentManager.beginTransaction();
@@ -111,6 +205,7 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -125,4 +220,27 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+
+    // methods for searching
+    public boolean isSearching() {
+        return searching;
+    }
+
+    public boolean isSearchingKeyword() {
+        return searchingKeyword;
+    }
+
+    public String getSearchedText() {
+        return searchedText;
+    }
+
+    public String[] getKeywords() {
+        return keywords;
+    }
+
+    // 1 = all questions
+    // 0 = my questions
+    public int getSearchedArea() {
+        return searchedArea;
+    }
 }

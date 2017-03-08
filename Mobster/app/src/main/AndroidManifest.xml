@@ -25,17 +25,27 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity" />
-        <activity android:name=".Voting" />
-        <activity android:name=".Registration" />
-        <activity android:name=".CreateQuestion" />
-        <activity android:name=".Results" />
-        <activity android:name=".BanUser" />
-        <activity android:name=".Ban" />
-        <activity android:name=".AdminHome" />
-        <activity android:name=".AdminStatistics" />
-        <activity android:name=".deleteFlaggedQuestions" />
-        <activity android:name=".AdminDeleteFlagged" />
+      
+            android:screenOrientation="portrait"/>
+        <activity android:name=".Voting"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".Registration"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".CreateQuestion"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".Results"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".BanUser"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".Ban"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".AdminHome"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".deleteFlaggedQuestions"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".AdminDeleteFlagged"
+            android:screenOrientation="portrait"/>
+      
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").

@@ -10,4 +10,6 @@
     <string name="AUTH_FAIL">AUTH_FAILED></string>
     <string name="title_activity_location">Map</string>
     <string name="title_activity_maps">Map</string>
+    <string name="keywordsHelp">Write your keyword here!
+        \n eg: food, travel, gadgets</string>
 </resources>
