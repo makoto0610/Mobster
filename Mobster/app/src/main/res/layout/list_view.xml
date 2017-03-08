@@ -6,7 +6,7 @@
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:srcCompat="@drawable/ic_down_vote"
+        app:srcCompat="@drawable/ic_down_vote_green"
         android:id="@+id/imageView_downVote"
         android:layout_marginEnd="18dp"
         android:layout_alignBottom="@+id/textView_Duration"
@@ -37,7 +37,7 @@
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:srcCompat="@drawable/ic_up_vote"
+        app:srcCompat="@drawable/ic_up_vote_green"
         android:id="@+id/imageView_upVote"
         android:layout_above="@+id/textView_Rating"
         android:layout_toEndOf="@+id/tv_Map_Question" />
