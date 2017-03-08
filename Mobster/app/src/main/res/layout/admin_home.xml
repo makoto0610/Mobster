@@ -21,7 +21,8 @@
         android:text="STATISTICS"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/button7" />
+        android:id="@+id/admin_stats_button"
+        android:onClick="onStatisticsButtonClick"/>
 
     <Button
         android:text="LOGOUT"

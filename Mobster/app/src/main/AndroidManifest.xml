@@ -25,7 +25,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity"
+      
             android:screenOrientation="portrait"/>
         <activity android:name=".Voting"
             android:screenOrientation="portrait"/>
@@ -45,6 +45,7 @@
             android:screenOrientation="portrait"/>
         <activity android:name=".AdminDeleteFlagged"
             android:screenOrientation="portrait"/>
+      
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
