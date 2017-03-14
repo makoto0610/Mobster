@@ -27,9 +27,9 @@ public class MyQuestionsTabFragment extends Fragment {
         /**
          * Inflate home_tab_layout and setup Views.
          */
-        View x = inflater.inflate(R.layout.my_questions_tab_layout, null);
-        tabLayout = (TabLayout) x.findViewById(R.id.tabs_myquestions);
-        viewPager = (ViewPager) x.findViewById(R.id.viewpager_myquestions);
+        View x = inflater.inflate(R.layout.home_tab_layout, null);
+        tabLayout = (TabLayout) x.findViewById(R.id.tabs);
+        viewPager = (ViewPager) x.findViewById(R.id.viewpager);
 
         /**
          * Set an Adapater for the View Pager
