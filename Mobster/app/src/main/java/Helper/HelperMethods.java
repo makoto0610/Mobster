@@ -12,6 +12,7 @@ import org.joda.time.Duration;
 import java.util.Calendar;
 import java.util.HashMap;
 
+import Constants.Constant;
 import Objects.DisplayQuestion;
 
 /**
@@ -37,6 +38,21 @@ public class HelperMethods {
                 })
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .show();
+    }
+
+    /**
+     * Calculates duration (end time - current time)
+     * @param end endTime in millis
+     * @return time left as a long (milliseconds)
+     */
+    public static long computeDuration(long end) {
+        long currentTime = Calendar.getInstance().getTimeInMillis();
+        long duration = end - currentTime;
+
+        if (duration <= 0) {
+            //this is the check to see if question is still valid
+        }
+        return duration;
     }
 
 
@@ -89,8 +105,10 @@ public class HelperMethods {
         long downvotes = (long) value.get("num_downvotes");
         long rating = upvotes - downvotes;
         long access = (long) value.get("num_access");
-        //TODO: calculate rating instead of hard coded value
-        return new DisplayQuestion((String) (value.get("question")), new Duration(6000000),
+        HashMap end =  (HashMap) value.get("end");
+        long endTime = (long) end.get("timeInMillis");
+        long duration = computeDuration(endTime);
+        return new DisplayQuestion((String) (value.get("question")), new Duration(duration),
                 rating, keyQuestion, access);
     }
 }
