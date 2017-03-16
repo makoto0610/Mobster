@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.location.Location;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.v7.widget.ThemedSpinnerAdapter;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -25,6 +26,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import Constants.Constant;
+import Helper.HelperMethods;
 import Objects.Adapters.CustomInfoWindowAdapter;
 import Objects.DisplayQuestion;
 import Objects.LocationWrapper;
@@ -36,8 +38,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private GoogleMap mMap;
     private DatabaseReference mDatabase;
+    /* TODO: Location, questionID, and duration should be put into an object instead of 3 diff. hashmaps */
     private Map<String, LocationWrapper> questionLocationMap;
     private Map<String, String> questionQuestionIdMap;
+    private Map<String, Long> questionDurationMap;
 
     private CustomInfoWindowAdapter infoWinAdapter;
 
@@ -49,6 +53,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .getReferenceFromUrl(Constant.DB_URL);
         questionLocationMap = new HashMap<>();
         questionQuestionIdMap = new HashMap<>();
+        questionDurationMap = new HashMap<>();
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -111,6 +116,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     }
                     Helper.Log.d(Constant.DEBUG, locWrap.toString());
                     questionLocationMap.put(keyQuestion, locWrap);
+                    HashMap end = (HashMap) postSnapshot.child("end").getValue();
+                    long endTime = (long) end.get("timeInMillis");
+                    questionDurationMap.put(keyQuestion, HelperMethods.computeDuration(endTime));
                 }
 
                 initializeQuestionMarkers();
@@ -128,7 +136,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             String question = e.getKey();
             LocationWrapper locWrap = e.getValue();
             LatLng ll = new LatLng(locWrap.getLatitude(), locWrap.getLongitude());
-            mMap.addMarker(new MarkerOptions().position(ll).title(question).snippet("Duration: 1h"));
+            long endTime = questionDurationMap.get(question);
+            mMap.addMarker(new MarkerOptions().position(ll).title(question).snippet("Duration: "  + new Duration(endTime).toStandardHours().toString()
+                    .substring(2)));
         }
 
 
@@ -168,14 +178,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     if (value == null) return;
                     Helper.Log.i(Constant.DEBUG, "keys:" + value.keySet().toString());
                     Helper.Log.i(Constant.DEBUG, "values: " + value.values().toString());
-                    long upvotes = (long) value.get("num_upvotes");
-                    long downvotes = (long) value.get("num_downvotes");
-                    long rating = upvotes - downvotes;
-                    long access = (long) value.get("num_access");
-
-                    DisplayQuestion question = new DisplayQuestion((String) value.get("question"),
-                            new Duration(6000000),
-                            rating, keyQuestion, access);
+                    DisplayQuestion question = HelperMethods.getQuestion(postSnapshot, value, keyQuestion);
                     marker.setTag(question);
                     infoWinAdapter.dq = question;
                     marker.showInfoWindow();
