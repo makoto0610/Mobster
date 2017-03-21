@@ -12,6 +12,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -71,7 +72,23 @@ public class Voting extends Activity implements OnClickListener{
         questionKey = bundle.getString("questionPassed");
         ll = (LinearLayout)findViewById(R.id.linearLayout2);
 
+        final ImageView flag = (ImageView) findViewById(R.id.imageView_flag);
+
         mDatabase = FirebaseDatabase.getInstance().getReferenceFromUrl(DB_URL);
+
+        flag.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //buttonPressed = true;
+                flag.setImageResource(R.drawable.flag_button_red);
+                mDatabase.child("questions").child(questionKey).child("isFlagged")
+                        .setValue(1);
+
+            }
+        });
+
+
+
         DatabaseReference choicesRef = mDatabase.child("questions").child(questionKey).child("choices");
 
 
