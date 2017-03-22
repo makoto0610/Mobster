@@ -5,4 +5,11 @@
     <color name="colorHightlight">#44BBAA</color>
     <color name="colorAccent">#E6DAE8</color>
     <color name="colorOrange">#FFA500</color>
+
+    <color name="colorPrimaryLight">#959595</color>
+    <color name="colorPrimaryDarkLight">#64cbc7</color>
+    <color name="colorHightlightLight">#44BBAA</color>
+    <color name="colorAccentLight">#c1f3ec</color>
+    <color name="colorOrangeLight">#FFA500</color>
+
 </resources>

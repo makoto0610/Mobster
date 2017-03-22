@@ -83,6 +83,7 @@ public class CreateQuestion extends AppCompatActivity implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        HelperMethods.setChosenTheme(this, getApplicationContext());
         setContentView(R.layout.activity_create_question);
 
         mDatabase = FirebaseDatabase.getInstance()

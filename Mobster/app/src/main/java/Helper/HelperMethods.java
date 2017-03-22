@@ -1,11 +1,15 @@
 package Helper;
 
+import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Application;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.view.View;
 
 import com.google.firebase.database.DataSnapshot;
+import com.the_great_amoeba.mobster.R;
+import com.the_great_amoeba.mobster.SaveSharedPreferences;
 
 import org.joda.time.Duration;
 
@@ -111,5 +115,17 @@ public class HelperMethods {
         return new DisplayQuestion((String) (value.get("question")), new Duration(duration),
                 rating, keyQuestion, access);
     }
+
+    public static void setChosenTheme(Activity app, Context ctx) {
+        String currentTheme = SaveSharedPreferences.getChosenTheme(ctx);
+        System.out.println(currentTheme);
+        if (currentTheme.equals("dark")) {
+            app.setTheme(R.style.AppTheme);
+        } else {
+            app.setTheme(R.style.AppThemeLight);
+        }
+
+    }
+
 }
 

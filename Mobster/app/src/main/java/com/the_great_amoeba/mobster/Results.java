@@ -40,6 +40,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import Helper.HelperMethods;
+
 /**
  * Created by natalie on 2/6/2017.
  */
@@ -64,6 +66,8 @@ public class Results extends AppCompatActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        HelperMethods.setChosenTheme(this, getApplicationContext());
+
         setContentView(R.layout.activity_results);
         Bundle bundle = getIntent().getExtras();
         String questionPassed = bundle.getString("questionPassed");
