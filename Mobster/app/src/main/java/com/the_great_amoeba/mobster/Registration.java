@@ -100,7 +100,7 @@ public class Registration extends AppCompatActivity {
         String email = this.email.getText().toString();
         Query contain = mDatabase.child("users").orderByKey().equalTo(username);
 
-        if(username.length()== 0) {
+        if (username.length()== 0) {
             HelperMethods.errorDialog(this, "Username not entered",
                     "You did not enter a username.");
             this.confirm.setText("");
@@ -120,6 +120,9 @@ public class Registration extends AppCompatActivity {
             HelperMethods.errorDialog(this, "Username invalid",
                     "Username already exists");
             this.confirm.setText("");
+        } else if (email.length() == 0 || !email.contains("@") || email.contains(" ")) {
+            HelperMethods.errorDialog(this, "Email invalid",
+                    "Email cannot be empty and must be valid.");
         } else {
             User user = new User(username, password, email);
             addNewUser(user);
