@@ -48,6 +48,8 @@
             android:screenOrientation="portrait"/>
         <activity android:name=".AdminDeleteFlagged"
             android:screenOrientation="portrait"/>
+        <activity android:name=".ForgotPassword"
+            android:screenOrientation="portrait" />
       
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.

@@ -108,8 +108,6 @@ public class Registration extends AppCompatActivity {
         Query contain = mDatabase.child("users").orderByKey().equalTo(username);
         //usernameBanned = username;
 
-
-
         if (username.length()== 0) {
             HelperMethods.errorDialog(this, "Username not entered",
                     "You did not enter a username.");
@@ -142,22 +140,20 @@ public class Registration extends AppCompatActivity {
     /**
      * Method that queries Firebase DB to see if entered username matches an existing username.
      */
-    public void checkUsernameExists(final String username, final String password, final String email) {
-        //checks if username exists
-        mDatabase.child("users").child(username).addListenerForSingleValueEvent(new ValueEventListener() {
+    public boolean checkUsernameExists(final String enteredUsername) {
+        final Boolean[] isExist = {false};
+        mDatabase.child("users").child(enteredUsername).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists()){
-                    HelperMethods.errorDialog(context, "Username invalid",
-                            "Username already exists");
-                } else {
-                    checkUsernameBanned(username, password, email);
+                    isExist[0] = true;
                 }
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
             }
         });
+        return isExist[0];
     }
 
     /**
