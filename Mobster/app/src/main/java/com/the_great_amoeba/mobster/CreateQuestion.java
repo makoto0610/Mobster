@@ -1,12 +1,16 @@
 package com.the_great_amoeba.mobster;
 
 import android.Manifest;
+import android.app.AlarmManager;
 import android.app.DatePickerDialog;
+import android.app.Notification;
+import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -393,6 +397,7 @@ public class CreateQuestion extends AppCompatActivity implements
         } else {
             Toast.makeText(context, "Question Posted!",
                     Toast.LENGTH_LONG).show();
+            scheduleNotification(createNotification(question.getText().toString()), 3000);
 
             storeQuestion();
 
@@ -526,6 +531,34 @@ public class CreateQuestion extends AppCompatActivity implements
         }
     }
 
+    // Notification creation and scheduling
+    private void scheduleNotification(Notification notification, int delay) {
+        Intent notificationIntent = new Intent(this, NotificationPublisher.class);
+        notificationIntent.putExtra(NotificationPublisher.NOTIFICATION_ID, 1);
+        notificationIntent.putExtra(NotificationPublisher.NOTIFICATION, notification);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        long futureInMillis = SystemClock.elapsedRealtime() + delay;
+        AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+        alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, futureInMillis, pendingIntent);
+    }
+
+    private Notification createNotification(String note) {
+        Notification.Builder builder = new Notification.Builder(this);
+        builder.setContentTitle("Notification");
+        builder.setContentText("Question " + "'" + note + "'" +
+                " has expired. Check the results now!");
+        builder.setSmallIcon(R.drawable.ic_character);
+
+
+        Intent resultIntent = new Intent(this, MainActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0,
+                resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        builder.setContentIntent(pendingIntent);
+
+        return builder.build();
+    }
 }
 
 
