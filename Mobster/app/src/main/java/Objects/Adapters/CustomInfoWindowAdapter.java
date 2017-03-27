@@ -23,6 +23,9 @@ import Objects.DisplayQuestion;
  * Created by anireddy on 2/19/17.
  */
 
+/**
+ * I don't know what this class does anymore - Ani
+ */
 public class CustomInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
 
     private final View layout;
