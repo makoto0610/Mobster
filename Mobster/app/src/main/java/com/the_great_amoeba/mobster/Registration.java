@@ -25,6 +25,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.HashMap;
+
 import Constants.Constant;
 import Objects.User;
 import Helper.HelperMethods;
@@ -37,11 +39,16 @@ public class Registration extends AppCompatActivity {
     private FirebaseAuth.AuthStateListener mAuthListener;
 
     private EditText username;
+    private String usernameBanned;
     private EditText password;
     private EditText confirm;
     private EditText email;
 
+    private Boolean isExist;
+
     private Context context;
+    private String choices[];
+    private boolean flagBanned;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,6 +106,9 @@ public class Registration extends AppCompatActivity {
         String confirm = this.confirm.getText().toString();
         String email = this.email.getText().toString();
         Query contain = mDatabase.child("users").orderByKey().equalTo(username);
+        //usernameBanned = username;
+
+
 
         if (username.length()== 0) {
             HelperMethods.errorDialog(this, "Username not entered",
@@ -132,20 +142,45 @@ public class Registration extends AppCompatActivity {
     /**
      * Method that queries Firebase DB to see if entered username matches an existing username.
      */
-    public boolean checkUsernameExists(final String enteredUsername) {
-        final Boolean[] isExist = {false};
-        mDatabase.child("users").child(enteredUsername).addListenerForSingleValueEvent(new ValueEventListener() {
+    public void checkUsernameExists(final String username, final String password, final String email) {
+        //checks if username exists
+        mDatabase.child("users").child(username).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists()){
-                    isExist[0] = true;
+                    HelperMethods.errorDialog(context, "Username invalid",
+                            "Username already exists");
+                } else {
+                    checkUsernameBanned(username, password, email);
                 }
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
             }
         });
-        return isExist[0];
+    }
+
+    /**
+     * Method that queries Firebase DB to see if entered username matches an existing username that was banned.
+     */
+    public  void checkUsernameBanned(final String username, final String password, final String email) {
+        //To check for banned Users
+        mDatabase.child("admin").child("banned").child(username).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()){
+                    HelperMethods.errorDialog(context, "Username invalid",
+                            "Username already exists");
+                } else {
+                    //register the new user
+                    User user = new User(username, password, email);
+                    addNewUser(user);
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
     }
 
 

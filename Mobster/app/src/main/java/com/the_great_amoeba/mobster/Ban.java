@@ -22,7 +22,9 @@ package com.the_great_amoeba.mobster;
         import java.util.LinkedList;
 
         import Constants.Constant;
+        import Objects.BannedUser;
         import Objects.DisplayQuestion;
+        import Objects.User;
 
 /**
  * Created by singh on 2/22/2017.
@@ -49,6 +51,8 @@ public class Ban extends AppCompatActivity {
 
 
     public void onBanButtonClick(View view) {
+        BannedUser user = new BannedUser(userToBanPassed);
+        mDatabase.child("admin").child("banned").child(userToBanPassed).setValue(user);
         mDatabase.child("users").child(userToBanPassed).removeValue();
         Query contain = mDatabase.child("questions").orderByKey()
                 .limitToFirst(Constant.NUM_OF_QUESTIONS);
@@ -64,8 +68,9 @@ public class Ban extends AppCompatActivity {
                     String keyQuestion = postSnapshot.getKey();
                     HashMap value = (HashMap) postSnapshot.getValue();
                     String username = (String) value.get("username");
-                    if (userToBanPassed == username) {
+                    if (userToBanPassed.equals(username)) {
                         questionsToDelete[index] = keyQuestion;
+                        length++;
                     }
                 }
                 userBanned();
