@@ -36,6 +36,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import org.joda.time.Duration;
+
 import java.security.Security;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -397,7 +399,7 @@ public class CreateQuestion extends AppCompatActivity implements
         } else {
             Toast.makeText(context, "Question Posted!",
                     Toast.LENGTH_LONG).show();
-            scheduleNotification(createNotification(question.getText().toString()), 3000);
+            scheduleNotification(createNotification(question.getText().toString()), getDelay());
 
             storeQuestion();
 
@@ -532,7 +534,7 @@ public class CreateQuestion extends AppCompatActivity implements
     }
 
     // Notification creation and scheduling
-    private void scheduleNotification(Notification notification, int delay) {
+    private void scheduleNotification(Notification notification, long delay) {
         Intent notificationIntent = new Intent(this, NotificationPublisher.class);
         notificationIntent.putExtra(NotificationPublisher.NOTIFICATION_ID, 1);
         notificationIntent.putExtra(NotificationPublisher.NOTIFICATION, notification);
@@ -545,9 +547,8 @@ public class CreateQuestion extends AppCompatActivity implements
 
     private Notification createNotification(String note) {
         Notification.Builder builder = new Notification.Builder(this);
-        builder.setContentTitle("Notification");
-        builder.setContentText("Question " + "'" + note + "'" +
-                " has expired. Check the results now!");
+        builder.setContentTitle("Question " + "'" + note + "'" + " has expired.");
+        builder.setContentText("Check the results now!");
         builder.setSmallIcon(R.drawable.ic_character);
 
 
@@ -556,9 +557,14 @@ public class CreateQuestion extends AppCompatActivity implements
                 resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         builder.setContentIntent(pendingIntent);
-
         return builder.build();
     }
+
+    private long getDelay() {
+        Calendar start = Calendar.getInstance();
+        Calendar end = Calendar.getInstance();
+        end.set(year, month, day, hour, minute, 30);
+        System.out.println("DURATION: " + (end.getTimeInMillis() - start.getTimeInMillis()));
+        return end.getTimeInMillis() - start.getTimeInMillis();
+    }
 }
-
-

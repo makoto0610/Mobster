@@ -118,7 +118,6 @@ public class HelperMethods {
 
     public static void setChosenTheme(Activity app, Context ctx) {
         String currentTheme = SaveSharedPreferences.getChosenTheme(ctx);
-        System.out.println(currentTheme);
         if (currentTheme.equals("dark")) {
             app.setTheme(R.style.AppTheme);
         } else {
