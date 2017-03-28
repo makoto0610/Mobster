@@ -2,6 +2,7 @@ package com.the_great_amoeba.mobster;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -29,6 +30,8 @@ import Constants.Constant;
 import Helper.HelperMethods;
 import Objects.User;
 
+import static android.R.style.Theme;
+
 public class Login extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
@@ -49,6 +52,7 @@ public class Login extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setTheme(R.style.AppTheme);
         setContentView(R.layout.activity_login);
         context = this;
         mDatabase = FirebaseDatabase.getInstance()

@@ -53,6 +53,7 @@ public class Registration extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setTheme(R.style.AppTheme);
         setContentView(R.layout.activity_registration);
         context = this;
         mDatabase = FirebaseDatabase.getInstance()
@@ -208,6 +209,8 @@ public class Registration extends AppCompatActivity {
                         } else {
                             Intent intent = new Intent(Registration.this, MainActivity.class);
                             SaveSharedPreferences.setUserName(getApplicationContext(), _username);
+                            SaveSharedPreferences.setChosenTheme(getApplicationContext(), "dark");
+                            SaveSharedPreferences.setNotification(getApplicationContext(), "on");
                             startActivity(intent);
                         }
 

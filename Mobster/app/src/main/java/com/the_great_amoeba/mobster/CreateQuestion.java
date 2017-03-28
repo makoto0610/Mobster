@@ -1,12 +1,16 @@
 package com.the_great_amoeba.mobster;
 
 import android.Manifest;
+import android.app.AlarmManager;
 import android.app.DatePickerDialog;
+import android.app.Notification;
+import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -31,6 +35,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import org.joda.time.Duration;
 
 import java.security.Security;
 import java.util.ArrayList;
@@ -83,6 +89,7 @@ public class CreateQuestion extends AppCompatActivity implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        HelperMethods.setChosenTheme(this, getApplicationContext());
         setContentView(R.layout.activity_create_question);
 
         mDatabase = FirebaseDatabase.getInstance()
@@ -185,6 +192,8 @@ public class CreateQuestion extends AppCompatActivity implements
 
                             }
                         });
+
+                    textInKeyword.setText("");
 
                     } else {
                         ((LinearLayout) addView.getParent()).removeView(addView);
@@ -392,6 +401,7 @@ public class CreateQuestion extends AppCompatActivity implements
         } else {
             Toast.makeText(context, "Question Posted!",
                     Toast.LENGTH_LONG).show();
+            scheduleNotification(createNotification(question.getText().toString()), getDelay());
 
             storeQuestion();
 
@@ -525,6 +535,37 @@ public class CreateQuestion extends AppCompatActivity implements
         }
     }
 
+    // Notification creation and scheduling
+    private void scheduleNotification(Notification notification, long delay) {
+        Intent notificationIntent = new Intent(this, NotificationPublisher.class);
+        notificationIntent.putExtra(NotificationPublisher.NOTIFICATION_ID, 1);
+        notificationIntent.putExtra(NotificationPublisher.NOTIFICATION, notification);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        long futureInMillis = SystemClock.elapsedRealtime() + delay;
+        AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+        alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, futureInMillis, pendingIntent);
+    }
+
+    private Notification createNotification(String note) {
+        Notification.Builder builder = new Notification.Builder(this);
+        builder.setContentTitle("Question " + "'" + note + "'" + " has expired.");
+        builder.setContentText("Check the results now!");
+        builder.setSmallIcon(R.drawable.ic_character);
+
+
+        Intent resultIntent = new Intent(this, MainActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0,
+                resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        builder.setContentIntent(pendingIntent);
+        return builder.build();
+    }
+
+    private long getDelay() {
+        Calendar start = Calendar.getInstance();
+        Calendar end = Calendar.getInstance();
+        end.set(year, month, day, hour, minute, start.get(Calendar.SECOND));
+        return end.getTimeInMillis() - start.getTimeInMillis();
+    }
 }
-
-

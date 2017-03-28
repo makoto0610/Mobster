@@ -10,6 +10,8 @@ import android.preference.PreferenceManager;
 
 public class SaveSharedPreferences {
     static final String PREF_USER_NAME= "username";
+    static final String PREF_THEME = "theme";
+    static final String PREF_NOTIFICATION = "notification";
 
     static SharedPreferences getSharedPreferences(Context ctx) {
         return PreferenceManager.getDefaultSharedPreferences(ctx);
@@ -22,8 +24,28 @@ public class SaveSharedPreferences {
         editor.commit();
     }
 
+    public static void setChosenTheme(Context ctx, String theme) {
+        SharedPreferences.Editor editor = getSharedPreferences(ctx).edit();
+        editor.putString(PREF_THEME, theme);
+        editor.commit();
+    }
+
+    public static void setNotification(Context ctx, String notification) {
+        SharedPreferences.Editor editor = getSharedPreferences(ctx).edit();
+        editor.putString(PREF_NOTIFICATION, notification);
+        editor.commit();
+    }
+
     public static String getUserName(Context ctx)
     {
         return getSharedPreferences(ctx).getString(PREF_USER_NAME, "");
+    }
+
+    public static String getChosenTheme(Context ctx) {
+        return getSharedPreferences(ctx).getString(PREF_THEME, "");
+    }
+
+    public static String getNotification(Context ctx) {
+        return getSharedPreferences(ctx).getString(PREF_NOTIFICATION, "");
     }
 }
