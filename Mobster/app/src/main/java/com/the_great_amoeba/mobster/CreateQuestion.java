@@ -193,6 +193,8 @@ public class CreateQuestion extends AppCompatActivity implements
                             }
                         });
 
+                    textInKeyword.setText("");
+
                     } else {
                         ((LinearLayout) addView.getParent()).removeView(addView);
                         HelperMethods.errorDialog(context, "Empty option",
@@ -563,8 +565,7 @@ public class CreateQuestion extends AppCompatActivity implements
     private long getDelay() {
         Calendar start = Calendar.getInstance();
         Calendar end = Calendar.getInstance();
-        end.set(year, month, day, hour, minute, 30);
-//        System.out.println("DURATION: " + (end.getTimeInMillis() - start.getTimeInMillis()));
+        end.set(year, month, day, hour, minute, start.get(Calendar.SECOND));
         return end.getTimeInMillis() - start.getTimeInMillis();
     }
 }

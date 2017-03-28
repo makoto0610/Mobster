@@ -27,7 +27,7 @@
 
     <item android:title="Settings"
         android:id="@+id/nav_item_settings"
-        />
+        android:icon="@drawable/ic_settings" />
 
     <item android:title="Logout"
         android:id="@+id/nav_item_logout"
