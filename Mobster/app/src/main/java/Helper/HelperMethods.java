@@ -123,7 +123,6 @@ public class HelperMethods {
         } else {
             app.setTheme(R.style.AppThemeLight);
         }
-
     }
 
 }

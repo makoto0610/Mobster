@@ -6,8 +6,10 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.ToggleButton;
 
 import Helper.HelperMethods;
 
@@ -36,6 +38,13 @@ public class SettingsActivity extends AppCompatActivity {
             butt.setChecked(true);
         }
 
+        ToggleButton note = (ToggleButton) findViewById(R.id.notification_toggle);
+        if (SaveSharedPreferences.getNotification(getApplicationContext()).equals("on")) {
+            note.setChecked(true);
+        } else {
+            note.setChecked(false);
+        }
+
         RadioGroup themes = (RadioGroup) findViewById(R.id.theme_choices);
         themes.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
         {
@@ -50,6 +59,17 @@ public class SettingsActivity extends AppCompatActivity {
                 }
             }
         });
+
+        note.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    SaveSharedPreferences.setNotification(getApplicationContext(), "on");
+                } else {
+                    SaveSharedPreferences.setNotification(getApplicationContext(), "off");
+                }
+            }
+        });
+
         View.OnClickListener listener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -61,8 +81,5 @@ public class SettingsActivity extends AppCompatActivity {
         button.setOnClickListener(listener);
 
     }
-
-
-
 
 }

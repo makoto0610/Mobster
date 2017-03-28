@@ -564,7 +564,7 @@ public class CreateQuestion extends AppCompatActivity implements
         Calendar start = Calendar.getInstance();
         Calendar end = Calendar.getInstance();
         end.set(year, month, day, hour, minute, 30);
-        System.out.println("DURATION: " + (end.getTimeInMillis() - start.getTimeInMillis()));
+//        System.out.println("DURATION: " + (end.getTimeInMillis() - start.getTimeInMillis()));
         return end.getTimeInMillis() - start.getTimeInMillis();
     }
 }

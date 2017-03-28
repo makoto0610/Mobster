@@ -210,6 +210,7 @@ public class Registration extends AppCompatActivity {
                             Intent intent = new Intent(Registration.this, MainActivity.class);
                             SaveSharedPreferences.setUserName(getApplicationContext(), _username);
                             SaveSharedPreferences.setChosenTheme(getApplicationContext(), "dark");
+                            SaveSharedPreferences.setNotification(getApplicationContext(), "on");
                             startActivity(intent);
                         }
 
