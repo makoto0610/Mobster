@@ -239,6 +239,12 @@ public class Voting extends Activity implements OnClickListener{
             cref.setValue(c);
         }
 
+        // adding the current user to answered list so he cannot answer questions more than once
+        DatabaseReference votedUsersRef = mDatabase.child("questions").child(questionKey)
+                .child("votedUsers").push();
+        votedUsersRef.setValue(SaveSharedPreferences.getUserName(getApplicationContext()));
+
+
         // Updating the "answered" value for the current user
         final String username = SaveSharedPreferences.getUserName(getApplicationContext());
         DatabaseReference answered = mDatabase.child("users").child(username).child("answered");;
