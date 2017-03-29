@@ -32,6 +32,8 @@ public class Question {
 
     private Location loc;
 
+    private LinkedList<String> comments;
+
 
     public enum Status {
         CLOSED, NEW, TRENDING
@@ -41,8 +43,9 @@ public class Question {
     }
 
 
+
     public Question(String question, LinkedList<Choice> choices, LinkedList<String> keywords,
-                    Calendar start, Calendar end, String username, Location loc) {
+                    Calendar start, Calendar end, String username, Location loc, LinkedList<String> comments) {
         this.question = question;
         this.choices = choices;
         this.keywords = keywords;
@@ -53,6 +56,12 @@ public class Question {
         this.loc = loc;
         isFlagged = 0;
 
+        this.comments = comments;
+    }
+
+    public LinkedList<String> getComments() {
+
+        return comments;
     }
 
     public String getQuestion() {
