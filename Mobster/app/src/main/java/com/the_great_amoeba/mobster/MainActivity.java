@@ -23,6 +23,7 @@ import com.github.mikephil.charting.data.PieEntry;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import Helper.HelperMethods;
 import Objects.User;
 
 public class MainActivity extends AppCompatActivity {
@@ -40,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        HelperMethods.setChosenTheme(this, getApplicationContext());
         setContentView(R.layout.activity_main);
 
         /**
@@ -179,6 +181,12 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(intent);
                 }
 
+                if (menuItem.getItemId() == R.id.nav_item_settings) {
+                    Intent intent = new Intent(getApplicationContext(), SettingsActivity.class);
+                    startActivity(intent);
+                }
+
+
                 return false;
             }
 
@@ -219,6 +227,7 @@ public class MainActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
 
 
     // methods for searching

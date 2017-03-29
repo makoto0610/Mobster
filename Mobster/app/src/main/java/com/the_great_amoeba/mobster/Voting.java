@@ -49,6 +49,7 @@ import com.google.firebase.database.DatabaseReference;
 import java.util.LinkedList;
 
 import Constants.Constant;
+import Helper.HelperMethods;
 import Objects.Choice;
 import Objects.Comment;
 
@@ -71,6 +72,8 @@ public class Voting extends Activity implements OnClickListener{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        HelperMethods.setChosenTheme(this, getApplicationContext());
+
         setContentView(R.layout.vote_layout);
         Bundle bundle = getIntent().getExtras();
         questionKey = bundle.getString("questionPassed");
