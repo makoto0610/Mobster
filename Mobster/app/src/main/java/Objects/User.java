@@ -1,9 +1,7 @@
 package Objects;
 
-import android.util.Log;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Created by makoto on 1/19/17.
@@ -40,7 +38,9 @@ public class User {
         return password;
     }
 
-    public String getEmail() {return email;}
+    public String getEmail() {
+        return email;
+    }
 
     public void setPassword(String password) {
         this.password = password;
@@ -61,4 +61,6 @@ public class User {
     public int getAnswered() {
         return this.answered;
     }
+
 }
+

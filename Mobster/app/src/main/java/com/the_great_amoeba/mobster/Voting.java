@@ -2,37 +2,16 @@ package com.the_great_amoeba.mobster;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.ToggleButton;
-import android.widget.LinearLayout.LayoutParams;
-import android.util.Log;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.RadioGroup;
-import android.app.Activity;
-import android.os.Bundle;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
-import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -43,10 +22,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
-
-import com.google.firebase.database.DatabaseReference;
-
-import java.util.LinkedList;
 
 import Constants.Constant;
 import Helper.HelperMethods;
@@ -73,12 +48,23 @@ public class Voting extends Activity implements OnClickListener{
         setContentView(R.layout.vote_layout);
         Bundle bundle = getIntent().getExtras();
         questionKey = bundle.getString("questionPassed");
+
+
+
+        String username = SaveSharedPreferences.getUserName(getApplicationContext());
+        System.out.println("Question key is " + questionKey);;
+        System.out.println("Username is " + username);
+
+
         ll = (LinearLayout)findViewById(R.id.linearLayout2);
 
         final ImageView flag = (ImageView) findViewById(R.id.imageView_flag);
 
         mDatabase = FirebaseDatabase.getInstance().getReferenceFromUrl(DB_URL);
 
+        DatabaseReference viewed = mDatabase.child("users").child(username);
+        System.out.println("VIEWED IS " + viewed);
+        
         flag.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
