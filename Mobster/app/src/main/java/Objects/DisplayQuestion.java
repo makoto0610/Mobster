@@ -12,14 +12,16 @@ public class DisplayQuestion {
     private long rating;
     private String questionId;
     private long num_access;
+    private String username;
 
     public DisplayQuestion(String question, Duration duration, long rating, String questionId,
-                           long num_access) {
+                           long num_access, String username) {
         this.question = question;
         this.duration = duration;
         this.rating = rating;
         this.questionId = questionId;
         this.num_access = num_access;
+        this.username = username;
     }
 
     public String getQuestionId() {
@@ -52,5 +54,13 @@ public class DisplayQuestion {
 
     public long getNum_access() {
         return num_access;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 }
