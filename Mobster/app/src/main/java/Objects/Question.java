@@ -29,6 +29,7 @@ public class Question {
     private int num_access;
     private long num_upvotes;
     private long num_downvotes;
+    private LinkedList<String> votedUsers;
 
     private Location loc;
 
@@ -57,6 +58,7 @@ public class Question {
         isFlagged = 0;
 
         this.comments = comments;
+        this.votedUsers = new LinkedList<>();
     }
 
     public LinkedList<String> getComments() {
@@ -139,5 +141,13 @@ public class Question {
 
     public Location getLoc() {
         return loc;
+    }
+
+    public void addVotedUsers(String username) {
+        this.votedUsers.add(username);
+    }
+
+    public LinkedList<String> getVotedUsers() {
+        return this.votedUsers;
     }
 }

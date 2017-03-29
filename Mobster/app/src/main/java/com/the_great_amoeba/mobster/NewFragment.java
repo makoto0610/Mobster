@@ -175,6 +175,7 @@ public class NewFragment extends Fragment {
                 final DisplayQuestion dq = (DisplayQuestion) parentAdapter.getAdapter().getItem(position);
                 final String questionKey = dq.getQuestionId();
                 final String username = dq.getUsername();
+                LinkedList<String> votedUsernames = dq.getVotedUsers();
 
                 final ImageView upVote = (ImageView) view.findViewById(R.id.imageView_upVote);
                 final ImageView downVote = (ImageView) view.findViewById(R.id.imageView_downVote);
@@ -267,7 +268,7 @@ public class NewFragment extends Fragment {
                     bundle.putString("questionPassed", data.getQuestionId());
                     System.out.println("User name is " + username);
                     System.out.println("USER is " + user);
-                    if (username.equals(user)) {
+                    if (username.equals(user) || votedUsernames.contains(user)) {
                         bundle.putChar("homeTabPassed", 'h');
                         Intent intent = new Intent(view.getContext(), Results.class);
                         intent.putExtras(bundle);

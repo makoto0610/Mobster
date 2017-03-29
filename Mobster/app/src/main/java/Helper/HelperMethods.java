@@ -113,8 +113,9 @@ public class HelperMethods {
         long endTime = (long) end.get("timeInMillis");
         long duration = computeDuration(endTime);
         String username = (String) value.get("username");
+        HashMap votedUsers = (HashMap) value.get("votedUsers");
         return new DisplayQuestion((String) (value.get("question")), new Duration(duration),
-                rating, keyQuestion, access, username);
+                rating, keyQuestion, access, username, votedUsers);
     }
 
     public static void setChosenTheme(Activity app, Context ctx) {
