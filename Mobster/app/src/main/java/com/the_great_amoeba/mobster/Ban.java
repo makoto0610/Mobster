@@ -40,6 +40,7 @@ public class Ban extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.setTheme(R.style.AppTheme);
         setContentView(R.layout.activity_ban);
         Bundle bundle = getIntent().getExtras();
         userToBanPassed = bundle.getString("userToBan");
