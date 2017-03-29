@@ -52,10 +52,8 @@ public class Voting extends Activity implements OnClickListener{
 
 
         String username = SaveSharedPreferences.getUserName(getApplicationContext());
-        System.out.println("Question key is " + questionKey);
-//        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-//        DatabaseReference viewed = mDatabase.child("users").child(username).child("viewedQuestions");
-//        System.out.println(viewed);
+        System.out.println("Question key is " + questionKey);;
+        System.out.println("Username is " + username);
 
 
         ll = (LinearLayout)findViewById(R.id.linearLayout2);
@@ -64,6 +62,9 @@ public class Voting extends Activity implements OnClickListener{
 
         mDatabase = FirebaseDatabase.getInstance().getReferenceFromUrl(DB_URL);
 
+        DatabaseReference viewed = mDatabase.child("users").child(username);
+        System.out.println("VIEWED IS " + viewed);
+        
         flag.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

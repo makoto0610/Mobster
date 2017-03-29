@@ -16,8 +16,6 @@ public class User {
     private String email;
     private int asked;
     private int answered;
-    private List<String> votedQuestions;
-    private List<String> viewedQuestions;
 
     public User(String username, String password, String email) {
         this.username = username;
@@ -29,8 +27,6 @@ public class User {
         } else {
             this.email = email;
         }
-        this.votedQuestions = new LinkedList<>();
-        this.viewedQuestions = new LinkedList<>();
     }
 
 
@@ -66,20 +62,5 @@ public class User {
         return this.answered;
     }
 
-    public void addVoted(String id) {
-        this.votedQuestions.add(id);
-    }
-
-    public List<String> getVotedQuestions() {
-        return this.votedQuestions;
-    }
-
-    public void addViewedQuestions(String id) {
-        this.viewedQuestions.add(id);
-    }
-
-    public List<String> getViewedQuestions() {
-        return this.viewedQuestions;
-    }
 }
 
