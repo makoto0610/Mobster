@@ -1,9 +1,7 @@
 package Objects;
 
-import android.util.Log;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Created by makoto on 1/19/17.
@@ -18,6 +16,8 @@ public class User {
     private String email;
     private int asked;
     private int answered;
+    private List<String> votedQuestions;
+    private List<String> viewedQuestions;
 
     public User(String username, String password, String email) {
         this.username = username;
@@ -29,6 +29,8 @@ public class User {
         } else {
             this.email = email;
         }
+        this.votedQuestions = new LinkedList<>();
+        this.viewedQuestions = new LinkedList<>();
     }
 
 
@@ -40,7 +42,9 @@ public class User {
         return password;
     }
 
-    public String getEmail() {return email;}
+    public String getEmail() {
+        return email;
+    }
 
     public void setPassword(String password) {
         this.password = password;
@@ -61,4 +65,21 @@ public class User {
     public int getAnswered() {
         return this.answered;
     }
+
+    public void addVoted(String id) {
+        this.votedQuestions.add(id);
+    }
+
+    public List<String> getVotedQuestions() {
+        return this.votedQuestions;
+    }
+
+    public void addViewedQuestions(String id) {
+        this.viewedQuestions.add(id);
+    }
+
+    public List<String> getViewedQuestions() {
+        return this.viewedQuestions;
+    }
 }
+
