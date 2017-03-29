@@ -174,6 +174,7 @@ public class NewFragment extends Fragment {
 
                 final DisplayQuestion dq = (DisplayQuestion) parentAdapter.getAdapter().getItem(position);
                 final String questionKey = dq.getQuestionId();
+                final String username = dq.getUsername();
 
                 final ImageView upVote = (ImageView) view.findViewById(R.id.imageView_upVote);
                 final ImageView downVote = (ImageView) view.findViewById(R.id.imageView_downVote);
@@ -264,7 +265,14 @@ public class NewFragment extends Fragment {
                     DisplayQuestion data = (DisplayQuestion) parentAdapter.getItemAtPosition(position);
                     Bundle bundle = new Bundle();
                     bundle.putString("questionPassed", data.getQuestionId());
-                    if (isHomeFragment()) {
+                    System.out.println("User name is " + username);
+                    System.out.println("USER is " + user);
+                    if (username.equals(user)) {
+                        bundle.putChar("homeTabPassed", 'h');
+                        Intent intent = new Intent(view.getContext(), Results.class);
+                        intent.putExtras(bundle);
+                        startActivity(intent);
+                    } else if (isHomeFragment()) {
                         bundle.putChar("homeTabPassed", 'h');
                         Intent intent = new Intent(view.getContext(), Voting.class);
                         intent.putExtras(bundle);
