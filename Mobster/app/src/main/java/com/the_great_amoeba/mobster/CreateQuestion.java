@@ -427,6 +427,8 @@ public class CreateQuestion extends AppCompatActivity implements
                 keywordLL.add(k);
             }
 
+            LinkedList<String> commentLL = new LinkedList<>();
+
             final Calendar current = Calendar.getInstance();
 
             Calendar end = Calendar.getInstance();
@@ -435,7 +437,7 @@ public class CreateQuestion extends AppCompatActivity implements
             String username = SaveSharedPreferences.getUserName(getApplicationContext());
 
             Question questionToAdd = new Question(this.question.getText().toString(), choices,
-                    keywordLL, current, end, username, loc);
+                    keywordLL, current, end, username, loc, commentLL);
             DatabaseReference choicesRef = mDatabase.child("questions");
             choicesRef.push().setValue(questionToAdd);
 

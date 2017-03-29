@@ -56,6 +56,8 @@ public class Results extends AppCompatActivity{
     private ListView list;
     private List<Map.Entry<String, Float>> ordered;
 
+    String questionPassed;
+
 
     public static final String DB_URL = "https://mobster-3ba43.firebaseio.com/";
     private DatabaseReference mDatabase;
@@ -70,7 +72,7 @@ public class Results extends AppCompatActivity{
 
         setContentView(R.layout.activity_results);
         Bundle bundle = getIntent().getExtras();
-        String questionPassed = bundle.getString("questionPassed");
+        questionPassed = bundle.getString("questionPassed");
         final char home = bundle.getChar("homeTabPassed");
         mDatabase = FirebaseDatabase.getInstance().getReferenceFromUrl(DB_URL);
         DatabaseReference choicesRef = mDatabase.child("questions")
@@ -111,6 +113,19 @@ public class Results extends AppCompatActivity{
             Button button = (Button) findViewById(R.id.back_to_main);
             button.setOnClickListener(listener);
         }
+
+        View.OnClickListener commentListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Results.this, CommentActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("questionPassed", questionPassed);
+                intent.putExtras(bundle);
+                startActivity(intent);
+            }
+        };
+        Button commentButton = (Button) findViewById(R.id.commentsButton);
+        commentButton.setOnClickListener(commentListener);
 
     }
 

@@ -51,6 +51,7 @@ import java.util.LinkedList;
 import Constants.Constant;
 import Helper.HelperMethods;
 import Objects.Choice;
+import Objects.Comment;
 
 public class Voting extends Activity implements OnClickListener{
 
@@ -65,6 +66,9 @@ public class Voting extends Activity implements OnClickListener{
     private String questionKey;
     private boolean selected;
 
+    private EditText commentText;
+    private String comment;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,6 +78,7 @@ public class Voting extends Activity implements OnClickListener{
         Bundle bundle = getIntent().getExtras();
         questionKey = bundle.getString("questionPassed");
         ll = (LinearLayout)findViewById(R.id.linearLayout2);
+        commentText = (EditText) findViewById(R.id.commentText);
 
         final ImageView flag = (ImageView) findViewById(R.id.imageView_flag);
 
@@ -225,6 +230,14 @@ public class Voting extends Activity implements OnClickListener{
         ob.incrementVote();
         mDatabase.child("questions").child(questionKey).child("choices")
                 .child(String.valueOf(answer)).setValue(ob);
+
+        //store the comment (if not empty)
+        comment = commentText.getText().toString();
+        if (!comment.equals("")) {
+            DatabaseReference cref = mDatabase.child("questions").child(questionKey).child("comments").push();
+            Comment c = new Comment(comment, SaveSharedPreferences.getUserName(getApplicationContext()));
+            cref.setValue(c);
+        }
 
         // Updating the "answered" value for the current user
         final String username = SaveSharedPreferences.getUserName(getApplicationContext());
