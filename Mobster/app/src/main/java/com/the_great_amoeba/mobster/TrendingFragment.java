@@ -45,6 +45,7 @@ public class TrendingFragment extends Fragment {
     private DatabaseReference mDatabase;
     private View view;
     private DisplayQuestion[] array;
+    private String user;
 
     @Nullable
     @Override
@@ -54,6 +55,7 @@ public class TrendingFragment extends Fragment {
                 .getReferenceFromUrl(Constant.DB_URL);
         this.view = inflater.inflate(R.layout.new_layout, null);
         Log.d(Constant.DEBUG, "in OncreateView");
+        this.user = SaveSharedPreferences.getUserName(getActivity().getApplicationContext());
         getNewQuestionsFromFirebase();
         return view;
     }
@@ -157,6 +159,8 @@ public class TrendingFragment extends Fragment {
 
                 final DisplayQuestion dq = (DisplayQuestion) parentAdapter.getAdapter().getItem(position);
                 final String questionKey = dq.getQuestionId();
+                final String username = dq.getUsername();
+                LinkedList<String> votedUsernames = dq.getVotedUsers();
 
                 final ImageView upVote = (ImageView) view.findViewById(R.id.imageView_upVote);
                 final ImageView downVote = (ImageView) view.findViewById(R.id.imageView_downVote);
@@ -239,12 +243,32 @@ public class TrendingFragment extends Fragment {
                         });
                     }
                 });
-                DisplayQuestion data = (DisplayQuestion) parentAdapter.getItemAtPosition(position);
-                Intent intent = new Intent(view.getContext(), Voting.class);
-                Bundle bundle = new Bundle();
-                bundle.putString("questionPassed", data.getQuestionId());
-                intent.putExtras(bundle);
-                startActivity(intent);
+
+                if (!buttonPressed) {
+                    DisplayQuestion data = (DisplayQuestion) parentAdapter.getItemAtPosition(position);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("questionPassed", data.getQuestionId());
+                    System.out.println("User name is " + username);
+                    System.out.println("USER is " + user);
+                    if (username.equals(user) || votedUsernames.contains(user)) {
+                        Intent intent = new Intent(view.getContext(), Results.class);
+                        intent.putExtras(bundle);
+                        startActivity(intent);
+                    } else {
+                        Intent intent = new Intent(view.getContext(), Voting.class);
+                        intent.putExtras(bundle);
+                        startActivity(intent);
+                    }
+                }
+
+
+
+//                DisplayQuestion data = (DisplayQuestion) parentAdapter.getItemAtPosition(position);
+//                Intent intent = new Intent(view.getContext(), Voting.class);
+//                Bundle bundle = new Bundle();
+//                bundle.putString("questionPassed", data.getQuestionId());
+//                intent.putExtras(bundle);
+//                startActivity(intent);
             }
         });
     }
