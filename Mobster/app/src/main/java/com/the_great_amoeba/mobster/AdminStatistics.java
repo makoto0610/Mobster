@@ -67,6 +67,21 @@ public class AdminStatistics extends Activity {
 
             }
         });
+
+        DatabaseReference banRef = db.child("admin").child("banned");
+        banRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                banned = String.valueOf(dataSnapshot.getChildrenCount());
+                bannedText= (TextView)findViewById(R.id.num_banned_col);
+                bannedText.setText(banned);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
 }
