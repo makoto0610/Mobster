@@ -59,7 +59,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-        getQuestionLocationsFromFirebase();
     }
 
 
@@ -87,7 +86,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.setInfoWindowAdapter(this.infoWinAdapter);
         mMap.setOnMarkerClickListener(this);
         mMap.setOnInfoWindowClickListener(this);
-
+        getQuestionLocationsFromFirebase();
 
     }
 
@@ -120,8 +119,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     long endTime = (long) end.get("timeInMillis");
                     questionDurationMap.put(keyQuestion, HelperMethods.computeDuration(endTime));
                 }
-
                 initializeQuestionMarkers();
+
             }
 
             @Override
@@ -133,12 +132,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     public void initializeQuestionMarkers() {
         for (Map.Entry<String, LocationWrapper> e : questionLocationMap.entrySet()) {
+            Helper.Log.d(Constant.DEBUG, "Map entry set" + e.toString());
             String question = e.getKey();
             LocationWrapper locWrap = e.getValue();
             LatLng ll = new LatLng(locWrap.getLatitude(), locWrap.getLongitude());
             long endTime = questionDurationMap.get(question);
-            mMap.addMarker(new MarkerOptions().position(ll).title(question).snippet("Duration: "  + new Duration(endTime).toStandardHours().toString()
-                    .substring(2)));
+            mMap.addMarker(new MarkerOptions().position(ll).title(question));
         }
 
 
