@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
@@ -18,6 +19,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.github.mikephil.charting.data.PieEntry;
 import com.google.firebase.auth.FirebaseAuth;
@@ -38,6 +40,9 @@ public class MainActivity extends AppCompatActivity {
     private boolean searchingKeyword;
     private String[] keywords;
 
+    public static boolean homeFragmentShown=false ;
+    public static boolean otherFragmentShown=false ;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,7 +60,10 @@ public class MainActivity extends AppCompatActivity {
          */
         mFragmentManager = getSupportFragmentManager();
         mFragmentTransaction = mFragmentManager.beginTransaction();
+        homeFragmentShown=true;
+
         mFragmentTransaction.replace(R.id.containerView, new HomeTabFragment()).commit();
+
 
         /**
          * Setup click events on the Navigation View Items.
@@ -153,16 +161,22 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 if (menuItem.getItemId() == R.id.nav_item_my_questions) {
+                    otherFragmentShown=true;
+                    homeFragmentShown=false;
                     FragmentTransaction xfragmentTransaction = mFragmentManager.beginTransaction();
                     xfragmentTransaction.replace(R.id.containerView, new MyQuestionsTabFragment()).commit();
                 }
 
                 if (menuItem.getItemId() == R.id.nav_item_statistics) {
+                    otherFragmentShown=true;   //when moving to fragment1
+                    homeFragmentShown=false;
                     FragmentTransaction xfragmentTransaction = mFragmentManager.beginTransaction();
                     xfragmentTransaction.replace(R.id.containerView, new StatisticsFragment()).commit();
                 }
 
                 if (menuItem.getItemId() == R.id.nav_item_rules) {
+                    otherFragmentShown=true;   //when moving to fragment1
+                    homeFragmentShown=false;
                     FragmentTransaction xfragmentTransaction = mFragmentManager.beginTransaction();
                     xfragmentTransaction.replace(R.id.containerView, new RulesFragment()).commit();
                 }
@@ -182,6 +196,8 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 if (menuItem.getItemId() == R.id.nav_item_settings) {
+                    otherFragmentShown=true;   //when moving to fragment1
+                    homeFragmentShown=false;
                     Intent intent = new Intent(getApplicationContext(), SettingsActivity.class);
                     startActivity(intent);
                 }
@@ -201,6 +217,7 @@ public class MainActivity extends AppCompatActivity {
                 R.string.app_name);
 
         mDrawerLayout.setDrawerListener(mDrawerToggle);
+
 
         mDrawerToggle.syncState();
 
@@ -251,5 +268,35 @@ public class MainActivity extends AppCompatActivity {
     // 0 = my questions
     public int getSearchedArea() {
         return searchedArea;
+    }
+
+    @Override
+    public void onBackPressed() {
+            if(homeFragmentShown) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setCancelable(false);
+                builder.setMessage("Do you want to Exit?");
+                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //if user pressed "yes", then he is allowed to exit from application
+                        finish();
+                    }
+                });
+                builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //if user select "No", just cancel this dialog and continue with app
+                        dialog.cancel();
+                    }
+                });
+                AlertDialog alert = builder.create();
+                alert.show();
+            } else {
+                homeFragmentShown=true;
+                FragmentTransaction xfragmentTransaction = mFragmentManager.beginTransaction();
+                xfragmentTransaction.replace(R.id.containerView, new HomeTabFragment()).commit();
+            }
+
     }
 }

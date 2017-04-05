@@ -99,5 +99,9 @@ public class StatisticsFragment extends Fragment {
         return view;
 //        return inflater.inflate(R.layout.statistics_layout,null);
     }
+//    public static void onBackPressed()
+//    {
+//        getActivity().finish();
+//    }
 }
 

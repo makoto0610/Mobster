@@ -323,4 +323,6 @@ public class TrendingFragment extends Fragment {
         }
         return true;
     }
+
+
 }

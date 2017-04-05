@@ -106,13 +106,7 @@ public class Results extends AppCompatActivity{
                 startActivity(intent);
             }
         };
-        if (home == 'm') {
-            View b = findViewById(R.id.back_to_main);
-            b.setVisibility(View.GONE);
-        } else {
-            Button button = (Button) findViewById(R.id.back_to_main);
-            button.setOnClickListener(listener);
-        }
+
 
         View.OnClickListener commentListener = new View.OnClickListener() {
             @Override
@@ -239,6 +233,14 @@ public class Results extends AppCompatActivity{
 
         chart.setData(pieData);
         chart.invalidate();
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+
     }
 
 

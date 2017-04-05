@@ -65,6 +65,7 @@ public class deleteFlaggedQuestions extends AppCompatActivity {
                         index++;
                     }
                 }
+
                 init_FlaggedQuestions_Display();
             }
 
@@ -85,6 +86,7 @@ public class deleteFlaggedQuestions extends AppCompatActivity {
         } else {
 
             // Get ListView object from xml
+
             listView = (ListView) findViewById(R.id.list);
 
             // Define a new Adapter
@@ -106,6 +108,8 @@ public class deleteFlaggedQuestions extends AppCompatActivity {
 
             // ListView Item Click Listener
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+
 
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view,

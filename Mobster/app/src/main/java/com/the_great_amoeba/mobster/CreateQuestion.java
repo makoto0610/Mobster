@@ -570,4 +570,13 @@ public class CreateQuestion extends AppCompatActivity implements
         end.set(year, month, day, hour, minute, start.get(Calendar.SECOND));
         return end.getTimeInMillis() - start.getTimeInMillis();
     }
+
+    @Override
+    public void onBackPressed()
+    {
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+
+    }
+
 }
