@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
                     builder.setView(input);
 
                     // radio buttons
-                    final String[] choices = {"Go to My Questions", "Go to Home"};
+                    final String[] choices = {"search my questions", "search all"};
                     builder.setSingleChoiceItems(choices, searchedArea, new DialogInterface.OnClickListener() {
 
                         @Override
@@ -83,6 +83,8 @@ public class MainActivity extends AppCompatActivity {
                             searchedArea = which;
                         }
                     });
+
+
 
 
                     // search and cancel buttons

@@ -150,7 +150,7 @@
         android:layout_toEndOf="@+id/notification_text" />
 
     <Button
-        android:text="Back"
+        android:text="Save"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="33dp"
