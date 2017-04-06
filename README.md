@@ -5,7 +5,11 @@ Mobster is an Andorid application based on the idea of ochlosophia, which means 
 ### Using the Application
 To use the application on mobile, please simply go to the Google Play Store and search for "Mobster" and follow the standard application installation procedure. (WILL BE RELEASED SOON)
 ### Contribute to the Development
-
+This Andoird application is developed in Andorid Studio and we highly recommend you to use Android Studio for both development and testing.
+To clone the repository please use
+'''git clone https://github.com/makoto0610/Mobster''' in the directory you want to clone the repository to.
+To download the Android Studio please use the following to: [here](https://developer.android.com/studio/index.html)
+Once Android Studio and repository are setup, please open the project using Android Studio to run the application.
 
 ## Usage
 
@@ -15,7 +19,7 @@ TODO: Write usage instructions
 
 1. Fork it!
 2. Create your feature branch: `git checkout -b my-new-feature`
-3. Commit your changes: `git commit -am 'Add some feature'`
+3. Commit your changes: `git commit -m 'Your own commit message'`
 4. Push to the branch: `git push origin my-new-feature`
 5. Submit a pull request :D
 
@@ -24,8 +28,7 @@ TODO: Write usage instructions
 TODO: Write history
 
 ## Credits
-
-TODO: Write credits
+Ani Reddy, 
 
 ## License
 
