@@ -38,6 +38,7 @@ import Constants.Constant;
 import Helper.HelperMethods;
 import Objects.Adapters.CustomListViewAdapter;
 import Objects.DisplayQuestion;
+import Objects.Question;
 
 
 public class TrendingFragment extends Fragment {
@@ -87,7 +88,9 @@ public class TrendingFragment extends Fragment {
                     String keyQuestion = postSnapshot.getKey();
                     HashMap value = (HashMap) postSnapshot.getValue();
                     String status = (String) value.get("status");
-
+                    if (status.equals(Question.Status.CLOSED)) {
+                        continue;
+                    }
                     String questionTitle = (String) value.get("question");
 
                     boolean containsAll = keywordsMatch(keywordStatus, postSnapshot);
@@ -95,24 +98,20 @@ public class TrendingFragment extends Fragment {
                     boolean noSearch = noSearchStatus(searchStatus, keywordStatus);
 
                     if (noSearch) {
-                        //TODO: sort by accesses
-//                        Helper.Log.i(Constant.DEBUG, "keys:" + value.keySet().toString());
-//                        Helper.Log.i(Constant.DEBUG, "values: " + value.values().toString());
                         DisplayQuestion question = HelperMethods.getQuestion(postSnapshot, value, keyQuestion);
-                        questions.add(question);
-
+                        if (!checkDuratationAndUpdateStatus(question)) {
+                            questions.add(question);
+                        }
                     } else if (searchStatus && questionTitle.contains(searchText)) {
-//                        Helper.Log.i(Constant.DEBUG, "keys:" + value.keySet().toString());
-//                        Helper.Log.i(Constant.DEBUG, "values: " + value.values().toString());
                         DisplayQuestion question = HelperMethods.getQuestion(postSnapshot, value, keyQuestion);
-                        questions.add(question);
-
+                        if (!checkDuratationAndUpdateStatus(question)) {
+                            questions.add(question);
+                        }
                     } else if (containsAll) {
-//                        Helper.Log.i(Constant.DEBUG, "keys:" + value.keySet().toString());
-//                        Helper.Log.i(Constant.DEBUG, "values: " + value.values().toString());
                         DisplayQuestion question = HelperMethods.getQuestion(postSnapshot, value, keyQuestion);
-                        questions.add(question);
-
+                        if (!checkDuratationAndUpdateStatus(question)) {
+                            questions.add(question);
+                        }
                     }
                 }
                 Collections.sort(questions, new Comparator<DisplayQuestion>() {
@@ -260,15 +259,6 @@ public class TrendingFragment extends Fragment {
                         startActivity(intent);
                     }
                 }
-
-
-
-//                DisplayQuestion data = (DisplayQuestion) parentAdapter.getItemAtPosition(position);
-//                Intent intent = new Intent(view.getContext(), Voting.class);
-//                Bundle bundle = new Bundle();
-//                bundle.putString("questionPassed", data.getQuestionId());
-//                intent.putExtras(bundle);
-//                startActivity(intent);
             }
         });
     }
@@ -322,5 +312,15 @@ public class TrendingFragment extends Fragment {
             return false;
         }
         return true;
+    }
+
+    private boolean checkDuratationAndUpdateStatus(DisplayQuestion question) {
+        if (question.getDuration().getMillis() == 0) {
+            mDatabase.child("questions")
+                    .child(question.getQuestionId())
+                    .child("status").setValue(Question.Status.CLOSED);
+            return true;
+        }
+        return false;
     }
 }

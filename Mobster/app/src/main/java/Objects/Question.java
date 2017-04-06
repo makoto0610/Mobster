@@ -3,10 +3,8 @@ package Objects;
 import android.location.Location;
 import android.widget.LinearLayout;
 
-import org.joda.time.DateTime;
 import org.joda.time.Duration;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.LinkedList;
