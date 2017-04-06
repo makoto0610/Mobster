@@ -11,25 +11,19 @@ To clone the repository please use
 To download the Android Studio please use the following to: [here](https://developer.android.com/studio/index.html)
 Once Android Studio and repository are setup, please open the project using Android Studio to run the application.
 
-## Usage
-
-TODO: Write usage instructions
-
 ## Contributing
 
 1. Fork it!
-2. Create your feature branch: `git checkout -b my-new-feature`
+2. Create your feature branch: `git checkout -b my_new_feature`
 3. Commit your changes: `git commit -m 'Your own commit message'`
-4. Push to the branch: `git push origin my-new-feature`
+4. Push to the branch: `git push origin my_new_feature`
 5. Submit a pull request :D
 
 ## History
-
-TODO: Write history
+Version 1.0 of the application under development.
 
 ## Credits
-Ani Reddy, 
+[Makoto, R](https://github.com/makoto0610), [Esha, S](https://github.com/esingh7), [Christine, S](https://github.com/cshih299), [Natalie, Y](https://github.com/nathyu), [Ani, R](https://github.com/anir1296)
 
 ## License
-
-TODO: Write license
+All rights reserved.
