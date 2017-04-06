@@ -118,19 +118,19 @@ public class CreateQuestion extends AppCompatActivity implements
             @Override
             public void onClick(View v) {
                 if (options.size() <= 9) {
-                    if (!options.contains(textIn.getText().toString())) {
+                    if (!options.contains(textIn.getText().toString().toLowerCase())) {
                         // Creates the potential view (which is a row with the added textview and remove button
                         LayoutInflater layoutInflater =
                                 (LayoutInflater) getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                         final View addView = layoutInflater.inflate(R.layout.row, null);
                         final TextView addedOption = (TextView) addView.findViewById(R.id.option_text_view);
-                        addedOption.setText(textIn.getText().toString());
+                        addedOption.setText(textIn.getText().toString().toLowerCase());
 
                         containerList.addView(addView);
                         // Adds the view and logic for the remove button
-                        if (addedOption.getText().toString().trim().length() > 0) {
+                        if (addedOption.getText().toString().toLowerCase().trim().length() > 0) {
 
-                            options.add(addedOption.getText().toString());
+                            options.add(addedOption.getText().toString().toLowerCase());
 
 
                             Button buttonRemove = (Button) addView.findViewById(R.id.remove_option);
@@ -138,13 +138,12 @@ public class CreateQuestion extends AppCompatActivity implements
 
                                 @Override
                                 public void onClick(View v) {
-                                    String toRemove = addedOption.getText().toString();
+                                    String toRemove = addedOption.getText().toString().toLowerCase();
                                     options.remove(toRemove);
                                     ((LinearLayout) addView.getParent()).removeView(addView);
 
                                 }
                             });
-
                             textIn.setText("");
 
                         } else {
@@ -175,13 +174,13 @@ public class CreateQuestion extends AppCompatActivity implements
                             (LayoutInflater) getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                     final View addView = layoutInflater.inflate(R.layout.row, null);
                     final TextView addedKeyword = (TextView) addView.findViewById(R.id.option_text_view);
-                    addedKeyword.setText(textInKeyword.getText().toString());
+                    addedKeyword.setText(textInKeyword.getText().toString().toLowerCase());
 
                     containerKeywordList.addView(addView);
                     // Adds the view and logic for the remove button
-                    if (addedKeyword.getText().toString().trim().length() > 0) {
+                    if (addedKeyword.getText().toString().toLowerCase().trim().length() > 0) {
 
-                        keywords.add(addedKeyword.getText().toString());
+                        keywords.add(addedKeyword.getText().toString().toLowerCase());
 
 
                         Button buttonRemove = (Button) addView.findViewById(R.id.remove_option);
@@ -189,7 +188,7 @@ public class CreateQuestion extends AppCompatActivity implements
 
                             @Override
                             public void onClick(View v) {
-                                String toRemove = addedKeyword.getText().toString();
+                                String toRemove = addedKeyword.getText().toString().toLowerCase();
                                 keywords.remove(toRemove);
                                 ((LinearLayout) addView.getParent()).removeView(addView);
 
