@@ -15,9 +15,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 
 import com.google.firebase.database.DataSnapshot;
@@ -29,8 +27,6 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 
-import org.joda.time.Duration;
-
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -39,6 +35,7 @@ import Constants.Constant;
 import Objects.Adapters.CustomListViewAdapter;
 import Objects.DisplayQuestion;
 import Helper.HelperMethods;
+import Objects.Question;
 
 public class NewFragment extends Fragment {
 
@@ -100,31 +97,43 @@ public class NewFragment extends Fragment {
                         if (noSearch) {
                             if (isHomeFragment()) {
                                 DisplayQuestion question = HelperMethods.getQuestion(postSnapshot, value, keyQuestion);
-                                questions.add(question);
+                                if (!checkDuratationAndUpdateStatus(question)) {
+                                    questions.add(question);
+                                }
                             } else { // else it is to be displayed in the My Questions Fragment
                                 if (username.equals(user)) {
                                     DisplayQuestion question = HelperMethods.getQuestion(postSnapshot, value, keyQuestion);
-                                    questions.add(question);
+                                    if (!checkDuratationAndUpdateStatus(question)) {
+                                        questions.add(question);
+                                    }
                                 }
                             }
                         } else if (searchStatus && questionTitle.contains(searchText)) {
                             if (isHomeFragment()) {
                                 DisplayQuestion question = HelperMethods.getQuestion(postSnapshot, value, keyQuestion);
-                                questions.add(question);
+                                if (!checkDuratationAndUpdateStatus(question)) {
+                                    questions.add(question);
+                                }
                             } else { // else it is to be displayed in the My Questions Fragment
                                 if (username.equals(user)) {
                                     DisplayQuestion question = HelperMethods.getQuestion(postSnapshot, value, keyQuestion);
-                                    questions.add(question);
+                                    if (!checkDuratationAndUpdateStatus(question)) {
+                                        questions.add(question);
+                                    }
                                 }
                             }
                         } else if (containsAll) {
                             if (isHomeFragment()) {
                                 DisplayQuestion question = HelperMethods.getQuestion(postSnapshot, value, keyQuestion);
-                                questions.add(question);
+                                if (!checkDuratationAndUpdateStatus(question)) {
+                                    questions.add(question);
+                                }
                             } else { // else it is to be displayed in the My Questions Fragment
                                 if (username.equals(user)) {
                                     DisplayQuestion question = HelperMethods.getQuestion(postSnapshot, value, keyQuestion);
-                                    questions.add(question);
+                                    if (!checkDuratationAndUpdateStatus(question)) {
+                                        questions.add(question);
+                                    }
                                 }
                             }
                         }
@@ -266,8 +275,6 @@ public class NewFragment extends Fragment {
                     DisplayQuestion data = (DisplayQuestion) parentAdapter.getItemAtPosition(position);
                     Bundle bundle = new Bundle();
                     bundle.putString("questionPassed", data.getQuestionId());
-                    System.out.println("User name is " + username);
-                    System.out.println("USER is " + user);
                     if (username.equals(user) || votedUsernames.contains(user)) {
                         bundle.putChar("homeTabPassed", 'h');
                         Intent intent = new Intent(view.getContext(), Results.class);
@@ -355,6 +362,17 @@ public class NewFragment extends Fragment {
 
     private boolean isSearchingHome() {
         if ((((MainActivity)getActivity()).getSearchedArea() == 1)) {
+            return true;
+        }
+        return false;
+    }
+
+
+    private boolean checkDuratationAndUpdateStatus(DisplayQuestion question) {
+        if (question.getDuration().getMillis() == 0) {
+            mDatabase.child("questions")
+                    .child(question.getQuestionId())
+                    .child("status").setValue(Question.Status.CLOSED);
             return true;
         }
         return false;

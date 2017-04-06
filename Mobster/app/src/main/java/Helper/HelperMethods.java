@@ -52,9 +52,8 @@ public class HelperMethods {
     public static long computeDuration(long end) {
         long currentTime = Calendar.getInstance().getTimeInMillis();
         long duration = end - currentTime;
-
         if (duration <= 0) {
-            //this is the check to see if question is still valid
+            duration = 0;
         }
         return duration;
     }
