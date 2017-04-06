@@ -118,41 +118,44 @@ public class CreateQuestion extends AppCompatActivity implements
             @Override
             public void onClick(View v) {
                 if (options.size() <= 9) {
+                    if (!options.contains(textIn.getText().toString())) {
+                        // Creates the potential view (which is a row with the added textview and remove button
+                        LayoutInflater layoutInflater =
+                                (LayoutInflater) getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                        final View addView = layoutInflater.inflate(R.layout.row, null);
+                        final TextView addedOption = (TextView) addView.findViewById(R.id.option_text_view);
+                        addedOption.setText(textIn.getText().toString());
 
-                    // Creates the potential view (which is a row with the added textview and remove button
-                    LayoutInflater layoutInflater =
-                            (LayoutInflater) getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                    final View addView = layoutInflater.inflate(R.layout.row, null);
-                    final TextView addedOption = (TextView) addView.findViewById(R.id.option_text_view);
-                    addedOption.setText(textIn.getText().toString());
+                        containerList.addView(addView);
+                        // Adds the view and logic for the remove button
+                        if (addedOption.getText().toString().trim().length() > 0) {
 
-                    containerList.addView(addView);
-                    // Adds the view and logic for the remove button
-                    if (addedOption.getText().toString().trim().length() > 0) {
-
-                        options.add(addedOption.getText().toString());
+                            options.add(addedOption.getText().toString());
 
 
-                        Button buttonRemove = (Button) addView.findViewById(R.id.remove_option);
-                        buttonRemove.setOnClickListener(new View.OnClickListener() {
+                            Button buttonRemove = (Button) addView.findViewById(R.id.remove_option);
+                            buttonRemove.setOnClickListener(new View.OnClickListener() {
 
-                            @Override
-                            public void onClick(View v) {
-                                String toRemove = addedOption.getText().toString();
-                                options.remove(toRemove);
-                                ((LinearLayout) addView.getParent()).removeView(addView);
+                                @Override
+                                public void onClick(View v) {
+                                    String toRemove = addedOption.getText().toString();
+                                    options.remove(toRemove);
+                                    ((LinearLayout) addView.getParent()).removeView(addView);
 
-                            }
-                        });
+                                }
+                            });
 
-                    textIn.setText("");
+                            textIn.setText("");
 
+                        } else {
+                            ((LinearLayout) addView.getParent()).removeView(addView);
+                            HelperMethods.errorDialog(context, "Empty option",
+                                    "You cannot have an empty option");
+                        }
                     } else {
-                        ((LinearLayout) addView.getParent()).removeView(addView);
-                        HelperMethods.errorDialog(context, "Empty option",
-                                "You cannot have an empty option");
+                        HelperMethods.errorDialog(context, "Duplicated Choice",
+                                "You may not have duplicated choices.");
                     }
-
                 } else {
                     HelperMethods.errorDialog(context, "Too many options!",
                             "You can only have up to 10 options");
