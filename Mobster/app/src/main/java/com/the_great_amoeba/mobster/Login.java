@@ -98,6 +98,7 @@ public class Login extends AppCompatActivity {
     public void onLoginClick(View view) {
         final String username = this.username.getText().toString().trim();
         final String password = this.password.getText().toString().trim();
+        if (validateInput(username, password)) return;
         //To check for banned Users
         mDatabase.child("admin").child("banned").child(username).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -113,6 +114,26 @@ public class Login extends AppCompatActivity {
             public void onCancelled(DatabaseError databaseError) {
             }
         });
+    }
+
+    /**
+     * TODO
+     * @param username
+     * @param password
+     * @return
+     */
+    public boolean validateInput(String username, String password) {
+        boolean error = false;
+        if (username.length() == 0) {
+            HelperMethods.errorDialog(this, "Username not entered",
+                    "You did not enter a username.");
+            error = true;
+        } else if (password.length() == 0) {
+            HelperMethods.errorDialog(this, "Password not entered",
+                    "You did not enter a password.");
+            error = true;
+        }
+        return error;
     }
 
 
