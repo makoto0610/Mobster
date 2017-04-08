@@ -9,12 +9,18 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.MutableData;
+import com.google.firebase.database.Transaction;
 import com.the_great_amoeba.mobster.R;
 
 import org.joda.time.Duration;
 
 import java.util.List;
 
+import Constants.Constant;
 import Objects.DisplayQuestion;
 
 /**
@@ -41,15 +47,22 @@ public class CustomListViewAdapter extends ArrayAdapter<DisplayQuestion> {
     }
 
     public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder holder = null;
         DisplayQuestion question = getItem(position);
 
+        final ViewHolder holder;
         LayoutInflater mInflater = (LayoutInflater) context
                 .getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
         if (convertView == null) {
             convertView = mInflater.inflate(R.layout.list_view, null);
             holder = new ViewHolder();
             holder.imageFavorite = (ImageView) convertView.findViewById(R.id.imageView_favorite);
+            holder.imageFavorite.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    holder.imageFavorite.setImageResource(R.drawable.ic_star);
+                }
+            });
+
             holder.textQuestion = (TextView) convertView.findViewById(R.id.tv_Map_Question);
             holder.textDuration = (TextView) convertView.findViewById(R.id.textView_Duration);
             holder.textRating = (TextView) convertView.findViewById(R.id.textView_Rating);

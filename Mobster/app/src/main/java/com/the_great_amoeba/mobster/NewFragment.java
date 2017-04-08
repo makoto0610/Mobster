@@ -183,49 +183,49 @@ public class NewFragment extends Fragment {
 
                 final View relativeLayout = view;
 
-                favorite.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        buttonPressed = true;
-                        favorite.setImageResource(R.drawable.ic_star);
-
-                        //NOTE: rating display changed before the database gets updated
-                        // had to do it this way as a workaround
-                        // ideally, want database updated THEN rating display changed
-                        // database/display mismatch might occur if a database error occurs
-
-                        dq.setRating(dq.getRating() + 1);
-                        updateRating(relativeLayout, dq.getRating());
-
-                        //begin upvote transaction
-                        DatabaseReference accessFavorite = mDatabase.child("questions").child(questionKey).child("numFavorites");
-                        accessFavorite.runTransaction(new Transaction.Handler() {
-                            @Override
-                            public Transaction.Result doTransaction(MutableData mutableData) {
-                                //Helper.Log.d(Constant.DEBUG, "in doTransaction()");
-                                Long currentValue = (Long) mutableData.getValue();
-                                if (currentValue == null) {
-                                    //Helper.Log.d(Constant.DEBUG, "doTransaction() data returned null");
-                                    mutableData.setValue(1);
-                                } else {
-                                    mutableData.setValue(currentValue + 1);
-                                }
-                                return Transaction.success(mutableData);
-                            }
-
-                            @Override
-                            public void onComplete(DatabaseError databaseError, boolean b, DataSnapshot dataSnapshot) {
-                                if (databaseError == null) {
-                                    Helper.Log.d(Constant.DEBUG, "Transaction finished.");
-                                    //Helper.Log.d(Constant.DEBUG, dataSnapshot.toString());
-                                }
-                                else Helper.Log.d(Constant.DEBUG, "Transaction finished w/ database error " + databaseError.toString());
-                            }
-
-                        });
-
-                    }
-                });
+//                favorite.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View view) {
+//                        buttonPressed = true;
+//                        favorite.setImageResource(R.drawable.ic_star);
+//
+//                        //NOTE: rating display changed before the database gets updated
+//                        // had to do it this way as a workaround
+//                        // ideally, want database updated THEN rating display changed
+//                        // database/display mismatch might occur if a database error occurs
+//
+//                        dq.setRating(dq.getRating() + 1);
+//                        updateRating(relativeLayout, dq.getRating());
+//
+//                        //begin upvote transaction
+//                        DatabaseReference accessFavorite = mDatabase.child("questions").child(questionKey).child("numFavorites");
+//                        accessFavorite.runTransaction(new Transaction.Handler() {
+//                            @Override
+//                            public Transaction.Result doTransaction(MutableData mutableData) {
+//                                //Helper.Log.d(Constant.DEBUG, "in doTransaction()");
+//                                Long currentValue = (Long) mutableData.getValue();
+//                                if (currentValue == null) {
+//                                    //Helper.Log.d(Constant.DEBUG, "doTransaction() data returned null");
+//                                    mutableData.setValue(1);
+//                                } else {
+//                                    mutableData.setValue(currentValue + 1);
+//                                }
+//                                return Transaction.success(mutableData);
+//                            }
+//
+//                            @Override
+//                            public void onComplete(DatabaseError databaseError, boolean b, DataSnapshot dataSnapshot) {
+//                                if (databaseError == null) {
+//                                    Helper.Log.d(Constant.DEBUG, "Transaction finished.");
+//                                    //Helper.Log.d(Constant.DEBUG, dataSnapshot.toString());
+//                                }
+//                                else Helper.Log.d(Constant.DEBUG, "Transaction finished w/ database error " + databaseError.toString());
+//                            }
+//
+//                        });
+//
+//                    }
+//                });
 
 
                 if (!buttonPressed) {
