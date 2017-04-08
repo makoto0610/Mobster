@@ -13,7 +13,7 @@
         android:id="@+id/nav_search_questions"
         android:icon="@drawable/places_ic_search"/>
 
-    <item android:title="Statistics"
+    <item android:title="My Statistics"
         android:id="@+id/nav_item_statistics"
         android:icon="@drawable/ic_equalizer"/>
 
