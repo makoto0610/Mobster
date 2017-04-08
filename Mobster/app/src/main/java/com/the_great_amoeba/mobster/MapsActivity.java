@@ -1,15 +1,14 @@
 package com.the_great_amoeba.mobster;
 
 import android.content.Intent;
-import android.location.Location;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
-import android.support.v7.widget.ThemedSpinnerAdapter;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -20,7 +19,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-import org.joda.time.Duration;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,9 +26,18 @@ import java.util.Map;
 import Constants.Constant;
 import Helper.HelperMethods;
 import Objects.Adapters.CustomInfoWindowAdapter;
-import Objects.DisplayQuestion;
 import Objects.LocationWrapper;
-import Objects.Question;
+
+import static com.google.android.gms.maps.model.BitmapDescriptorFactory.HUE_AZURE;
+import static com.google.android.gms.maps.model.BitmapDescriptorFactory.HUE_BLUE;
+import static com.google.android.gms.maps.model.BitmapDescriptorFactory.HUE_CYAN;
+import static com.google.android.gms.maps.model.BitmapDescriptorFactory.HUE_GREEN;
+import static com.google.android.gms.maps.model.BitmapDescriptorFactory.HUE_MAGENTA;
+import static com.google.android.gms.maps.model.BitmapDescriptorFactory.HUE_ORANGE;
+import static com.google.android.gms.maps.model.BitmapDescriptorFactory.HUE_RED;
+import static com.google.android.gms.maps.model.BitmapDescriptorFactory.HUE_ROSE;
+import static com.google.android.gms.maps.model.BitmapDescriptorFactory.HUE_VIOLET;
+import static com.google.android.gms.maps.model.BitmapDescriptorFactory.HUE_YELLOW;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,
         GoogleMap.OnMarkerClickListener,
@@ -44,6 +51,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private Map<String, Long> questionDurationMap;
 
     private CustomInfoWindowAdapter infoWinAdapter;
+
+    private static float[] colors = {
+        HUE_AZURE, HUE_GREEN, HUE_CYAN, HUE_BLUE, HUE_MAGENTA, HUE_ORANGE,
+            HUE_RED, HUE_ROSE, HUE_VIOLET, HUE_YELLOW
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -131,13 +143,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     public void initializeQuestionMarkers() {
+        int i = 0;
         for (Map.Entry<String, LocationWrapper> e : questionLocationMap.entrySet()) {
             Helper.Log.d(Constant.DEBUG, "Map entry set" + e.toString());
             String question = e.getKey();
             LocationWrapper locWrap = e.getValue();
             LatLng ll = new LatLng(locWrap.getLatitude(), locWrap.getLongitude());
             long endTime = questionDurationMap.get(question);
-            mMap.addMarker(new MarkerOptions().position(ll).title(question));
+            float color = colors[ ((i++) % colors.length)];
+            mMap.addMarker(new MarkerOptions().position(ll).title(question).icon(
+                    BitmapDescriptorFactory.defaultMarker(color)));
         }
 
 
@@ -151,49 +166,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      */
     @Override
     public boolean onMarkerClick(Marker marker) {
-//        getQuestionInfoFromFB(marker);
 //        return true;
         return false;
     }
 
-    public void getQuestionInfoFromFB(final Marker marker) {
-        final String question = marker.getTitle();
-        Helper.Log.d(Constant.DEBUG, "in getQuestionInfoFromFB");
-        marker.hideInfoWindow();
-
-        /**
-         * Query the database for the question object w/ given question field
-         */
-        Query questionQuery = mDatabase.child("questions").orderByChild("question").
-                equalTo(question);
-        questionQuery.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
-                    String keyQuestion = postSnapshot.getKey();
-                    HashMap value = (HashMap) postSnapshot.getValue();
-
-                    //TODO: error message if null (other places as well)
-                    if (value == null) return;
-                    Helper.Log.i(Constant.DEBUG, "keys:" + value.keySet().toString());
-                    Helper.Log.i(Constant.DEBUG, "values: " + value.values().toString());
-                    DisplayQuestion question = HelperMethods.getQuestion(postSnapshot, value, keyQuestion);
-                    marker.setTag(question);
-                    infoWinAdapter.dq = question;
-                    marker.showInfoWindow();
-
-                    //There should only be one question (no other questions should have same question string)
-                    break;
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                //TODO: questions not loading error message
-            }
-        });
-
-    }
 
     @Override
     public void onInfoWindowClick(Marker marker) {
