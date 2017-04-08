@@ -2,14 +2,12 @@ package com.the_great_amoeba.mobster;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -28,7 +26,6 @@ import java.util.HashMap;
 
 import Constants.Constant;
 import Helper.HelperMethods;
-import Objects.User;
 
 import static android.R.style.Theme;
 
@@ -172,7 +169,6 @@ public class Login extends AppCompatActivity {
      * @param password the user's password
      */
     private void firebaseAuth(String email, String username, String password) {
-        final String _email = email;
         final String _username = username;
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -221,6 +217,11 @@ public class Login extends AppCompatActivity {
         }
     }
 
+    /**
+     * Brings the user to the ForgotPassword Activity.
+     *
+     * @param view The current view (which is the Login View)
+     */
     public void onForgetPasswordClick(View view) {
         Intent intent = new Intent(this, ForgotPassword.class);
         startActivity(intent);

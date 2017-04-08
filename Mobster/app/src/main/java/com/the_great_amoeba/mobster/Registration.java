@@ -1,8 +1,6 @@
 package com.the_great_amoeba.mobster;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 
 import android.support.annotation.NonNull;
@@ -23,8 +21,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-
-import java.util.HashMap;
 
 import Constants.Constant;
 import Objects.User;
@@ -132,8 +128,8 @@ public class Registration extends AppCompatActivity {
             HelperMethods.errorDialog(this, "Email invalid",
                     "Email cannot be empty and must be valid.");
         } else {
-            User user = new User(username, password, email);
-            addNewUser(user);
+            User user = new User(username, email);
+            addNewUser(user, password);
         }
     }
 
@@ -169,8 +165,8 @@ public class Registration extends AppCompatActivity {
                             "Username already exists");
                 } else {
                     //register the new user
-                    User user = new User(username, password, email);
-                    addNewUser(user);
+                    User user = new User(username, email);
+                    addNewUser(user, password);
                 }
             }
             @Override
@@ -186,12 +182,11 @@ public class Registration extends AppCompatActivity {
      * users table in the DB.
      * @param user - User object to be used for insertion in Firebase DB.
      */
-    private void addNewUser(User user) {
-        boolean success = false;
+    private void addNewUser(User user, String password) {
         final String _username = user.getUsername();
         mDatabase.child("users").child(user.getUsername())
                 .setValue(user);
-        mAuth.createUserWithEmailAndPassword(user.getEmail(), user.getPassword())
+        mAuth.createUserWithEmailAndPassword(user.getEmail(), password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
