@@ -102,13 +102,12 @@ public class Registration extends AppCompatActivity {
         String confirm = this.confirm.getText().toString();
         String email = this.email.getText().toString();
         Query contain = mDatabase.child("users").orderByKey().equalTo(username);
-        //usernameBanned = username;
 
-        if (username.length()== 0) {
+        if (username.length() == 0) {
             HelperMethods.errorDialog(this, "Username not entered",
                     "You did not enter a username.");
             this.confirm.setText("");
-        } else if(password.length()== 0 ||  confirm.length()== 0) {
+        } else if (password.length() == 0 || confirm.length() == 0) {
             HelperMethods.errorDialog(this, "Password or confirm password not entered",
                     "You did not enter a password.");
             this.confirm.setText("");
@@ -141,10 +140,11 @@ public class Registration extends AppCompatActivity {
         mDatabase.child("users").child(enteredUsername).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists()){
+                if (dataSnapshot.exists()) {
                     isExist[0] = true;
                 }
             }
+
             @Override
             public void onCancelled(DatabaseError databaseError) {
             }
@@ -155,12 +155,12 @@ public class Registration extends AppCompatActivity {
     /**
      * Method that queries Firebase DB to see if entered username matches an existing username that was banned.
      */
-    public  void checkUsernameBanned(final String username, final String password, final String email) {
+    public void checkUsernameBanned(final String username, final String password, final String email) {
         //To check for banned Users
         mDatabase.child("admin").child("banned").child(username).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists()){
+                if (dataSnapshot.exists()) {
                     HelperMethods.errorDialog(context, "Username invalid",
                             "Username already exists");
                 } else {
@@ -169,6 +169,7 @@ public class Registration extends AppCompatActivity {
                     addNewUser(user, password);
                 }
             }
+
             @Override
             public void onCancelled(DatabaseError databaseError) {
             }
@@ -176,10 +177,10 @@ public class Registration extends AppCompatActivity {
     }
 
 
-
     /**
      * Adds a new user by first authenticating through Firebase, and then adding to the
      * users table in the DB.
+     *
      * @param user - User object to be used for insertion in Firebase DB.
      */
     private void addNewUser(User user, String password) {

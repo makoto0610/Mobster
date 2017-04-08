@@ -18,21 +18,16 @@ import android.util.Log;
 import android.widget.EditText;
 
 
-
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 
 import Constants.Constant;
 import Helper.HelperMethods;
-import Objects.Comment;
 
 /**
  * Created by natalie on 3/22/2017.
@@ -43,17 +38,19 @@ public class SettingsActivity extends AppCompatActivity {
 
     private Button verify;
     private Button changeEmail;
+
     private EditText newEmail;
     private TextView textEmail;
     private ImageView verified;
+
     private Context context;
+
     private FirebaseUser user;
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
 
     public static final String DB_URL = "https://mobster-3ba43.firebaseio.com/";
     private DatabaseReference mDatabase;
-
 
 
     @Override
@@ -65,23 +62,24 @@ public class SettingsActivity extends AppCompatActivity {
         verify = (Button) findViewById(R.id.verifyButton);
         changeEmail = (Button) findViewById(R.id.emailChangeButton);
         textEmail = (TextView) findViewById(R.id.email);
-        context = this;
         newEmail = (EditText) findViewById(R.id.newEmail);
-        user = FirebaseAuth.getInstance().getCurrentUser();
         verified = (ImageView) findViewById(R.id.verified);
-        mDatabase = FirebaseDatabase.getInstance().getReferenceFromUrl(DB_URL);
 
+        context = this;
+
+        user = FirebaseAuth.getInstance().getCurrentUser();
         if (!user.isEmailVerified()) {
             verified.setVisibility(View.GONE);
         }
 
-
         textEmail.setText(user.getEmail());
+
+        mDatabase = FirebaseDatabase.getInstance().getReferenceFromUrl(DB_URL);
         mAuth = FirebaseAuth.getInstance();
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                if (user != null ) {
+                if (user != null) {
                     Log.e("AUTH", user.isEmailVerified() ? "User is signed in and email is verified" : "Email is not verified");
                 } else {
                     Log.e("AUTH", "onAuthStateChanged:signed_out");
@@ -138,11 +136,9 @@ public class SettingsActivity extends AppCompatActivity {
         }
 
         RadioGroup themes = (RadioGroup) findViewById(R.id.theme_choices);
-        themes.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
-        {
-            public void onCheckedChanged(RadioGroup group, int checkedId)
-            {
-                RadioButton checkedRadioButton = (RadioButton)group.findViewById(checkedId);
+        themes.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                RadioButton checkedRadioButton = (RadioButton) group.findViewById(checkedId);
                 if (checkedRadioButton.getText().equals("Dark")) {
                     SaveSharedPreferences.setChosenTheme(getApplicationContext(), "dark");
                 } else {
@@ -174,6 +170,9 @@ public class SettingsActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Sends the verification email to the user's email.
+     */
     private void sendVerificationEmail() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -190,8 +189,13 @@ public class SettingsActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Changes the user's email and also updates it in the database
+     *
+     * @param user currently logged in
+     * @param email to be updated to
+     */
     private void changeEmail(final FirebaseUser user, final String email) {
-
         user.updateEmail(email)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override

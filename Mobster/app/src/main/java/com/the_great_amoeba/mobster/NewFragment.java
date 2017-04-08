@@ -82,7 +82,7 @@ public class NewFragment extends Fragment {
                 // search keywords
                 boolean keywordStatus = getKeywordSearchStatus();
 
-                for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     String keyQuestion = postSnapshot.getKey();
                     HashMap value = (HashMap) postSnapshot.getValue();
                     String status = (String) value.get("status");
@@ -144,7 +144,7 @@ public class NewFragment extends Fragment {
                 array = questions.toArray(array);
                 init_Questions_Display();
 
-                
+
             }
 
             @Override
@@ -170,6 +170,7 @@ public class NewFragment extends Fragment {
         // react to click
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             boolean buttonPressed;
+
             public void onItemClick(AdapterView<?> parentAdapter, View view, int position,
                                     long id) {
 
@@ -226,8 +227,8 @@ public class NewFragment extends Fragment {
                                 if (databaseError == null) {
                                     Helper.Log.d(Constant.DEBUG, "Transaction finished.");
                                     //Helper.Log.d(Constant.DEBUG, dataSnapshot.toString());
-                                }
-                                else Helper.Log.d(Constant.DEBUG, "Transaction finished w/ database error " + databaseError.toString());
+                                } else
+                                    Helper.Log.d(Constant.DEBUG, "Transaction finished w/ database error " + databaseError.toString());
                             }
 
                         });
@@ -241,7 +242,7 @@ public class NewFragment extends Fragment {
                         downVote.setImageResource(R.drawable.ic_down_vote_orange);
                         upVote.setImageResource(R.drawable.ic_up_vote_green);
 
-                        dq.setRating(dq.getRating() - 1 );
+                        dq.setRating(dq.getRating() - 1);
                         updateRating(relativeLayout, dq.getRating());
 
                         //begin downvote transaction
@@ -263,8 +264,8 @@ public class NewFragment extends Fragment {
                             public void onComplete(DatabaseError databaseError, boolean b, DataSnapshot dataSnapshot) {
                                 if (databaseError == null) {
                                     Helper.Log.d(Constant.DEBUG, "Transaction finished.");
-                                }
-                                else Helper.Log.d(Constant.DEBUG, "Transaction finished w/ database error " + databaseError.toString());
+                                } else
+                                    Helper.Log.d(Constant.DEBUG, "Transaction finished w/ database error " + databaseError.toString());
                             }
 
                         });
@@ -299,8 +300,9 @@ public class NewFragment extends Fragment {
 
     /**
      * Method called after the upvote/downvote transactions are processed
+     *
      * @param relativeLayout - the relativeLayout (the list view row) to update
-     * @param newRating - the new rating to be displayed
+     * @param newRating      - the new rating to be displayed
      */
     private void updateRating(View relativeLayout, long newRating) {
         //Helper.Log.d(Constant.DEBUG, relativeLayout.toString());
@@ -312,26 +314,25 @@ public class NewFragment extends Fragment {
      * Returns whether or not the parent fragment is the Home Tab Fragment (or the My Questions Tab)
      *
      * @return true if the current fragment's parent is the HomeTabFragment. False if the parent
-     *          is the MyQuestionsFragment
+     * is the MyQuestionsFragment
      */
     private boolean isHomeFragment() {
         return getParentFragment().getClass().equals(new HomeTabFragment().getClass());
     }
 
 
-
     // Searching Helpers
     private String getSearchText() {
         String toReturn = "";
-        if (((MainActivity)getActivity()).isSearching()/* &&
+        if (((MainActivity) getActivity()).isSearching()/* &&
                 (((MainActivity)getActivity()).getSearchedArea() == 1)*/) {
-            toReturn = ((MainActivity)getActivity()).getSearchedText();
+            toReturn = ((MainActivity) getActivity()).getSearchedText();
         }
         return toReturn;
     }
 
     private boolean getKeywordSearchStatus() {
-        if (((MainActivity)getActivity()).isSearchingKeyword()/* &&
+        if (((MainActivity) getActivity()).isSearchingKeyword()/* &&
                 (((MainActivity)getActivity()).getSearchedArea() == 1)*/) {
             return true;
         }
@@ -340,11 +341,11 @@ public class NewFragment extends Fragment {
 
     private boolean keywordsMatch(boolean keywordStatus, DataSnapshot postSnapshot) {
         if (keywordStatus) {
-            String[] searchedKeywords = ((MainActivity)getActivity()).getKeywords();
-            String[] questionKeywords = new String[(int)postSnapshot.child("keywords").getChildrenCount()];
+            String[] searchedKeywords = ((MainActivity) getActivity()).getKeywords();
+            String[] questionKeywords = new String[(int) postSnapshot.child("keywords").getChildrenCount()];
             int arrayCount = 0;
             for (DataSnapshot k : postSnapshot.child("keywords").getChildren()) {
-                questionKeywords[arrayCount] = (String)k.getValue();
+                questionKeywords[arrayCount] = (String) k.getValue();
                 arrayCount++;
             }
             return Arrays.asList(questionKeywords)
@@ -361,7 +362,7 @@ public class NewFragment extends Fragment {
     }
 
     private boolean isSearchingHome() {
-        if ((((MainActivity)getActivity()).getSearchedArea() == 1)) {
+        if ((((MainActivity) getActivity()).getSearchedArea() == 1)) {
             return true;
         }
         return false;

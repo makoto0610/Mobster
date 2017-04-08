@@ -23,17 +23,19 @@ public class ForgotPassword extends AppCompatActivity {
     private ProgressBar progress;
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forgot_password);
+
+        // Setup UI values
         emailInput = (EditText) findViewById(R.id.email_input);
         sendPassword = (Button) findViewById(R.id.send_password);
         progress = (ProgressBar) findViewById(R.id.progressBar);
 
         auth = FirebaseAuth.getInstance();
 
+        // functionality for when user clicks on "forgot password" button
         sendPassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -65,8 +67,6 @@ public class ForgotPassword extends AppCompatActivity {
             }
         });
     }
-
-
 
 
 }
