@@ -13,7 +13,6 @@ import android.location.Location;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -100,8 +99,8 @@ public class CreateQuestion extends AppCompatActivity implements
         addKeyword = (Button) findViewById(R.id.add_keyword);
         submit = (Button) findViewById(R.id.submit_question);
 
-        textDate = (EditText) findViewById(R.id.end_date_text);
-        textTime = (EditText) findViewById(R.id.end_time_text);
+        textDate = (TextView) findViewById(R.id.end_date_text);
+        textTime = (TextView) findViewById(R.id.end_time_text);
         context = this;
         question = (EditText) findViewById(R.id.create_question);
 

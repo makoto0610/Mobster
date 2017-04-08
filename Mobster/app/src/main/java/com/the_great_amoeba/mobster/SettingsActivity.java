@@ -23,10 +23,16 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 
 import Constants.Constant;
 import Helper.HelperMethods;
+import Objects.Comment;
 
 /**
  * Created by natalie on 3/22/2017.
@@ -45,6 +51,9 @@ public class SettingsActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
 
+    public static final String DB_URL = "https://mobster-3ba43.firebaseio.com/";
+    private DatabaseReference mDatabase;
+
 
 
     @Override
@@ -60,6 +69,8 @@ public class SettingsActivity extends AppCompatActivity {
         newEmail = (EditText) findViewById(R.id.newEmail);
         user = FirebaseAuth.getInstance().getCurrentUser();
         verified = (ImageView) findViewById(R.id.verified);
+        mDatabase = FirebaseDatabase.getInstance().getReferenceFromUrl(DB_URL);
+
         if (!user.isEmailVerified()) {
             verified.setVisibility(View.GONE);
         }
@@ -179,7 +190,7 @@ public class SettingsActivity extends AppCompatActivity {
         }
     }
 
-    private void changeEmail(final FirebaseUser user, String email) {
+    private void changeEmail(final FirebaseUser user, final String email) {
 
         user.updateEmail(email)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -190,9 +201,12 @@ public class SettingsActivity extends AppCompatActivity {
                             Toast.makeText(SettingsActivity.this, "Email Updated!",
                                     Toast.LENGTH_LONG).show();
                             textEmail.setText(user.getEmail());
-                        } else {
-                            HelperMethods.errorDialog(context, "Email Update Error",
-                                    "Error when updating email");
+
+                            String username = SaveSharedPreferences.getUserName(getApplicationContext());
+                            System.out.println("username: " + username);
+
+                            DatabaseReference updateEmail = mDatabase.child("users").child(username).child("email");
+                            updateEmail.setValue(email);
                         }
                     }
                 });
