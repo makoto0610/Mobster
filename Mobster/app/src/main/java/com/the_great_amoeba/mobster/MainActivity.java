@@ -44,22 +44,16 @@ public class MainActivity extends AppCompatActivity {
         HelperMethods.setChosenTheme(this, getApplicationContext());
         setContentView(R.layout.activity_main);
 
-        /**
-         * Setup the DrawerLayout and NavigationView
-         */
+        // Setup the DrawerLayout and NavigationView
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
         mNavigationView = (NavigationView) findViewById(R.id.nav_view);
 
-        /**
-         * Inflating the HomeFragment as the first Fragment
-         */
+        //Inflating the HomeFragment as the first Fragment
         mFragmentManager = getSupportFragmentManager();
         mFragmentTransaction = mFragmentManager.beginTransaction();
         mFragmentTransaction.replace(R.id.containerView, new HomeTabFragment()).commit();
 
-        /**
-         * Setup click events on the Navigation View Items.
-         */
+        //Setup click events on the Navigation View Items
         mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(MenuItem menuItem) {
@@ -121,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
                             } else {
                                 String[] keywordsRaw = searchedText.split(",");
                                 keywords = new String[keywordsRaw.length];
-                                for (int i = 0 ; i < keywordsRaw.length; i++) {
+                                for (int i = 0; i < keywordsRaw.length; i++) {
                                     keywords[i] = keywordsRaw[i].trim();
                                 }
                                 searchingKeyword = true;
@@ -171,7 +165,7 @@ public class MainActivity extends AppCompatActivity {
                     Intent intent = new Intent(getApplicationContext(), Login.class);
                     //Log out from Firebase Auth
                     FirebaseAuth.getInstance().signOut();
-                    SaveSharedPreferences.setUserName(getApplicationContext(),"");
+                    SaveSharedPreferences.setUserName(getApplicationContext(), "");
                     startActivity(intent);
                 }
 
@@ -192,9 +186,7 @@ public class MainActivity extends AppCompatActivity {
 
         });
 
-        /**
-         * Setup Drawer Toggle of the Toolbar
-         */
+        // Setup Drawer Toggle of the Toolbar
         android.support.v7.widget.Toolbar toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBarDrawerToggle mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar, R.string.app_name,
@@ -227,7 +219,6 @@ public class MainActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-
 
 
     // methods for searching

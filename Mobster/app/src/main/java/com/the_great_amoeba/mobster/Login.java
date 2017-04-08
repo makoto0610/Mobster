@@ -2,14 +2,12 @@ package com.the_great_amoeba.mobster;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -28,9 +26,7 @@ import java.util.HashMap;
 
 import Constants.Constant;
 import Helper.HelperMethods;
-import Objects.User;
 
-import static android.R.style.Theme;
 
 public class Login extends AppCompatActivity {
 
@@ -67,6 +63,12 @@ public class Login extends AppCompatActivity {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
                     // User is signed in
+                    user = firebaseAuth.getCurrentUser();
+                    if (user != null) {
+                        Log.d(Constant.AUTH_TAG, user.isEmailVerified() ? "User is signed in and email is verified" : "Email is not verified");
+                    } else {
+                        Log.d(Constant.AUTH_TAG, "onAuthStateChanged:signed_out");
+                    }
                     Log.d(Constant.AUTH_TAG, "onAuthStateChanged:signed_in:" + user.getUid());
                 } else {
                     // User is signed out
@@ -102,13 +104,14 @@ public class Login extends AppCompatActivity {
         mDatabase.child("admin").child("banned").child(username).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists()){
+                if (dataSnapshot.exists()) {
                     HelperMethods.errorDialog(context, "User Banned",
                             "Sorry you have been banned from using Mobster");
                 } else {
                     checkLogin(username, password);
                 }
             }
+
             @Override
             public void onCancelled(DatabaseError databaseError) {
             }
@@ -124,11 +127,11 @@ public class Login extends AppCompatActivity {
      * @param username username entered
      * @param password password entered
      */
-    public void checkLogin(final String username, final String password){
-        if(!flagBanned && username.equals("admin") && password.equals("password")) {
+    public void checkLogin(final String username, final String password) {
+        if (!flagBanned && username.equals("admin") && password.equals("password")) {
             Intent intent = new Intent(Login.this, AdminHome.class);
             startActivity(intent);
-        } else if(!flagBanned){
+        } else if (!flagBanned) {
 
 
             //Find the email associated with the username (required for Firebase Auth)
@@ -161,12 +164,11 @@ public class Login extends AppCompatActivity {
      * Method that calls Firebase's authentication method to log a user in and
      * starts MainActivity.
      *
-     * @param email that corresponds to the user
+     * @param email    that corresponds to the user
      * @param username the user's username
      * @param password the user's password
      */
     private void firebaseAuth(String email, String username, String password) {
-        final String _email = email;
         final String _username = username;
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -215,6 +217,11 @@ public class Login extends AppCompatActivity {
         }
     }
 
+    /**
+     * Brings the user to the ForgotPassword Activity.
+     *
+     * @param view The current view (which is the Login View)
+     */
     public void onForgetPasswordClick(View view) {
         Intent intent = new Intent(this, ForgotPassword.class);
         startActivity(intent);
