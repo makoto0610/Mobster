@@ -80,7 +80,7 @@ public class TrendingFragment extends Fragment {
                 }
 
                 // search keywords
-                boolean keywordStatus = getKeywordSearchStatus();
+//                boolean keywordStatus = getKeywordSearchStatus();
 
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     String keyQuestion = postSnapshot.getKey();
@@ -91,8 +91,11 @@ public class TrendingFragment extends Fragment {
                     }
                     String questionTitle = (String) value.get("question");
 
-                    boolean containsAll = keywordsMatch(keywordStatus, postSnapshot);
+//                    boolean containsAll = keywordsMatch(keywordStatus, postSnapshot);
+//
+//                    boolean noSearch = noSearchStatus(searchStatus, keywordStatus);
 
+<<<<<<< b7113c06f5785295e8ff203289005783efd388ad
                     boolean noSearch = noSearchStatus(searchStatus, keywordStatus);
 
                     if (noSearch) {
@@ -110,7 +113,31 @@ public class TrendingFragment extends Fragment {
                         if (!checkDuratationAndUpdateStatus(question)) {
                             questions.add(question);
                         }
+=======
+                    if (searchStatus) {
+                        //TODO: sort by accesses
+                        if (searchMatch(searchText, questionTitle, postSnapshot)) {
+                            DisplayQuestion question = HelperMethods.getQuestion(postSnapshot, value, keyQuestion);
+                            questions.add(question);
+                        }
+                    } else {
+                        DisplayQuestion question = HelperMethods.getQuestion(postSnapshot, value, keyQuestion);
+                        questions.add(question);
+>>>>>>> Combined keywords and title searching. Haven't tested much.
                     }
+//                    } else if (searchStatus && questionTitle.contains(searchText)) {
+////                        Helper.Log.i(Constant.DEBUG, "keys:" + value.keySet().toString());
+////                        Helper.Log.i(Constant.DEBUG, "values: " + value.values().toString());
+//                        DisplayQuestion question = HelperMethods.getQuestion(postSnapshot, value, keyQuestion);
+//                        questions.add(question);
+//
+//                    } else if (containsAll) {
+////                        Helper.Log.i(Constant.DEBUG, "keys:" + value.keySet().toString());
+////                        Helper.Log.i(Constant.DEBUG, "values: " + value.values().toString());
+//                        DisplayQuestion question = HelperMethods.getQuestion(postSnapshot, value, keyQuestion);
+//                        questions.add(question);
+//
+//                    }
                 }
                 Collections.sort(questions, new Comparator<DisplayQuestion>() {
                     @Override
@@ -284,6 +311,7 @@ public class TrendingFragment extends Fragment {
         return toReturn;
     }
 
+<<<<<<< b7113c06f5785295e8ff203289005783efd388ad
     private boolean getKeywordSearchStatus() {
         if (((MainActivity) getActivity()).isSearchingKeyword() &&
                 (((MainActivity) getActivity()).getSearchedArea() == 1)) {
@@ -300,20 +328,28 @@ public class TrendingFragment extends Fragment {
             for (DataSnapshot k : postSnapshot.child("keywords").getChildren()) {
                 questionKeywords[arrayCount] = (String) k.getValue();
                 arrayCount++;
+=======
+    private boolean searchMatch(String searched, String question, DataSnapshot postSnapshot) {
+        String[] words = searched.split("\\s*(,|\\s)\\s*");
+
+        // check keywords
+        boolean keywordsMatch = false;
+        for (DataSnapshot k : postSnapshot.child("keywords").getChildren()) {
+            if (Arrays.asList(words).contains((String)k.getValue())) {
+                keywordsMatch = true;
+                break;
+>>>>>>> Combined keywords and title searching. Haven't tested much.
             }
-            return Arrays.asList(questionKeywords)
-                    .containsAll(Arrays.asList(searchedKeywords));
         }
-        return false;
+
+        // check questions title
+        String[] title = question.split("\\s+");
+        boolean titleMatch = Arrays.asList(title).containsAll(Arrays.asList(searched));
+
+        return (keywordsMatch || titleMatch);
     }
 
-    private boolean noSearchStatus(boolean searchText, boolean searchKeyword) {
-        if (searchText || searchKeyword) {
-            return false;
-        }
-        return true;
-    }
-
+<<<<<<< b7113c06f5785295e8ff203289005783efd388ad
     private boolean checkDuratationAndUpdateStatus(DisplayQuestion question) {
         if (question.getDuration().getMillis() == 0) {
             mDatabase.child("questions")
@@ -323,4 +359,35 @@ public class TrendingFragment extends Fragment {
         }
         return false;
     }
+=======
+//    private boolean getKeywordSearchStatus() {
+//        if (((MainActivity)getActivity()).isSearchingKeyword() &&
+//                (((MainActivity)getActivity()).getSearchedArea() == 1)) {
+//            return true;
+//        }
+//        return false;
+//    }
+
+//    private boolean keywordsMatch(boolean keywordStatus, DataSnapshot postSnapshot) {
+//        if (keywordStatus) {
+//            String[] searchedKeywords = ((MainActivity)getActivity()).getKeywords();
+//            String[] questionKeywords = new String[(int)postSnapshot.child("keywords").getChildrenCount()];
+//            int arrayCount = 0;
+//            for (DataSnapshot k : postSnapshot.child("keywords").getChildren()) {
+//                questionKeywords[arrayCount] = (String)k.getValue();
+//                arrayCount++;
+//            }
+//            return Arrays.asList(questionKeywords)
+//                    .containsAll(Arrays.asList(searchedKeywords));
+//        }
+//        return false;
+//    }
+
+//    private boolean noSearchStatus(boolean searchText, boolean searchKeyword) {
+//        if (searchText || searchKeyword) {
+//            return false;
+//        }
+//        return true;
+//    }
+>>>>>>> Combined keywords and title searching. Haven't tested much.
 }

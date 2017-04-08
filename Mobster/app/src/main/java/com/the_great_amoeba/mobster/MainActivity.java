@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
 
                     // text inputs
                     final EditText input = new EditText(MainActivity.this);
-                    if (searching || searchingKeyword) {
+                    if (searching) {
                         input.setText(searchedText);
                     } else {
                         input.setHint("Enter text here");
@@ -88,16 +88,17 @@ public class MainActivity extends AppCompatActivity {
 
 
                     // search and cancel buttons
-                    builder.setPositiveButton("Search Question Name", new DialogInterface.OnClickListener() {
+                    builder.setPositiveButton("Search", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
+                            searching = true;
                             searchedText = input.getText().toString();
-                            if (searchedText.equals("")) {
+/*                            if (searchedText.equals("")) {
                                 searching = false;
                             } else {
                                 searching = true;
                             }
-                            searchingKeyword = false;
+                            searchingKeyword = false;*/
                             FragmentTransaction xfragmentTransaction = mFragmentManager.beginTransaction();
                             if (searchedArea == 0) {
                                 xfragmentTransaction.replace(R.id.containerView, new MyQuestionsTabFragment()).commit();
@@ -107,29 +108,34 @@ public class MainActivity extends AppCompatActivity {
                             }
                         }
                     });
-                    builder.setNegativeButton("Search Keywords (separate by commas)", new DialogInterface.OnClickListener() {
+                    builder.setNegativeButton("Clear Search", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            searchedText = input.getText().toString();
-                            if (searchedText.equals("")) {
-                                searchingKeyword = false;
-                                keywords = new String[0];
-                            } else {
-                                String[] keywordsRaw = searchedText.split(",");
-                                keywords = new String[keywordsRaw.length];
-                                for (int i = 0; i < keywordsRaw.length; i++) {
-                                    keywords[i] = keywordsRaw[i].trim();
-                                }
-                                searchingKeyword = true;
-                            }
+                            input.setText("");
                             searching = false;
                             FragmentTransaction xfragmentTransaction = mFragmentManager.beginTransaction();
-                            if (searchedArea == 0) {
-                                xfragmentTransaction.replace(R.id.containerView, new MyQuestionsTabFragment()).commit();
+                            xfragmentTransaction.replace(R.id.containerView, new HomeTabFragment()).commit();
 
-                            } else {
-                                xfragmentTransaction.replace(R.id.containerView, new HomeTabFragment()).commit();
-                            }
+//                            searchedText = input.getText().toString();
+//                            if (searchedText.equals("")) {
+//                                searchingKeyword = false;
+//                                keywords = new String[0];
+//                            } else {
+//                                String[] keywordsRaw = searchedText.split(",");
+//                                keywords = new String[keywordsRaw.length];
+//                                for (int i = 0 ; i < keywordsRaw.length; i++) {
+//                                    keywords[i] = keywordsRaw[i].trim();
+//                                }
+//                                searchingKeyword = true;
+//                            }
+//                            searching = false;
+//                            FragmentTransaction xfragmentTransaction = mFragmentManager.beginTransaction();
+//                            if (searchedArea == 0) {
+//                                xfragmentTransaction.replace(R.id.containerView, new MyQuestionsTabFragment()).commit();
+//
+//                            } else {
+//                                xfragmentTransaction.replace(R.id.containerView, new HomeTabFragment()).commit();
+//                            }
                         }
                     });
                     //neutral is actually is negative
