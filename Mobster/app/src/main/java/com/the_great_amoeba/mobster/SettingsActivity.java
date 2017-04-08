@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -38,8 +39,11 @@ public class SettingsActivity extends AppCompatActivity {
     private Button changeEmail;
     private EditText newEmail;
     private TextView textEmail;
+    private ImageView verified;
     private Context context;
     private FirebaseUser user;
+    private FirebaseAuth mAuth;
+    private FirebaseAuth.AuthStateListener mAuthListener;
 
 
 
@@ -55,10 +59,24 @@ public class SettingsActivity extends AppCompatActivity {
         context = this;
         newEmail = (EditText) findViewById(R.id.newEmail);
         user = FirebaseAuth.getInstance().getCurrentUser();
+        verified = (ImageView) findViewById(R.id.verified);
+        if (!user.isEmailVerified()) {
+            verified.setVisibility(View.GONE);
+        }
 
 
         textEmail.setText(user.getEmail());
-
+        mAuth = FirebaseAuth.getInstance();
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                if (user != null ) {
+                    Log.e("AUTH", user.isEmailVerified() ? "User is signed in and email is verified" : "Email is not verified");
+                } else {
+                    Log.e("AUTH", "onAuthStateChanged:signed_out");
+                }
+            }
+        };
 
         verify.setOnClickListener(new View.OnClickListener() {
 
@@ -80,15 +98,8 @@ public class SettingsActivity extends AppCompatActivity {
                     HelperMethods.errorDialog(context, "Invalid Email",
                             "Please enter a valid email");
                 } else {
-                    try {
-                        changeEmail(user, changedEmail);
-                        textEmail.setText(user.getEmail());
-                        newEmail.setText("");
-                    } catch (Exception e) {
-                        HelperMethods.errorDialog(context, "Email Update Error",
-                                "Error when updating email");
-                    }
-
+                    changeEmail(user, changedEmail);
+                    newEmail.setText("");
                 }
             }
         });
@@ -168,7 +179,7 @@ public class SettingsActivity extends AppCompatActivity {
         }
     }
 
-    private void changeEmail(FirebaseUser user, String email) {
+    private void changeEmail(final FirebaseUser user, String email) {
 
         user.updateEmail(email)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -178,8 +189,28 @@ public class SettingsActivity extends AppCompatActivity {
                             Log.d(Constant.AUTH_TAG, "User email address updated.");
                             Toast.makeText(SettingsActivity.this, "Email Updated!",
                                     Toast.LENGTH_LONG).show();
+                            textEmail.setText(user.getEmail());
+                        } else {
+                            HelperMethods.errorDialog(context, "Email Update Error",
+                                    "Error when updating email");
                         }
                     }
                 });
     }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mAuth.addAuthStateListener(mAuthListener);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (mAuthListener != null) {
+            mAuth.removeAuthStateListener(mAuthListener);
+        }
+    }
+
+
 }

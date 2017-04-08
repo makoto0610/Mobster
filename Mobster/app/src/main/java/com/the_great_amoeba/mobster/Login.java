@@ -67,6 +67,12 @@ public class Login extends AppCompatActivity {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
                     // User is signed in
+                    user = firebaseAuth.getCurrentUser();
+                    if (user != null ) {
+                        Log.d(Constant.AUTH_TAG, user.isEmailVerified() ? "User is signed in and email is verified" : "Email is not verified");
+                    } else {
+                        Log.d(Constant.AUTH_TAG, "onAuthStateChanged:signed_out");
+                    }
                     Log.d(Constant.AUTH_TAG, "onAuthStateChanged:signed_in:" + user.getUid());
                 } else {
                     // User is signed out
