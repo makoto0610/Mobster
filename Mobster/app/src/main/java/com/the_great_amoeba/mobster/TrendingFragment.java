@@ -26,8 +26,6 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 
-import org.joda.time.Duration;
-
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
@@ -161,17 +159,15 @@ public class TrendingFragment extends Fragment {
                 final String username = dq.getUsername();
                 LinkedList<String> votedUsernames = dq.getVotedUsers();
 
-                final ImageView upVote = (ImageView) view.findViewById(R.id.imageView_upVote);
-                final ImageView downVote = (ImageView) view.findViewById(R.id.imageView_downVote);
+                final ImageView favorite = (ImageView) view.findViewById(R.id.imageView_favorite);
 
                 final View relativeLayout = view;
 
-                upVote.setOnClickListener(new View.OnClickListener() {
+                favorite.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         buttonPressed = true;
-                        downVote.setImageResource(R.drawable.ic_down_vote_green);
-                        upVote.setImageResource(R.drawable.ic_up_vote_orange);
+                        favorite.setImageResource(R.drawable.ic_star);
 
                         //NOTE: rating display changed before the database gets updated
                         // had to do it this way as a workaround
@@ -181,7 +177,7 @@ public class TrendingFragment extends Fragment {
                         updateRating(relativeLayout, dq.getRating());
 
                         //begin upvote transaction
-                        DatabaseReference accessUp = mDatabase.child("questions").child(questionKey).child("num_upvotes");
+                        DatabaseReference accessUp = mDatabase.child("questions").child(questionKey).child("numFavorites");
                         accessUp.runTransaction(new Transaction.Handler() {
                             @Override
                             public Transaction.Result doTransaction(MutableData mutableData) {
@@ -205,41 +201,6 @@ public class TrendingFragment extends Fragment {
 
                         });
 
-                    }
-                });
-                downVote.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        buttonPressed = true;
-                        downVote.setImageResource(R.drawable.ic_down_vote_orange);
-                        upVote.setImageResource(R.drawable.ic_up_vote_green);
-
-                        dq.setRating(dq.getRating() - 1 );
-                        updateRating(relativeLayout, dq.getRating());
-
-                        //begin downvote transaction
-                        DatabaseReference accessDown = mDatabase.child("questions").child(questionKey).child("num_downvotes");
-                        accessDown.runTransaction(new Transaction.Handler() {
-                            @Override
-                            public Transaction.Result doTransaction(MutableData mutableData) {
-                                Long currentValue = (Long) mutableData.getValue();
-                                if (currentValue == null) {
-                                    mutableData.setValue(1);
-                                } else {
-                                    mutableData.setValue(currentValue + 1);
-                                }
-                                return Transaction.success(mutableData);
-                            }
-
-                            @Override
-                            public void onComplete(DatabaseError databaseError, boolean b, DataSnapshot dataSnapshot) {
-                                if (databaseError == null) {
-                                    Helper.Log.d(Constant.DEBUG, "Transaction finished.");
-                                }
-                                else Helper.Log.d(Constant.DEBUG, "Transaction finished w/ database error " + databaseError.toString());
-                            }
-
-                        });
                     }
                 });
 

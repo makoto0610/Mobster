@@ -104,9 +104,7 @@ public class HelperMethods {
      */
     public static DisplayQuestion getQuestion(DataSnapshot postSnapshot, HashMap value, String keyQuestion) {
         Object start = value.get("start");
-        long upvotes = (long) value.get("num_upvotes");
-        long downvotes = (long) value.get("num_downvotes");
-        long rating = upvotes - downvotes;
+        long rating = (long) value.get("numFavorites");
         long access = (long) value.get("num_access");
         HashMap end =  (HashMap) value.get("end");
         long endTime = (long) end.get("timeInMillis");

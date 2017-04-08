@@ -25,8 +25,8 @@ public class Question {
     private int isFlagged;
     private Status status;
     private int num_access;
-    private long num_upvotes;
-    private long num_downvotes;
+    private long numFavorites;
+
     private LinkedList<String> votedUsers;
 
     private Location loc;
@@ -54,6 +54,7 @@ public class Question {
         this.status = Status.NEW;
         this.loc = loc;
         isFlagged = 0;
+        this.numFavorites = 0;
 
         this.comments = comments;
         this.votedUsers = new LinkedList<>();
@@ -63,6 +64,16 @@ public class Question {
 
         return comments;
     }
+
+    public void setNumFavorites(long numFavorites) {
+        this.numFavorites = numFavorites;
+    }
+
+    public long getNumFavorites() {
+
+        return numFavorites;
+    }
+
 
     public String getQuestion() {
         return question;
@@ -112,29 +123,12 @@ public class Question {
         this.num_access++;
     }
 
-    public void setNum_upvotes(long num_upvotes) {
-        this.num_upvotes = num_upvotes;
-    }
-
     public void setIsFlagged(int isFlagged) {
         this.isFlagged = isFlagged;
     }
 
     public int getIsFlagged() {
         return this.isFlagged;
-    }
-
-    public void setNum_downvotes(long num_downvotes) {
-        this.num_downvotes = num_downvotes;
-    }
-
-    public long getNum_upvotes() {
-
-        return num_upvotes;
-    }
-
-    public long getNum_downvotes() {
-        return num_downvotes;
     }
 
     public Location getLoc() {

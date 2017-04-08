@@ -34,8 +34,7 @@ public class CustomListViewAdapter extends ArrayAdapter<DisplayQuestion> {
 
     /*private view holder class*/
     private class ViewHolder {
-        ImageView imageUpVote;
-        ImageView imageDownVote;
+        ImageView imageFavorite;
         TextView textQuestion;
         TextView textDuration;
         TextView textRating;
@@ -50,8 +49,7 @@ public class CustomListViewAdapter extends ArrayAdapter<DisplayQuestion> {
         if (convertView == null) {
             convertView = mInflater.inflate(R.layout.list_view, null);
             holder = new ViewHolder();
-            holder.imageUpVote = (ImageView) convertView.findViewById(R.id.imageView_upVote);
-            holder.imageDownVote = (ImageView) convertView.findViewById(R.id.imageView_downVote);
+            holder.imageFavorite = (ImageView) convertView.findViewById(R.id.imageView_favorite);
             holder.textQuestion = (TextView) convertView.findViewById(R.id.tv_Map_Question);
             holder.textDuration = (TextView) convertView.findViewById(R.id.textView_Duration);
             holder.textRating = (TextView) convertView.findViewById(R.id.textView_Rating);
