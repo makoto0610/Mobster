@@ -1,7 +1,7 @@
 package com.the_great_amoeba.mobster;
 
+import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -10,15 +10,19 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 import android.util.Log;
+import android.widget.EditText;
+
 
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+
 
 import Constants.Constant;
 import Helper.HelperMethods;
@@ -29,11 +33,67 @@ import Helper.HelperMethods;
 
 public class SettingsActivity extends AppCompatActivity {
 
+
+    private Button verify;
+    private Button changeEmail;
+    private EditText newEmail;
+    private TextView textEmail;
+    private Context context;
+    private FirebaseUser user;
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         HelperMethods.setChosenTheme(this, getApplicationContext());
         setContentView(R.layout.activity_settings);
+
+        verify = (Button) findViewById(R.id.verifyButton);
+        changeEmail = (Button) findViewById(R.id.emailChangeButton);
+        textEmail = (TextView) findViewById(R.id.email);
+        context = this;
+        newEmail = (EditText) findViewById(R.id.newEmail);
+        user = FirebaseAuth.getInstance().getCurrentUser();
+
+
+        textEmail.setText(user.getEmail());
+
+
+        verify.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                sendVerificationEmail();
+            }
+        });
+
+        changeEmail.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                String changedEmail = newEmail.getText().toString().trim();
+                if (changedEmail.length() == 0) {
+                    HelperMethods.errorDialog(context, "Empty email",
+                            "You cannot have an empty email");
+                } else if (!changedEmail.contains("@") || !changedEmail.contains(".") || changedEmail.contains(" ")) {
+                    HelperMethods.errorDialog(context, "Invalid Email",
+                            "Please enter a valid email");
+                } else {
+                    try {
+                        changeEmail(user, changedEmail);
+                        textEmail.setText(user.getEmail());
+                        newEmail.setText("");
+                    } catch (Exception e) {
+                        HelperMethods.errorDialog(context, "Email Update Error",
+                                "Error when updating email");
+                    }
+
+                }
+            }
+        });
+
+
         onClickSave();
 
 
@@ -108,8 +168,7 @@ public class SettingsActivity extends AppCompatActivity {
         }
     }
 
-    private void changeEmail(String email) {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    private void changeEmail(FirebaseUser user, String email) {
 
         user.updateEmail(email)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -117,6 +176,8 @@ public class SettingsActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
                             Log.d(Constant.AUTH_TAG, "User email address updated.");
+                            Toast.makeText(SettingsActivity.this, "Email Updated!",
+                                    Toast.LENGTH_LONG).show();
                         }
                     }
                 });

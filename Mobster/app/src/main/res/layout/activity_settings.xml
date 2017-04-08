@@ -19,7 +19,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/theme_text"
-        android:layout_marginStart="63dp"
+        android:layout_marginStart="40dp"
         android:layout_marginTop="50dp"
         android:textSize="26sp"
         android:layout_below="@+id/settings_title"
@@ -34,42 +34,7 @@
         android:layout_alignTop="@+id/theme_text"
         android:layout_alignEnd="@+id/notification_toggle">
 
-        <RadioButton
-            android:text="Light"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/light_theme"
-            android:layout_weight="1"
-            android:layout_alignBaseline="@+id/dark_theme"
-            android:layout_alignBottom="@+id/dark_theme"
-            android:layout_marginEnd="12dp"/>
-
-        <RadioButton
-            android:text="Dark"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/dark_theme"
-            android:layout_weight="1"
-            android:layout_alignTop="@+id/theme_text"
-            android:layout_alignEnd="@+id/notification_text" />
     </RadioGroup>
-
-    <ToggleButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/notification_toggle"
-        android:layout_marginStart="31dp"
-        android:layout_alignBottom="@+id/notification_text"
-        android:layout_toEndOf="@+id/notification_text" />
-
-    <Button
-        android:text="Back"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="33dp"
-        android:id="@+id/save_settings"
-        android:layout_alignParentBottom="true"
-        android:layout_toEndOf="@+id/theme_text" />
 
     <TextView
         android:text="Email:"
@@ -80,16 +45,6 @@
         android:layout_below="@+id/notification_toggle"
         android:layout_alignStart="@+id/notification_text"
         android:layout_marginTop="60dp" />
-
-    <TextView
-        android:text="Notifications"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
-        android:id="@+id/notification_text"
-        android:textSize="26sp"
-        android:layout_below="@+id/theme_choices"
-        android:layout_alignStart="@+id/theme_text" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -116,14 +71,6 @@
         android:layout_alignEnd="@+id/VerificationText"
         android:layout_marginTop="15dp"/>
 
-    <Button
-        android:text="VERIFY ME!"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/textEmail"
-        android:layout_alignStart="@+id/notification_toggle"
-        android:id="@+id/verifyButton" />
-
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -148,10 +95,65 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/email"
-        android:textSize="20sp"
+        android:textSize="19sp"
         android:text="CURRENT EMAIL"
         android:layout_alignBaseline="@+id/textEmail"
         android:layout_alignBottom="@+id/textEmail"
         android:layout_alignEnd="@+id/verifyButton"
         android:layout_toEndOf="@+id/theme_text" />
+
+    <RadioButton
+        android:text="Dark"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/dark_theme"
+        android:layout_weight="1"
+        android:layout_alignTop="@+id/theme_choices"
+        android:layout_alignEnd="@+id/notification_toggle" />
+
+    <ToggleButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/notification_toggle"
+        android:layout_marginEnd="30dp"
+        android:layout_alignBottom="@+id/notification_text"
+        android:layout_alignParentEnd="true" />
+
+    <Button
+        android:text="VERIFY ME!"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/verifyButton"
+        android:layout_alignBaseline="@+id/VerificationText"
+        android:layout_alignBottom="@+id/VerificationText"
+        android:layout_alignEnd="@+id/notification_toggle" />
+
+    <TextView
+        android:text="Notifications"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="54dp"
+        android:id="@+id/notification_text"
+        android:textSize="26sp"
+        android:layout_below="@+id/light_theme"
+        android:layout_alignStart="@+id/theme_text" />
+
+    <RadioButton
+        android:text="Light"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/light_theme"
+        android:layout_weight="1"
+        android:layout_marginStart="33dp"
+        android:layout_alignBottom="@+id/theme_text"
+        android:layout_toEndOf="@+id/notification_text" />
+
+    <Button
+        android:text="Back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="33dp"
+        android:id="@+id/save_settings"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
 </RelativeLayout>
