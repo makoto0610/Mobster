@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
                     builder.setPositiveButton("Search Question Name", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            searchedText = input.getText().toString();
+                            searchedText = input.getText().toString().toLowerCase();
                             if (searchedText.equals("")) {
                                 searching = false;
                             } else {
@@ -114,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
                     builder.setNegativeButton("Search Keywords (separate by commas)", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            searchedText = input.getText().toString();
+                            searchedText = input.getText().toString().toLowerCase();
                             if (searchedText.equals("")) {
                                 searchingKeyword = false;
                                 keywords = new String[0];
