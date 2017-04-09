@@ -355,7 +355,7 @@ public class NewFragment extends Fragment {
 //    }
 
     private boolean searchMatch(String searched, String question, DataSnapshot postSnapshot) {
-        String[] words = searched.split("\\s*(,|\\s)\\s*");
+        String[] words = searched.split("\\s*(,|\\?|\\s)\\s*");
 
         // check keywords
         boolean keywordsMatch = false;
@@ -367,8 +367,9 @@ public class NewFragment extends Fragment {
         }
 
         // check questions title
-        String[] title = question.split("\\s+");
-        boolean titleMatch = Arrays.asList(title).containsAll(Arrays.asList(searched));
+        String[] title = question.split("\\s*(,|\\?|\\s)\\s*");
+
+        boolean titleMatch = Arrays.asList(title).containsAll(Arrays.asList(words));
 
         return (keywordsMatch || titleMatch);
     }

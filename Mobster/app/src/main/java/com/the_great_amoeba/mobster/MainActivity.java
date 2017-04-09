@@ -17,7 +17,9 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 
 import com.github.mikephil.charting.data.PieEntry;
 import com.google.firebase.auth.FirebaseAuth;
@@ -70,9 +72,20 @@ public class MainActivity extends AppCompatActivity {
                     } else {
                         input.setHint("Enter text here");
                     }
-
                     input.setInputType(InputType.TYPE_CLASS_TEXT);
-                    builder.setView(input);
+
+                    // adding margins to the input line
+                    FrameLayout container = new FrameLayout(MainActivity.this);
+                    FrameLayout.LayoutParams params = new  FrameLayout.LayoutParams
+                                    (ViewGroup.LayoutParams.MATCH_PARENT
+                                    , ViewGroup.LayoutParams.WRAP_CONTENT);
+                    params.leftMargin = getResources().getDimensionPixelSize(R.dimen.dialog_margin);
+                    params.rightMargin = getResources().getDimensionPixelSize(R.dimen.dialog_margin);
+                    input.setLayoutParams(params);
+                    container.addView(input);
+                    builder.setView(container);
+
+                    //builder.setView(input);
 
                     // radio buttons
                     final String[] choices = {"search my questions", "search all"};
