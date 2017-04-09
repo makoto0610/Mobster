@@ -20,9 +20,9 @@
         android:scrollHorizontally="false"
         android:layout_width="150dp"
         android:layout_centerVertical="true"
-        android:layout_alignParentStart="true"
-        android:layout_toStartOf="@+id/textView_Rating"
-        android:minHeight="80dp" />
+        android:minHeight="80dp"
+        android:layout_alignStart="@+id/textView_Duration"
+        android:layout_toStartOf="@+id/imageView_downVote" />
 
     <TextView
         android:text="TextView"
@@ -50,7 +50,8 @@
         android:minWidth="80dp"
         android:minHeight="25dp"
         android:layout_below="@+id/tv_Map_Question"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="15dp" />
 
 
 </RelativeLayout>
