@@ -11,6 +11,8 @@ import android.widget.TextView;
 
 import com.the_great_amoeba.mobster.R;
 
+import org.joda.time.Duration;
+
 import java.util.List;
 
 import Objects.DisplayQuestion;
@@ -59,9 +61,25 @@ public class CustomListViewAdapter extends ArrayAdapter<DisplayQuestion> {
 
         holder.textQuestion.setText(question.getQuestion());
         holder.textRating.setText(question.getRating() + "");
-        holder.textDuration.setText(question.getDuration().toStandardHours().toString()
-        .substring(2));
+
+        holder.textDuration.setText(getDurationDisplay(question.getDuration()));
 
         return convertView;
+    }
+
+    private String getDurationDisplay(Duration duration) {
+        long days = duration.getStandardDays();
+        long hours = duration.getStandardMinutes();
+        long minutes = duration.getStandardMinutes();
+        long seconds = duration.getStandardSeconds();
+        if (days != 0) {
+            return days + " days";
+        } else if (hours != 0) {
+            return hours + " hours";
+        }
+        if (minutes <= 0 && seconds > 0) {
+            minutes = 1;
+        }
+        return minutes + " minutes";
     }
 }

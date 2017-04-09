@@ -3,10 +3,8 @@ package Objects;
 import android.location.Location;
 import android.widget.LinearLayout;
 
-import org.joda.time.DateTime;
 import org.joda.time.Duration;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -124,6 +122,10 @@ public class Question {
 
     public int getIsFlagged() {
         return this.isFlagged;
+    }
+
+    public void incrementFlagged() {
+        this.isFlagged++;
     }
 
     public void setNum_downvotes(long num_downvotes) {

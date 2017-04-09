@@ -58,7 +58,7 @@ public class deleteFlaggedQuestions extends AppCompatActivity {
                     String question = (String) value.get("question");
                     if(value.get("isFlagged")!= null) {
                         Long isFlagged = (Long) value.get("isFlagged");
-                        if (isFlagged == 1) {
+                        if (isFlagged >= 3) {
                             array[index] = question;
                             length++;
                         }

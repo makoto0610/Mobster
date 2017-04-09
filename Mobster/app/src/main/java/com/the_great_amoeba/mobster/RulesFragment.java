@@ -28,8 +28,8 @@ public class RulesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         initDetails();
-        View view = inflater.inflate(R.layout.rules_layout,container, false);
-        ListView lv = (ListView)view.findViewById(R.id.faq_list);
+        View view = inflater.inflate(R.layout.rules_layout, container, false);
+        ListView lv = (ListView) view.findViewById(R.id.faq_list);
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -37,9 +37,7 @@ public class RulesFragment extends Fragment {
             }
         });
         return view;
-//        return inflater.inflate(R.layout.rules_layout,null);
     }
-
 
 
     private void onRuleClick(View view, int pos) {
@@ -58,12 +56,12 @@ public class RulesFragment extends Fragment {
     private void initDetails() {
         map = new HashMap<>();
         map.put(0, "1. No personal information should be disclosed. \n\n"
-            + "2. No profanity. \n\n"
-            + "Any questions that violate these rules will be removed.");
+                + "2. No profanity. \n\n"
+                + "Any questions that violate these rules will be removed.");
         map.put(1, "Ask a question by selecting the icon at the top right corner.");
         map.put(2, "Answer a question by selecting the question you want to answer " +
-            ", choosing the option(s) that you want, and then pressing 'Submit'.");
-        map.put(3, "You can upvote a question if you think it's intereseting and want it to "
-            + "gain visibility.");
+                ", choosing the option(s) that you want, and then pressing 'Submit'.");
+        map.put(3, "You can upvote a question if you think it's interesting and want it to "
+                + "gain visibility.");
     }
 }

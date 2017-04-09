@@ -102,30 +102,36 @@ public class ClosedFragment extends Fragment {
                         if (noSearch) {
                             if (isHomeFragment()) {
                                 DisplayQuestion question = HelperMethods.getQuestion(postSnapshot, value, keyQuestion);
+                                question.setDuration(new Duration(0));
                                 questions.add(question);
                             } else { // else it is to be displayed in the My Questions Fragment
                                 if (username.equals(user)) {
                                     DisplayQuestion question = HelperMethods.getQuestion(postSnapshot, value, keyQuestion);
+                                    question.setDuration(new Duration(0));
                                     questions.add(question);
                                 }
                             }
                         } else if (searchStatus && questionTitle.contains(searchText)) {
                             if (isHomeFragment()) {
                                 DisplayQuestion question = HelperMethods.getQuestion(postSnapshot, value, keyQuestion);
+                                question.setDuration(new Duration(0));
                                 questions.add(question);
                             } else { // else it is to be displayed in the My Questions Fragment
                                 if (username.equals(user)) {
                                     DisplayQuestion question = HelperMethods.getQuestion(postSnapshot, value, keyQuestion);
+                                    question.setDuration(new Duration(0));
                                     questions.add(question);
                                 }
                             }
                         } else if (containsAll) {
                             if (isHomeFragment()) {
                                 DisplayQuestion question = HelperMethods.getQuestion(postSnapshot, value, keyQuestion);
+                                question.setDuration(new Duration(0));
                                 questions.add(question);
                             } else { // else it is to be displayed in the My Questions Fragment
                                 if (username.equals(user)) {
                                     DisplayQuestion question = HelperMethods.getQuestion(postSnapshot, value, keyQuestion);
+                                    question.setDuration(new Duration(0));
                                     questions.add(question);
                                 }
                             }

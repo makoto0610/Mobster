@@ -38,6 +38,7 @@ import Constants.Constant;
 import Helper.HelperMethods;
 import Objects.Adapters.CustomListViewAdapter;
 import Objects.DisplayQuestion;
+import Objects.Question;
 
 
 public class TrendingFragment extends Fragment {
@@ -83,11 +84,13 @@ public class TrendingFragment extends Fragment {
                 // search keywords
                 boolean keywordStatus = getKeywordSearchStatus();
 
-                for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     String keyQuestion = postSnapshot.getKey();
                     HashMap value = (HashMap) postSnapshot.getValue();
                     String status = (String) value.get("status");
-
+                    if (status.equals(Question.Status.CLOSED)) {
+                        continue;
+                    }
                     String questionTitle = (String) value.get("question");
 
                     boolean containsAll = keywordsMatch(keywordStatus, postSnapshot);
@@ -95,24 +98,20 @@ public class TrendingFragment extends Fragment {
                     boolean noSearch = noSearchStatus(searchStatus, keywordStatus);
 
                     if (noSearch) {
-                        //TODO: sort by accesses
-//                        Helper.Log.i(Constant.DEBUG, "keys:" + value.keySet().toString());
-//                        Helper.Log.i(Constant.DEBUG, "values: " + value.values().toString());
                         DisplayQuestion question = HelperMethods.getQuestion(postSnapshot, value, keyQuestion);
-                        questions.add(question);
-
+                        if (!checkDuratationAndUpdateStatus(question)) {
+                            questions.add(question);
+                        }
                     } else if (searchStatus && questionTitle.contains(searchText)) {
-//                        Helper.Log.i(Constant.DEBUG, "keys:" + value.keySet().toString());
-//                        Helper.Log.i(Constant.DEBUG, "values: " + value.values().toString());
                         DisplayQuestion question = HelperMethods.getQuestion(postSnapshot, value, keyQuestion);
-                        questions.add(question);
-
+                        if (!checkDuratationAndUpdateStatus(question)) {
+                            questions.add(question);
+                        }
                     } else if (containsAll) {
-//                        Helper.Log.i(Constant.DEBUG, "keys:" + value.keySet().toString());
-//                        Helper.Log.i(Constant.DEBUG, "values: " + value.values().toString());
                         DisplayQuestion question = HelperMethods.getQuestion(postSnapshot, value, keyQuestion);
-                        questions.add(question);
-
+                        if (!checkDuratationAndUpdateStatus(question)) {
+                            questions.add(question);
+                        }
                     }
                 }
                 Collections.sort(questions, new Comparator<DisplayQuestion>() {
@@ -147,6 +146,7 @@ public class TrendingFragment extends Fragment {
         // react to click
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             boolean buttonPressed;
+
             public void onItemClick(AdapterView<?> parentAdapter, View view, int position,
                                     long id) {
                 buttonPressed = false;
@@ -200,8 +200,8 @@ public class TrendingFragment extends Fragment {
                                 if (databaseError == null) {
                                     Helper.Log.d(Constant.DEBUG, "Transaction finished.");
                                     //Helper.Log.d(Constant.DEBUG, dataSnapshot.toString());
-                                }
-                                else Helper.Log.d(Constant.DEBUG, "Transaction finished w/ database error " + databaseError.toString());
+                                } else
+                                    Helper.Log.d(Constant.DEBUG, "Transaction finished w/ database error " + databaseError.toString());
                             }
 
                         });
@@ -215,7 +215,7 @@ public class TrendingFragment extends Fragment {
                         downVote.setImageResource(R.drawable.ic_down_vote_orange);
                         upVote.setImageResource(R.drawable.ic_up_vote_green);
 
-                        dq.setRating(dq.getRating() - 1 );
+                        dq.setRating(dq.getRating() - 1);
                         updateRating(relativeLayout, dq.getRating());
 
                         //begin downvote transaction
@@ -236,8 +236,8 @@ public class TrendingFragment extends Fragment {
                             public void onComplete(DatabaseError databaseError, boolean b, DataSnapshot dataSnapshot) {
                                 if (databaseError == null) {
                                     Helper.Log.d(Constant.DEBUG, "Transaction finished.");
-                                }
-                                else Helper.Log.d(Constant.DEBUG, "Transaction finished w/ database error " + databaseError.toString());
+                                } else
+                                    Helper.Log.d(Constant.DEBUG, "Transaction finished w/ database error " + databaseError.toString());
                             }
 
                         });
@@ -260,23 +260,15 @@ public class TrendingFragment extends Fragment {
                         startActivity(intent);
                     }
                 }
-
-
-
-//                DisplayQuestion data = (DisplayQuestion) parentAdapter.getItemAtPosition(position);
-//                Intent intent = new Intent(view.getContext(), Voting.class);
-//                Bundle bundle = new Bundle();
-//                bundle.putString("questionPassed", data.getQuestionId());
-//                intent.putExtras(bundle);
-//                startActivity(intent);
             }
         });
     }
 
     /**
      * Method called after the upvote/downvote transactions are processed
+     *
      * @param relativeLayout - the relativeLayout (the list view row) to update
-     * @param newRating - the new rating to be displayed
+     * @param newRating      - the new rating to be displayed
      */
     private void updateRating(View relativeLayout, long newRating) {
         Helper.Log.d(Constant.DEBUG, relativeLayout.toString());
@@ -287,16 +279,16 @@ public class TrendingFragment extends Fragment {
     // Searching Helpers
     private String getSearchText() {
         String toReturn = "";
-        if (((MainActivity)getActivity()).isSearching() &&
-                (((MainActivity)getActivity()).getSearchedArea() == 1)) {
-            toReturn = ((MainActivity)getActivity()).getSearchedText();
+        if (((MainActivity) getActivity()).isSearching() &&
+                (((MainActivity) getActivity()).getSearchedArea() == 1)) {
+            toReturn = ((MainActivity) getActivity()).getSearchedText();
         }
         return toReturn;
     }
 
     private boolean getKeywordSearchStatus() {
-        if (((MainActivity)getActivity()).isSearchingKeyword() &&
-                (((MainActivity)getActivity()).getSearchedArea() == 1)) {
+        if (((MainActivity) getActivity()).isSearchingKeyword() &&
+                (((MainActivity) getActivity()).getSearchedArea() == 1)) {
             return true;
         }
         return false;
@@ -304,11 +296,11 @@ public class TrendingFragment extends Fragment {
 
     private boolean keywordsMatch(boolean keywordStatus, DataSnapshot postSnapshot) {
         if (keywordStatus) {
-            String[] searchedKeywords = ((MainActivity)getActivity()).getKeywords();
-            String[] questionKeywords = new String[(int)postSnapshot.child("keywords").getChildrenCount()];
+            String[] searchedKeywords = ((MainActivity) getActivity()).getKeywords();
+            String[] questionKeywords = new String[(int) postSnapshot.child("keywords").getChildrenCount()];
             int arrayCount = 0;
             for (DataSnapshot k : postSnapshot.child("keywords").getChildren()) {
-                questionKeywords[arrayCount] = (String)k.getValue();
+                questionKeywords[arrayCount] = (String) k.getValue();
                 arrayCount++;
             }
             return Arrays.asList(questionKeywords)
@@ -324,5 +316,13 @@ public class TrendingFragment extends Fragment {
         return true;
     }
 
-
+    private boolean checkDuratationAndUpdateStatus(DisplayQuestion question) {
+        if (question.getDuration().getMillis() == 0) {
+            mDatabase.child("questions")
+                    .child(question.getQuestionId())
+                    .child("status").setValue(Question.Status.CLOSED);
+            return true;
+        }
+        return false;
+    }
 }
