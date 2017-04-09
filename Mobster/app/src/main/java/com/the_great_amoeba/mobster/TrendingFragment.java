@@ -95,25 +95,6 @@ public class TrendingFragment extends Fragment {
 //
 //                    boolean noSearch = noSearchStatus(searchStatus, keywordStatus);
 
-<<<<<<< b7113c06f5785295e8ff203289005783efd388ad
-                    boolean noSearch = noSearchStatus(searchStatus, keywordStatus);
-
-                    if (noSearch) {
-                        DisplayQuestion question = HelperMethods.getQuestion(postSnapshot, value, keyQuestion);
-                        if (!checkDuratationAndUpdateStatus(question)) {
-                            questions.add(question);
-                        }
-                    } else if (searchStatus && questionTitle.contains(searchText)) {
-                        DisplayQuestion question = HelperMethods.getQuestion(postSnapshot, value, keyQuestion);
-                        if (!checkDuratationAndUpdateStatus(question)) {
-                            questions.add(question);
-                        }
-                    } else if (containsAll) {
-                        DisplayQuestion question = HelperMethods.getQuestion(postSnapshot, value, keyQuestion);
-                        if (!checkDuratationAndUpdateStatus(question)) {
-                            questions.add(question);
-                        }
-=======
                     if (searchStatus) {
                         //TODO: sort by accesses
                         if (searchMatch(searchText, questionTitle, postSnapshot)) {
@@ -123,7 +104,6 @@ public class TrendingFragment extends Fragment {
                     } else {
                         DisplayQuestion question = HelperMethods.getQuestion(postSnapshot, value, keyQuestion);
                         questions.add(question);
->>>>>>> Combined keywords and title searching. Haven't tested much.
                     }
 //                    } else if (searchStatus && questionTitle.contains(searchText)) {
 ////                        Helper.Log.i(Constant.DEBUG, "keys:" + value.keySet().toString());
@@ -311,24 +291,6 @@ public class TrendingFragment extends Fragment {
         return toReturn;
     }
 
-<<<<<<< b7113c06f5785295e8ff203289005783efd388ad
-    private boolean getKeywordSearchStatus() {
-        if (((MainActivity) getActivity()).isSearchingKeyword() &&
-                (((MainActivity) getActivity()).getSearchedArea() == 1)) {
-            return true;
-        }
-        return false;
-    }
-
-    private boolean keywordsMatch(boolean keywordStatus, DataSnapshot postSnapshot) {
-        if (keywordStatus) {
-            String[] searchedKeywords = ((MainActivity) getActivity()).getKeywords();
-            String[] questionKeywords = new String[(int) postSnapshot.child("keywords").getChildrenCount()];
-            int arrayCount = 0;
-            for (DataSnapshot k : postSnapshot.child("keywords").getChildren()) {
-                questionKeywords[arrayCount] = (String) k.getValue();
-                arrayCount++;
-=======
     private boolean searchMatch(String searched, String question, DataSnapshot postSnapshot) {
         String[] words = searched.split("\\s*(,|\\s)\\s*");
 
@@ -338,7 +300,6 @@ public class TrendingFragment extends Fragment {
             if (Arrays.asList(words).contains((String)k.getValue())) {
                 keywordsMatch = true;
                 break;
->>>>>>> Combined keywords and title searching. Haven't tested much.
             }
         }
 
@@ -349,7 +310,6 @@ public class TrendingFragment extends Fragment {
         return (keywordsMatch || titleMatch);
     }
 
-<<<<<<< b7113c06f5785295e8ff203289005783efd388ad
     private boolean checkDuratationAndUpdateStatus(DisplayQuestion question) {
         if (question.getDuration().getMillis() == 0) {
             mDatabase.child("questions")
@@ -359,7 +319,6 @@ public class TrendingFragment extends Fragment {
         }
         return false;
     }
-=======
 //    private boolean getKeywordSearchStatus() {
 //        if (((MainActivity)getActivity()).isSearchingKeyword() &&
 //                (((MainActivity)getActivity()).getSearchedArea() == 1)) {
@@ -389,5 +348,4 @@ public class TrendingFragment extends Fragment {
 //        }
 //        return true;
 //    }
->>>>>>> Combined keywords and title searching. Haven't tested much.
 }
