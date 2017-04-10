@@ -24,6 +24,8 @@ import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.HashMap;
+
 import Constants.Constant;
 import Helper.HelperMethods;
 import Objects.Choice;
@@ -44,7 +46,6 @@ public class Voting extends Activity implements OnClickListener {
 
     private EditText commentText;
     private String comment;
-    private boolean flagbuttonPressed;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -60,6 +61,27 @@ public class Voting extends Activity implements OnClickListener {
         final ImageView flag = (ImageView) findViewById(R.id.imageView_flag);
         flag.setTag(1);
         mDatabase = FirebaseDatabase.getInstance().getReferenceFromUrl(DB_URL);
+
+        DatabaseReference flaggedRef = mDatabase.child("questions").child(questionKey)
+                .child("flaggedByUsers");
+
+        flaggedRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    String value = (String) postSnapshot.getValue();
+                    if(value.equals(SaveSharedPreferences.getUserName(getApplicationContext()))){
+                        flag.setTag(2);
+                        flag.setImageResource(R.drawable.flag_button_red);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
 
         flag.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,7 +108,11 @@ public class Voting extends Activity implements OnClickListener {
                             Log.d(Constant.AUTH_TAG, "Transaction finished.");
                         }
                     });
+                    DatabaseReference flaggedUsersRef = mDatabase.child("questions").child(questionKey)
+                            .child("flaggedByUsers").push();
+                    flaggedUsersRef.setValue(SaveSharedPreferences.getUserName(getApplicationContext()));
                 } else {
+
                     flag.setTag(1);
                     flag.setImageResource(R.drawable.flag_button);
                     DatabaseReference flagged = mDatabase.child("questions").child(questionKey).child("isFlagged");
@@ -106,6 +132,30 @@ public class Voting extends Activity implements OnClickListener {
                             Log.d(Constant.AUTH_TAG, "Transaction finished.");
                         }
                     });
+                    DatabaseReference flaggedRef = mDatabase.child("questions").child(questionKey)
+                            .child("flaggedByUsers");
+
+                    //removing user from flaggedbyUsers table if the user unflags the question
+                    flaggedRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                                String keyUser = postSnapshot.getKey();
+                                String value = (String) postSnapshot.getValue();
+                                if(value.equals(SaveSharedPreferences.getUserName(getApplicationContext()))){
+                                    mDatabase.child("questions").child(questionKey).child("flaggedByUsers").child(keyUser).removeValue();
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+
+
+
                 }
 
 
