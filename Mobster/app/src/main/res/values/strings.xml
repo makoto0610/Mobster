@@ -5,6 +5,7 @@
         <item>How do I ask a question? </item>
         <item>How do I answer a question? </item>
         <item>What are the arrows next to each question? </item>
+        <item>What is the Location option in the menu?</item>
     </string-array>
     <string name="AUTH_TAG">AUTH></string>
     <string name="AUTH_FAIL">AUTH_FAILED></string>

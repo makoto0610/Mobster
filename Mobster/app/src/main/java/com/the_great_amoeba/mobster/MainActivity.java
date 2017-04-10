@@ -17,7 +17,9 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 
 import com.github.mikephil.charting.data.PieEntry;
 import com.google.firebase.auth.FirebaseAuth;
@@ -65,17 +67,28 @@ public class MainActivity extends AppCompatActivity {
 
                     // text inputs
                     final EditText input = new EditText(MainActivity.this);
-                    if (searching || searchingKeyword) {
+                    if (searching) {
                         input.setText(searchedText);
                     } else {
                         input.setHint("Enter text here");
                     }
-
                     input.setInputType(InputType.TYPE_CLASS_TEXT);
-                    builder.setView(input);
+
+                    // adding margins to the input line
+                    FrameLayout container = new FrameLayout(MainActivity.this);
+                    FrameLayout.LayoutParams params = new  FrameLayout.LayoutParams
+                                    (ViewGroup.LayoutParams.MATCH_PARENT
+                                    , ViewGroup.LayoutParams.WRAP_CONTENT);
+                    params.leftMargin = getResources().getDimensionPixelSize(R.dimen.dialog_margin);
+                    params.rightMargin = getResources().getDimensionPixelSize(R.dimen.dialog_margin);
+                    input.setLayoutParams(params);
+                    container.addView(input);
+                    builder.setView(container);
+
+                    //builder.setView(input);
 
                     // radio buttons
-                    final String[] choices = {"Go to My Questions", "Go to Home"};
+                    final String[] choices = {"search my questions", "search all"};
                     builder.setSingleChoiceItems(choices, searchedArea, new DialogInterface.OnClickListener() {
 
                         @Override
@@ -85,17 +98,20 @@ public class MainActivity extends AppCompatActivity {
                     });
 
 
+
+
                     // search and cancel buttons
-                    builder.setPositiveButton("Search Question Name", new DialogInterface.OnClickListener() {
+                    builder.setPositiveButton("Search", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
+                            searching = true;
                             searchedText = input.getText().toString();
-                            if (searchedText.equals("")) {
+/*                            if (searchedText.equals("")) {
                                 searching = false;
                             } else {
                                 searching = true;
                             }
-                            searchingKeyword = false;
+                            searchingKeyword = false;*/
                             FragmentTransaction xfragmentTransaction = mFragmentManager.beginTransaction();
                             if (searchedArea == 0) {
                                 xfragmentTransaction.replace(R.id.containerView, new MyQuestionsTabFragment()).commit();
@@ -105,29 +121,34 @@ public class MainActivity extends AppCompatActivity {
                             }
                         }
                     });
-                    builder.setNegativeButton("Search Keywords (separate by commas)", new DialogInterface.OnClickListener() {
+                    builder.setNegativeButton("Clear Search", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            searchedText = input.getText().toString();
-                            if (searchedText.equals("")) {
-                                searchingKeyword = false;
-                                keywords = new String[0];
-                            } else {
-                                String[] keywordsRaw = searchedText.split(",");
-                                keywords = new String[keywordsRaw.length];
-                                for (int i = 0; i < keywordsRaw.length; i++) {
-                                    keywords[i] = keywordsRaw[i].trim();
-                                }
-                                searchingKeyword = true;
-                            }
+                            input.setText("");
                             searching = false;
                             FragmentTransaction xfragmentTransaction = mFragmentManager.beginTransaction();
-                            if (searchedArea == 0) {
-                                xfragmentTransaction.replace(R.id.containerView, new MyQuestionsTabFragment()).commit();
+                            xfragmentTransaction.replace(R.id.containerView, new HomeTabFragment()).commit();
 
-                            } else {
-                                xfragmentTransaction.replace(R.id.containerView, new HomeTabFragment()).commit();
-                            }
+//                            searchedText = input.getText().toString();
+//                            if (searchedText.equals("")) {
+//                                searchingKeyword = false;
+//                                keywords = new String[0];
+//                            } else {
+//                                String[] keywordsRaw = searchedText.split(",");
+//                                keywords = new String[keywordsRaw.length];
+//                                for (int i = 0 ; i < keywordsRaw.length; i++) {
+//                                    keywords[i] = keywordsRaw[i].trim();
+//                                }
+//                                searchingKeyword = true;
+//                            }
+//                            searching = false;
+//                            FragmentTransaction xfragmentTransaction = mFragmentManager.beginTransaction();
+//                            if (searchedArea == 0) {
+//                                xfragmentTransaction.replace(R.id.containerView, new MyQuestionsTabFragment()).commit();
+//
+//                            } else {
+//                                xfragmentTransaction.replace(R.id.containerView, new HomeTabFragment()).commit();
+//                            }
                         }
                     });
                     //neutral is actually is negative
