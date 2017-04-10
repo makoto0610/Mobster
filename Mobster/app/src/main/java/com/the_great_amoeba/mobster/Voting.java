@@ -221,6 +221,7 @@ public class Voting extends Activity implements OnClickListener {
                 asked = String.valueOf(dataSnapshot.getValue());
                 questionText = (TextView) findViewById(R.id.viewQuestion);
                 questionText.setText(asked);
+                questionText.setTextSize(33);
 
             }
 
@@ -240,7 +241,7 @@ public class Voting extends Activity implements OnClickListener {
             rb[i] = new RadioButton(this);
             rb[i].setText(x[i]);
             rb[i].setId(i);
-            rb[i].setTextSize(30);
+            rb[i].setTextSize(27);
             rg.addView(rb[i]);
 
         }

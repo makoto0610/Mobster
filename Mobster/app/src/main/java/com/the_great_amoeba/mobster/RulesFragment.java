@@ -63,5 +63,7 @@ public class RulesFragment extends Fragment {
                 ", choosing the option(s) that you want, and then pressing 'Submit'.");
         map.put(3, "You can upvote a question if you think it's interesting and want it to "
                 + "gain visibility.");
+        map.put(4, "If you you allow Mobster access to your location, you will be able to "
+            + "view questions near your geographical location.");
     }
 }

@@ -20,6 +20,7 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.listener.PieRadarChartTouchListener;
@@ -49,8 +50,8 @@ import Helper.HelperMethods;
 public class Results extends AppCompatActivity{
 
     private PieChart chart;
-    private String[] xAxis; //= {"A", "B", "C", "D", "E"};
-    private float[] yAxis; //= {2,4,6,8,10};
+    private String[] xAxis;
+    private float[] yAxis;
     private HashMap<String, Float> map;
 
     private ListView list;
@@ -125,8 +126,13 @@ public class Results extends AppCompatActivity{
 
     private void createGraph() {
         map = new HashMap<>();
+        HashMap<String, Float> mapList = new HashMap<>();
         for (int i = 0; i < xAxis.length; i++) {
-            map.put(xAxis[i], yAxis[i]);
+            mapList.put(xAxis[i], yAxis[i]);
+            if (yAxis[i] > 0) {
+                map.put(xAxis[i], yAxis[i]);
+
+            }
         }
 
         // set data in chart
@@ -139,7 +145,11 @@ public class Results extends AppCompatActivity{
         PieDataSet dataSet = new PieDataSet(entries, "Choices");
 
         // chart configs
+        dataSet.setValueFormatter(new PercentFormatter());
         chart.setUsePercentValues(true);
+        Description chartDescription = new Description();
+        chartDescription.setText("");
+        chart.setDescription(chartDescription);
 
         // hole configs
         chart.setDrawHoleEnabled(true);
@@ -181,20 +191,27 @@ public class Results extends AppCompatActivity{
 
         // dataset configs
         ArrayList<Integer> colors = new ArrayList<>();
-        for (int c : ColorTemplate.COLORFUL_COLORS)
-            colors.add(c);
-
-        for (int c : ColorTemplate.JOYFUL_COLORS)
-            colors.add(c);
-
-        for (int c : ColorTemplate.VORDIPLOM_COLORS)
-            colors.add(c);
-
-        for (int c : ColorTemplate.LIBERTY_COLORS)
-            colors.add(c);
-
-        for (int c : ColorTemplate.PASTEL_COLORS)
-            colors.add(c);
+        if (SaveSharedPreferences.getChosenTheme(getApplicationContext()).equals("dark")) {
+            for (int c : ColorTemplate.COLORFUL_COLORS)
+                colors.add(c);
+        } else {
+            for (int c : ColorTemplate.PASTEL_COLORS)
+                colors.add(c);
+        }
+//        for (int c : ColorTemplate.COLORFUL_COLORS)
+//            colors.add(c);
+//
+//        for (int c : ColorTemplate.JOYFUL_COLORS)
+//            colors.add(c);
+//
+//        for (int c : ColorTemplate.VORDIPLOM_COLORS)
+//            colors.add(c);
+//
+//        for (int c : ColorTemplate.LIBERTY_COLORS)
+//            colors.add(c);
+//
+//        for (int c : ColorTemplate.PASTEL_COLORS)
+//            colors.add(c);
         dataSet.setColors(colors);
 
         //dataSet.setSliceSpace(2);
@@ -208,7 +225,7 @@ public class Results extends AppCompatActivity{
 
         // statistics
         // http://www.java2novice.com/java-interview-programs/sort-a-map-by-value/
-        Set<Map.Entry<String, Float>> set = map.entrySet();
+        Set<Map.Entry<String, Float>> set = mapList.entrySet();
         ordered = new ArrayList<>(set);
         Collections.sort(ordered, new Comparator<Map.Entry<String, Float>>() {
             @Override

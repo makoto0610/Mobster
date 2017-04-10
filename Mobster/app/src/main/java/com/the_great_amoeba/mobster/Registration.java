@@ -3,9 +3,11 @@ package com.the_great_amoeba.mobster;
 import android.content.Context;
 import android.content.Intent;
 
+import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -79,6 +81,11 @@ public class Registration extends AppCompatActivity {
         password = (EditText) findViewById(R.id.register_password);
         confirm = (EditText) findViewById(R.id.register_confirm_password);
         email = (EditText) findViewById(R.id.register_email);
+
+        password.setTypeface(Typeface.DEFAULT);
+        password.setTransformationMethod(new PasswordTransformationMethod());
+        confirm.setTypeface(Typeface.DEFAULT);
+        confirm.setTransformationMethod(new PasswordTransformationMethod());
 
     }
 

@@ -18,18 +18,9 @@
         android:textSize="35sp"
         android:textStyle="bold"
         android:minHeight="90dp"
-        android:layout_alignParentStart="true"
-        android:layout_toStartOf="@+id/protosslogo1"></TextView>
+        android:layout_alignStart="@+id/scrollView1"
+        android:layout_toStartOf="@+id/imageView_flag"></TextView>
 
-
-    <Button
-        android:text="SUBMIT"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/MY_BUTTON"
-        android:layout_centerHorizontal="true"
-        android:layout_alignParentBottom="true"
-        android:onClick="onClick"/>
 
     <ImageView  android:id="@+id/imageView_flag"
         android:layout_width="50dp"
@@ -41,12 +32,36 @@
         android:clickable="true"
         android:onClick="onImageClick" />
 
+    <TextView
+        android:text="Comment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="11dp"
+        android:id="@+id/commentLabel"
+        android:textSize="25sp"
+        android:layout_below="@+id/scrollView1"
+        android:layout_alignParentStart="true" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textMultiLine"
+        android:lines="3"
+        android:gravity="top|left"
+        android:ems="10"
+        android:layout_below="@+id/commentLabel"
+        android:layout_alignStart="@+id/commentLabel"
+        android:id="@+id/commentText"
+        android:hint="Optional"
+        android:layout_toStartOf="@+id/imageView_flag" />
+
     <ScrollView
         android:id="@+id/scrollView1"
         android:layout_width="match_parent"
+        android:layout_height="310dp"
         android:layout_below="@+id/viewQuestion"
-        android:layout_alignParentStart="true"
-        android:layout_height="310dp">
+        android:layout_alignStart="@+id/commentLabel"
+        android:layout_toStartOf="@+id/imageView_flag">
 
 
 
@@ -57,25 +72,15 @@
             android:orientation="vertical"></LinearLayout>
     </ScrollView>
 
-    <TextView
-        android:text="Comment"
+    <Button
+        android:text="SUBMIT"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="11dp"
-        android:id="@+id/commentLabel"
-        android:textSize="35sp"
-        android:layout_below="@+id/scrollView1"
-        android:layout_alignParentStart="true" />
-
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="textPersonName"
-        android:ems="10"
-        android:layout_below="@+id/commentLabel"
-        android:layout_alignStart="@+id/commentLabel"
-        android:id="@+id/commentText"
-        android:hint="Optional" />
+        android:id="@+id/MY_BUTTON"
+        android:onClick="onClick"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="17dp" />
 
     <!--<Button-->
         <!--android:text="Button"-->
