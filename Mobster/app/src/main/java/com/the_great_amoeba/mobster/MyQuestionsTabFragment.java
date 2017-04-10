@@ -35,6 +35,8 @@ public class MyQuestionsTabFragment extends Fragment {
          * Set an Adapater for the View Pager
          */
         viewPager.setAdapter(new MyAdapter(getChildFragmentManager()));
+        viewPager.setOffscreenPageLimit(1);
+
 
         /**
          * Now , this is a workaround ,

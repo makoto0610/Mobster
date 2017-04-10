@@ -14,13 +14,19 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
+import Constants.Constant;
+import Helper.Log;
+
+import static android.R.attr.progress;
 import static android.R.attr.tag;
 
 public class HomeTabFragment extends Fragment {
 
     public static TabLayout tabLayout;
     public static ViewPager viewPager;
+
     public static int int_items = 3;
 
     @Nullable
@@ -30,8 +36,12 @@ public class HomeTabFragment extends Fragment {
          *Inflate home_tab_layout and setup Views.
          */
         View x = inflater.inflate(R.layout.home_tab_layout, null);
+
         tabLayout = (TabLayout) x.findViewById(R.id.tabs);
         viewPager = (ViewPager) x.findViewById(R.id.viewpager);
+
+        //makes it so that the fragments are not created every time we switch a tab
+        viewPager.setOffscreenPageLimit(2);
 
         /**
          *Set an Apater for the View Pager
@@ -69,10 +79,13 @@ public class HomeTabFragment extends Fragment {
         public Fragment getItem(int position) {
             switch (position) {
                 case 0:
+                    Log.d(Constant.DEBUG, "Case 0");
                     return new NewFragment();
                 case 1:
+                    Log.d(Constant.DEBUG, "Case 1");
                     return new TrendingFragment();
                 case 2:
+                    Log.d(Constant.DEBUG, "Case 2");
                     return new ClosedFragment();
             }
             return null;

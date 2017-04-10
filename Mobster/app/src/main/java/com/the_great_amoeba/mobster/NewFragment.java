@@ -8,22 +8,22 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.TextView;
+import android.widget.ProgressBar;
+import android.widget.Toast;
 
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Query;
-import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.Arrays;
@@ -44,6 +44,8 @@ public class NewFragment extends Fragment {
 
     private String user;
 
+    private ProgressBar progressBar;
+
 
     @Nullable
     @Override
@@ -53,11 +55,20 @@ public class NewFragment extends Fragment {
                 .getReferenceFromUrl(Constant.DB_URL);
         this.view = inflater.inflate(R.layout.new_layout, null);
         Helper.Log.d(Constant.DEBUG, "in OncreateView of NewFragment");
+
+        this.progressBar = (ProgressBar) this.view.findViewById(R.id.progressBar);
+        progressBar.setVisibility(View.INVISIBLE);
+
         getNewQuestionsFromFirebase();
         this.user = SaveSharedPreferences.getUserName(getActivity().getApplicationContext());
         return view;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(Constant.DEBUG, "onResume NewFrag");
+    }
 
     /**
      * Get new questions from Firebase (async)
@@ -66,6 +77,8 @@ public class NewFragment extends Fragment {
         Query contain = mDatabase.child("questions").orderByKey()
                 .limitToFirst(Constant.NUM_OF_QUESTIONS);
         final LinkedList<DisplayQuestion> questions = new LinkedList<>();
+
+        progressBar.setVisibility(View.VISIBLE);
 
         contain.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -141,6 +154,9 @@ public class NewFragment extends Fragment {
                 }
                 array = new DisplayQuestion[questions.size()];
                 array = questions.toArray(array);
+
+                progressBar.setVisibility(View.GONE);
+
                 init_Questions_Display();
 
                 
@@ -148,8 +164,11 @@ public class NewFragment extends Fragment {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                //TODO: questions not loading error message
+                //TODO: Error message
+                progressBar.setVisibility(View.GONE);
             }
+
+
         });
 
     }
@@ -166,103 +185,42 @@ public class NewFragment extends Fragment {
         final ListView listView = (ListView) this.view.findViewById(R.id.mobile_list);
         listView.setAdapter(questions);
 
+
         // react to click
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             boolean buttonPressed;
             public void onItemClick(AdapterView<?> parentAdapter, View view, int position,
                                     long id) {
 
-                buttonPressed = false;
 
                 final DisplayQuestion dq = (DisplayQuestion) parentAdapter.getAdapter().getItem(position);
                 final String questionKey = dq.getQuestionId();
                 final String username = dq.getUsername();
                 LinkedList<String> votedUsernames = dq.getVotedUsers();
 
-                final ImageView favorite = (ImageView) view.findViewById(R.id.imageView_favorite);
 
-                final View relativeLayout = view;
-
-//                favorite.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View view) {
-//                        buttonPressed = true;
-//                        favorite.setImageResource(R.drawable.ic_star);
-//
-//                        //NOTE: rating display changed before the database gets updated
-//                        // had to do it this way as a workaround
-//                        // ideally, want database updated THEN rating display changed
-//                        // database/display mismatch might occur if a database error occurs
-//
-//                        dq.setRating(dq.getRating() + 1);
-//                        updateRating(relativeLayout, dq.getRating());
-//
-//                        //begin upvote transaction
-//                        DatabaseReference accessFavorite = mDatabase.child("questions").child(questionKey).child("numFavorites");
-//                        accessFavorite.runTransaction(new Transaction.Handler() {
-//                            @Override
-//                            public Transaction.Result doTransaction(MutableData mutableData) {
-//                                //Helper.Log.d(Constant.DEBUG, "in doTransaction()");
-//                                Long currentValue = (Long) mutableData.getValue();
-//                                if (currentValue == null) {
-//                                    //Helper.Log.d(Constant.DEBUG, "doTransaction() data returned null");
-//                                    mutableData.setValue(1);
-//                                } else {
-//                                    mutableData.setValue(currentValue + 1);
-//                                }
-//                                return Transaction.success(mutableData);
-//                            }
-//
-//                            @Override
-//                            public void onComplete(DatabaseError databaseError, boolean b, DataSnapshot dataSnapshot) {
-//                                if (databaseError == null) {
-//                                    Helper.Log.d(Constant.DEBUG, "Transaction finished.");
-//                                    //Helper.Log.d(Constant.DEBUG, dataSnapshot.toString());
-//                                }
-//                                else Helper.Log.d(Constant.DEBUG, "Transaction finished w/ database error " + databaseError.toString());
-//                            }
-//
-//                        });
-//
-//                    }
-//                });
-
-
-                if (!buttonPressed) {
-                    DisplayQuestion data = (DisplayQuestion) parentAdapter.getItemAtPosition(position);
-                    Bundle bundle = new Bundle();
-                    bundle.putString("questionPassed", data.getQuestionId());
-                    if (username.equals(user) || votedUsernames.contains(user)) {
-                        bundle.putChar("homeTabPassed", 'h');
-                        Intent intent = new Intent(view.getContext(), Results.class);
-                        intent.putExtras(bundle);
-                        startActivity(intent);
-                    } else if (isHomeFragment()) {
-                        bundle.putChar("homeTabPassed", 'h');
-                        Intent intent = new Intent(view.getContext(), Voting.class);
-                        intent.putExtras(bundle);
-                        startActivity(intent);
-                    } else {
-                        bundle.putChar("homeTabPassed", 'm');
-                        Intent intent = new Intent(view.getContext(), Results.class);
-                        intent.putExtras(bundle);
-                        startActivity(intent);
-                    }
+                DisplayQuestion data = (DisplayQuestion) parentAdapter.getItemAtPosition(position);
+                Bundle bundle = new Bundle();
+                bundle.putString("questionPassed", data.getQuestionId());
+                if (username.equals(user) || votedUsernames.contains(user)) {
+                    bundle.putChar("homeTabPassed", 'h');
+                    Intent intent = new Intent(view.getContext(), Results.class);
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                } else if (isHomeFragment()) {
+                    bundle.putChar("homeTabPassed", 'h');
+                    Intent intent = new Intent(view.getContext(), Voting.class);
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                } else {
+                    bundle.putChar("homeTabPassed", 'm');
+                    Intent intent = new Intent(view.getContext(), Results.class);
+                    intent.putExtras(bundle);
+                    startActivity(intent);
                 }
             }
         });
 
-    }
-
-    /**
-     * Method called after the upvote/downvote transactions are processed
-     * @param relativeLayout - the relativeLayout (the list view row) to update
-     * @param newRating - the new rating to be displayed
-     */
-    private void updateRating(View relativeLayout, long newRating) {
-        //Helper.Log.d(Constant.DEBUG, relativeLayout.toString());
-        TextView rating = (TextView) relativeLayout.findViewById(R.id.textView_Rating);
-        rating.setText("" + newRating);
     }
 
     /**

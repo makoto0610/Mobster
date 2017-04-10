@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -42,6 +43,9 @@ public class ClosedFragment extends Fragment {
 
     private String user;
 
+    private ProgressBar progressBar;
+
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater,
@@ -50,10 +54,16 @@ public class ClosedFragment extends Fragment {
                 .getReferenceFromUrl(Constant.DB_URL);
         this.view = inflater.inflate(R.layout.new_layout, null);
         Log.d(Constant.DEBUG, "in OncreateView of ClosedFragment");
+
+        this.progressBar = (ProgressBar) this.view.findViewById(R.id.progressBar);
+        progressBar.setVisibility(View.INVISIBLE);
+
+
         getNewQuestionsFromFirebase();
         this.user = SaveSharedPreferences.getUserName(getActivity().getApplicationContext());
         return view;
     }
+
 
 
     /**

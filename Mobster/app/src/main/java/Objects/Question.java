@@ -1,12 +1,10 @@
 package Objects;
 
 import android.location.Location;
-import android.widget.LinearLayout;
 
 import org.joda.time.Duration;
 
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.LinkedList;
 
 /**
@@ -25,7 +23,7 @@ public class Question {
     private int isFlagged;
     private Status status;
     private int num_access;
-    private long numFavorites;
+    private long num_favorites;
 
     private LinkedList<String> votedUsers;
 
@@ -54,7 +52,7 @@ public class Question {
         this.status = Status.NEW;
         this.loc = loc;
         isFlagged = 0;
-        this.numFavorites = 0;
+        this.num_favorites = 0;
 
         this.comments = comments;
         this.votedUsers = new LinkedList<>();
@@ -65,13 +63,13 @@ public class Question {
         return comments;
     }
 
-    public void setNumFavorites(long numFavorites) {
-        this.numFavorites = numFavorites;
+    public void setNum_favorites(long num_favorites) {
+        this.num_favorites = num_favorites;
     }
 
-    public long getNumFavorites() {
+    public long getNum_favorites() {
 
-        return numFavorites;
+        return num_favorites;
     }
 
 

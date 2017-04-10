@@ -13,17 +13,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Query;
-import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.Arrays;
@@ -46,6 +44,9 @@ public class TrendingFragment extends Fragment {
     private DisplayQuestion[] array;
     private String user;
 
+    private ProgressBar progressBar;
+
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater,
@@ -53,11 +54,24 @@ public class TrendingFragment extends Fragment {
         mDatabase = FirebaseDatabase.getInstance()
                 .getReferenceFromUrl(Constant.DB_URL);
         this.view = inflater.inflate(R.layout.new_layout, null);
-        Log.d(Constant.DEBUG, "in OncreateView");
+        Log.d(Constant.DEBUG, "in OncreateView of TrendingFragment");
+
+        this.progressBar = (ProgressBar) this.view.findViewById(R.id.progressBar);
+        progressBar.setVisibility(View.INVISIBLE);
+
+
         this.user = SaveSharedPreferences.getUserName(getActivity().getApplicationContext());
         getNewQuestionsFromFirebase();
         return view;
     }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(Constant.DEBUG, "onResume TrendingFrag");
+    }
+
 
 
     /**
@@ -67,6 +81,9 @@ public class TrendingFragment extends Fragment {
         Query contain = mDatabase.child("questions").orderByKey()
                 .limitToFirst(Constant.NUM_OF_QUESTIONS);
         final LinkedList<DisplayQuestion> questions = new LinkedList<>();
+
+        progressBar.setVisibility(View.VISIBLE);
+
 
         contain.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -120,12 +137,16 @@ public class TrendingFragment extends Fragment {
                 });
                 array = new DisplayQuestion[questions.size()];
                 array = questions.toArray(array);
+
+                progressBar.setVisibility(View.GONE);
+
                 init_Questions_Display();
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 //TODO: questions not loading error message
+                progressBar.setVisibility(View.GONE);
             }
         });
 
@@ -146,7 +167,6 @@ public class TrendingFragment extends Fragment {
             boolean buttonPressed;
             public void onItemClick(AdapterView<?> parentAdapter, View view, int position,
                                     long id) {
-                buttonPressed = false;
 
 
                 final DisplayQuestion dq = (DisplayQuestion) parentAdapter.getAdapter().getItem(position);
@@ -154,35 +174,22 @@ public class TrendingFragment extends Fragment {
                 final String username = dq.getUsername();
                 LinkedList<String> votedUsernames = dq.getVotedUsers();
 
-                if (!buttonPressed) {
-                    DisplayQuestion data = (DisplayQuestion) parentAdapter.getItemAtPosition(position);
-                    Bundle bundle = new Bundle();
-                    bundle.putString("questionPassed", data.getQuestionId());
-                    System.out.println("User name is " + username);
-                    System.out.println("USER is " + user);
-                    if (username.equals(user) || votedUsernames.contains(user)) {
-                        Intent intent = new Intent(view.getContext(), Results.class);
-                        intent.putExtras(bundle);
-                        startActivity(intent);
-                    } else {
-                        Intent intent = new Intent(view.getContext(), Voting.class);
-                        intent.putExtras(bundle);
-                        startActivity(intent);
-                    }
+                DisplayQuestion data = (DisplayQuestion) parentAdapter.getItemAtPosition(position);
+                Bundle bundle = new Bundle();
+                bundle.putString("questionPassed", data.getQuestionId());
+                System.out.println("User name is " + username);
+                System.out.println("USER is " + user);
+                if (username.equals(user) || votedUsernames.contains(user)) {
+                    Intent intent = new Intent(view.getContext(), Results.class);
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                } else {
+                    Intent intent = new Intent(view.getContext(), Voting.class);
+                    intent.putExtras(bundle);
+                    startActivity(intent);
                 }
             }
         });
-    }
-
-    /**
-     * Method called after the upvote/downvote transactions are processed
-     * @param relativeLayout - the relativeLayout (the list view row) to update
-     * @param newRating - the new rating to be displayed
-     */
-    private void updateRating(View relativeLayout, long newRating) {
-        Helper.Log.d(Constant.DEBUG, relativeLayout.toString());
-        TextView duration = (TextView) relativeLayout.findViewById(R.id.textView_Rating);
-        duration.setText("" + newRating);
     }
 
     // Searching Helpers
