@@ -106,8 +106,8 @@ public class Registration extends AppCompatActivity {
 
         String username = this.username.getText().toString();
         String password = this.password.getText().toString();
-        String confirm = this.confirm.getText().toString();
-        String email = this.email.getText().toString();
+        String confirm = this.confirm.getText().toString().toLowerCase();
+        String email = this.email.getText().toString().toLowerCase();
         Query contain = mDatabase.child("users").orderByKey().equalTo(username);
 
         if (username.length() == 0) {

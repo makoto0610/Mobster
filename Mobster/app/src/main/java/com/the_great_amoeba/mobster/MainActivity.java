@@ -104,8 +104,9 @@ public class MainActivity extends AppCompatActivity {
                     builder.setPositiveButton("Search", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
+
                             searching = true;
-                            searchedText = input.getText().toString();
+                            searchedText = input.getText().toString().toLowerCase();
 /*                            if (searchedText.equals("")) {
                                 searching = false;
                             } else {
@@ -124,6 +125,20 @@ public class MainActivity extends AppCompatActivity {
                     builder.setNegativeButton("Clear Search", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
+// <<<<<<< mraku3
+//                             searchedText = input.getText().toString().toLowerCase();
+//                             if (searchedText.equals("")) {
+//                                 searchingKeyword = false;
+//                                 keywords = new String[0];
+//                             } else {
+//                                 String[] keywordsRaw = searchedText.split(",");
+//                                 keywords = new String[keywordsRaw.length];
+//                                 for (int i = 0 ; i < keywordsRaw.length; i++) {
+//                                     keywords[i] = keywordsRaw[i].trim();
+//                                 }
+//                                 searchingKeyword = true;
+//                             }
+// =======
                             input.setText("");
                             searching = false;
                             FragmentTransaction xfragmentTransaction = mFragmentManager.beginTransaction();
