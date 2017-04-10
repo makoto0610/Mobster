@@ -83,9 +83,11 @@ public class Voting extends Activity implements OnClickListener {
             }
         });
 
+        //Checking if the flag has been pressed or unpressed
         flag.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //if flag has been pressed update the image and add the user under flagged
                 if(flag.getTag().equals(1)) {
                     flag.setTag(2);
                     flag.setImageResource(R.drawable.flag_button_red);
@@ -112,7 +114,7 @@ public class Voting extends Activity implements OnClickListener {
                             .child("flaggedByUsers").push();
                     flaggedUsersRef.setValue(SaveSharedPreferences.getUserName(getApplicationContext()));
                 } else {
-
+                    //if flag was pressed then unpressed by the same user then update image and delete the user from the database
                     flag.setTag(1);
                     flag.setImageResource(R.drawable.flag_button);
                     DatabaseReference flagged = mDatabase.child("questions").child(questionKey).child("isFlagged");
@@ -170,7 +172,7 @@ public class Voting extends Activity implements OnClickListener {
 
         DatabaseReference choicesRef = mDatabase.child("questions").child(questionKey).child("choices");
 
-
+        //updates the number of accesses
         DatabaseReference access = mDatabase.child("questions").child(questionKey).child("num_access");
         access.runTransaction(new Transaction.Handler() {
             @Override
@@ -190,6 +192,7 @@ public class Voting extends Activity implements OnClickListener {
             }
         });
 
+        //pulls the choices from firebase and displays them
         choicesRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -232,6 +235,11 @@ public class Voting extends Activity implements OnClickListener {
         });
     }
 
+    /**
+     * Creates radiobuttons for choices.
+     *
+     * @param num The number of radio buttons to be created
+     */
     private void createRadioButtons(int num, String[] x, float[] y) {
         //add radio buttons
         final RadioButton[] rb = new RadioButton[num];
@@ -248,6 +256,11 @@ public class Voting extends Activity implements OnClickListener {
         ll.addView(rg);
     }
 
+    /**
+     * When submit is pressed the vote is recorded.
+     *
+     * @param v The current view
+     */
     public void onClick(View v) {
         Toast toast;
         Log.w("ANDROID DYNAMIC VIEWS:", "View Id: " + v.getId());
@@ -269,6 +282,11 @@ public class Voting extends Activity implements OnClickListener {
         }
     }
 
+    /**
+     * Saves the answer that the user entered.
+     *
+     *
+     */
     public void saveAnswers() {
         LinearLayout root = (LinearLayout) findViewById(R.id.linearLayout2);
         loopQuestions(root);
@@ -335,6 +353,11 @@ public class Voting extends Activity implements OnClickListener {
 
     }
 
+    /**
+     * Updates number of questions answered by the user in the database.
+     * @param current The current ount of the questions the user has voted on
+     * @param username The username who voted
+     */
     private void updateAnswered(int current, String username) {
         DatabaseReference toUpdate = mDatabase.child("users").child(username).child("answered");
         toUpdate.setValue(current);

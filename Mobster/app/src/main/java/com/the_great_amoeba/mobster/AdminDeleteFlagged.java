@@ -39,6 +39,7 @@ public class AdminDeleteFlagged extends Activity{
         myTextView.setText("Are you sure you want to delete question: "+ deleteQuestion + "?");
     }
 
+    //if delete button is pressed get the question info from the database that needs to be deleted
     public void onDeleteButtonClick(View view) {
         Query contain = mDatabase.child("questions").orderByKey()
                 .limitToFirst(Constant.NUM_OF_QUESTIONS);
@@ -65,6 +66,7 @@ public class AdminDeleteFlagged extends Activity{
 
     }
 
+    //Delete the question selected by the admin
     private void deleteQuestion(){
         if(questionKeyToDelete != null) {
             mDatabase.child("questions").child(questionKeyToDelete).removeValue();

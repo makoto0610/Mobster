@@ -52,7 +52,6 @@ public class StatisticsFragment extends Fragment {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 asked = String.valueOf(dataSnapshot.getValue());
-//                System.out.println("ASK: " + asked);
                 askedText = (TextView)view.findViewById(R.id.asked);
                 askedText.setText(asked);
 
@@ -68,7 +67,6 @@ public class StatisticsFragment extends Fragment {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 answered = String.valueOf(dataSnapshot.getValue());
-//                System.out.println("ANS1: " + answered);
                 answeredText = (TextView)view.findViewById(R.id.answered);
                 answeredText.setText(answered);
 
@@ -79,29 +77,10 @@ public class StatisticsFragment extends Fragment {
 
             }
         });
-//        System.out.println("ANS2:  " + answered);
-
-//        askedText = (TextView)view.findViewById(R.id.asked);
-//        askedText.setText(asked);
-//        answeredText = (TextView)view.findViewById(R.id.answered);
-//        answeredText.setText(answered);
-
-//        View.OnClickListener listener = new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent i = new Intent(getActivity(), Results.class);
-//                startActivity(i);
-//            }
-//        };
-//        Button button = (Button) view.findViewById(R.id.to_results_temp);
-//        button.setOnClickListener(listener);
 
         return view;
-//        return inflater.inflate(R.layout.statistics_layout,null);
+
     }
-//    public static void onBackPressed()
-//    {
-//        getActivity().finish();
-//    }
+
 }
 
