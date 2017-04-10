@@ -26,8 +26,6 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 
-import org.joda.time.Duration;
-
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
@@ -82,9 +80,9 @@ public class TrendingFragment extends Fragment {
                 }
 
                 // search keywords
-                boolean keywordStatus = getKeywordSearchStatus();
+//                boolean keywordStatus = getKeywordSearchStatus();
 
-                for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     String keyQuestion = postSnapshot.getKey();
                     HashMap value = (HashMap) postSnapshot.getValue();
                     String status = (String) value.get("status");
@@ -93,26 +91,33 @@ public class TrendingFragment extends Fragment {
                     }
                     String questionTitle = (String) value.get("question");
 
-                    boolean containsAll = keywordsMatch(keywordStatus, postSnapshot);
+//                    boolean containsAll = keywordsMatch(keywordStatus, postSnapshot);
+//
+//                    boolean noSearch = noSearchStatus(searchStatus, keywordStatus);
 
-                    boolean noSearch = noSearchStatus(searchStatus, keywordStatus);
-
-                    if (noSearch) {
-                        DisplayQuestion question = HelperMethods.getQuestion(postSnapshot, value, keyQuestion);
-                        if (!checkDuratationAndUpdateStatus(question)) {
+                    if (searchStatus) {
+                        //TODO: sort by accesses
+                        if (searchMatch(searchText, questionTitle, postSnapshot)) {
+                            DisplayQuestion question = HelperMethods.getQuestion(postSnapshot, value, keyQuestion);
                             questions.add(question);
                         }
-                    } else if (searchStatus && questionTitle.contains(searchText)) {
+                    } else {
                         DisplayQuestion question = HelperMethods.getQuestion(postSnapshot, value, keyQuestion);
-                        if (!checkDuratationAndUpdateStatus(question)) {
-                            questions.add(question);
-                        }
-                    } else if (containsAll) {
-                        DisplayQuestion question = HelperMethods.getQuestion(postSnapshot, value, keyQuestion);
-                        if (!checkDuratationAndUpdateStatus(question)) {
-                            questions.add(question);
-                        }
+                        questions.add(question);
                     }
+//                    } else if (searchStatus && questionTitle.contains(searchText)) {
+////                        Helper.Log.i(Constant.DEBUG, "keys:" + value.keySet().toString());
+////                        Helper.Log.i(Constant.DEBUG, "values: " + value.values().toString());
+//                        DisplayQuestion question = HelperMethods.getQuestion(postSnapshot, value, keyQuestion);
+//                        questions.add(question);
+//
+//                    } else if (containsAll) {
+////                        Helper.Log.i(Constant.DEBUG, "keys:" + value.keySet().toString());
+////                        Helper.Log.i(Constant.DEBUG, "values: " + value.values().toString());
+//                        DisplayQuestion question = HelperMethods.getQuestion(postSnapshot, value, keyQuestion);
+//                        questions.add(question);
+//
+//                    }
                 }
                 Collections.sort(questions, new Comparator<DisplayQuestion>() {
                     @Override
@@ -146,6 +151,7 @@ public class TrendingFragment extends Fragment {
         // react to click
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             boolean buttonPressed;
+
             public void onItemClick(AdapterView<?> parentAdapter, View view, int position,
                                     long id) {
                 buttonPressed = false;
@@ -199,8 +205,8 @@ public class TrendingFragment extends Fragment {
                                 if (databaseError == null) {
                                     Helper.Log.d(Constant.DEBUG, "Transaction finished.");
                                     //Helper.Log.d(Constant.DEBUG, dataSnapshot.toString());
-                                }
-                                else Helper.Log.d(Constant.DEBUG, "Transaction finished w/ database error " + databaseError.toString());
+                                } else
+                                    Helper.Log.d(Constant.DEBUG, "Transaction finished w/ database error " + databaseError.toString());
                             }
 
                         });
@@ -214,7 +220,7 @@ public class TrendingFragment extends Fragment {
                         downVote.setImageResource(R.drawable.ic_down_vote_orange);
                         upVote.setImageResource(R.drawable.ic_up_vote_green);
 
-                        dq.setRating(dq.getRating() - 1 );
+                        dq.setRating(dq.getRating() - 1);
                         updateRating(relativeLayout, dq.getRating());
 
                         //begin downvote transaction
@@ -235,8 +241,8 @@ public class TrendingFragment extends Fragment {
                             public void onComplete(DatabaseError databaseError, boolean b, DataSnapshot dataSnapshot) {
                                 if (databaseError == null) {
                                     Helper.Log.d(Constant.DEBUG, "Transaction finished.");
-                                }
-                                else Helper.Log.d(Constant.DEBUG, "Transaction finished w/ database error " + databaseError.toString());
+                                } else
+                                    Helper.Log.d(Constant.DEBUG, "Transaction finished w/ database error " + databaseError.toString());
                             }
 
                         });
@@ -265,8 +271,9 @@ public class TrendingFragment extends Fragment {
 
     /**
      * Method called after the upvote/downvote transactions are processed
+     *
      * @param relativeLayout - the relativeLayout (the list view row) to update
-     * @param newRating - the new rating to be displayed
+     * @param newRating      - the new rating to be displayed
      */
     private void updateRating(View relativeLayout, long newRating) {
         Helper.Log.d(Constant.DEBUG, relativeLayout.toString());
@@ -277,41 +284,31 @@ public class TrendingFragment extends Fragment {
     // Searching Helpers
     private String getSearchText() {
         String toReturn = "";
-        if (((MainActivity)getActivity()).isSearching() &&
-                (((MainActivity)getActivity()).getSearchedArea() == 1)) {
-            toReturn = ((MainActivity)getActivity()).getSearchedText();
+        if (((MainActivity) getActivity()).isSearching() &&
+                (((MainActivity) getActivity()).getSearchedArea() == 1)) {
+            toReturn = ((MainActivity) getActivity()).getSearchedText();
         }
         return toReturn;
     }
 
-    private boolean getKeywordSearchStatus() {
-        if (((MainActivity)getActivity()).isSearchingKeyword() &&
-                (((MainActivity)getActivity()).getSearchedArea() == 1)) {
-            return true;
-        }
-        return false;
-    }
+    private boolean searchMatch(String searched, String question, DataSnapshot postSnapshot) {
+        String[] words = searched.split("\\s*(,|\\?|\\s)\\s*");
 
-    private boolean keywordsMatch(boolean keywordStatus, DataSnapshot postSnapshot) {
-        if (keywordStatus) {
-            String[] searchedKeywords = ((MainActivity)getActivity()).getKeywords();
-            String[] questionKeywords = new String[(int)postSnapshot.child("keywords").getChildrenCount()];
-            int arrayCount = 0;
-            for (DataSnapshot k : postSnapshot.child("keywords").getChildren()) {
-                questionKeywords[arrayCount] = (String)k.getValue();
-                arrayCount++;
+        // check keywords
+        boolean keywordsMatch = false;
+        for (DataSnapshot k : postSnapshot.child("keywords").getChildren()) {
+            if (Arrays.asList(words).contains((String)k.getValue())) {
+                keywordsMatch = true;
+                break;
             }
-            return Arrays.asList(questionKeywords)
-                    .containsAll(Arrays.asList(searchedKeywords));
         }
-        return false;
-    }
 
-    private boolean noSearchStatus(boolean searchText, boolean searchKeyword) {
-        if (searchText || searchKeyword) {
-            return false;
-        }
-        return true;
+        // check questions title
+        String[] title = question.split("\\s*(,|\\?|\\s)\\s*");
+
+        boolean titleMatch = Arrays.asList(title).containsAll(Arrays.asList(words));
+
+        return (keywordsMatch || titleMatch);
     }
 
     private boolean checkDuratationAndUpdateStatus(DisplayQuestion question) {
@@ -323,4 +320,33 @@ public class TrendingFragment extends Fragment {
         }
         return false;
     }
+//    private boolean getKeywordSearchStatus() {
+//        if (((MainActivity)getActivity()).isSearchingKeyword() &&
+//                (((MainActivity)getActivity()).getSearchedArea() == 1)) {
+//            return true;
+//        }
+//        return false;
+//    }
+
+//    private boolean keywordsMatch(boolean keywordStatus, DataSnapshot postSnapshot) {
+//        if (keywordStatus) {
+//            String[] searchedKeywords = ((MainActivity)getActivity()).getKeywords();
+//            String[] questionKeywords = new String[(int)postSnapshot.child("keywords").getChildrenCount()];
+//            int arrayCount = 0;
+//            for (DataSnapshot k : postSnapshot.child("keywords").getChildren()) {
+//                questionKeywords[arrayCount] = (String)k.getValue();
+//                arrayCount++;
+//            }
+//            return Arrays.asList(questionKeywords)
+//                    .containsAll(Arrays.asList(searchedKeywords));
+//        }
+//        return false;
+//    }
+
+//    private boolean noSearchStatus(boolean searchText, boolean searchKeyword) {
+//        if (searchText || searchKeyword) {
+//            return false;
+//        }
+//        return true;
+//    }
 }

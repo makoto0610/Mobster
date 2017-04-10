@@ -13,7 +13,6 @@ import android.location.Location;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -47,8 +46,8 @@ import Objects.Choice;
 import Objects.Question;
 
 public class CreateQuestion extends AppCompatActivity implements
-    GoogleApiClient.ConnectionCallbacks,
-    GoogleApiClient.OnConnectionFailedListener {
+        GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener {
 
     Button timePicker;
     Button datePicker;
@@ -97,27 +96,30 @@ public class CreateQuestion extends AppCompatActivity implements
         datePicker = (Button) findViewById(R.id.date_picker);
         timePicker = (Button) findViewById(R.id.time_picker);
         add = (Button) findViewById(R.id.add_option);
-        addKeyword = (Button) findViewById(R.id.add_keyword);
         submit = (Button) findViewById(R.id.submit_question);
+        addKeyword = (Button) findViewById(R.id.add_keyword);
 
-        textDate = (EditText) findViewById(R.id.end_date_text);
-        textTime = (EditText) findViewById(R.id.end_time_text);
-        context = this;
+        textDate = (TextView) findViewById(R.id.end_date_text);
+        textTime = (TextView) findViewById(R.id.end_time_text);
+
         question = (EditText) findViewById(R.id.create_question);
-
         textIn = (EditText) findViewById(R.id.add_option_text);
         textInKeyword = (EditText) findViewById(R.id.add_keyword_text);
-        add = (Button) findViewById(R.id.add_option);
+
         containerList = (LinearLayout) findViewById(R.id.container_list);
         containerKeywordList = (LinearLayout) findViewById(R.id.container_keyword_list);
 
+        context = this;
+
+        // functionality for when the user clicks on "add" options
         add.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
                 if (options.size() <= 9) {
                     if (!options.contains(textIn.getText().toString().toLowerCase())) {
-                        // Creates the potential view (which is a row with the added textview and remove button
+                        // Creates the potential view
+                        // Which is a row with the added TextView and remove button
                         LayoutInflater layoutInflater =
                                 (LayoutInflater) getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                         final View addView = layoutInflater.inflate(R.layout.row, null);
@@ -167,7 +169,8 @@ public class CreateQuestion extends AppCompatActivity implements
             public void onClick(View v) {
                 if (keywords.size() <= 5) {
 
-                    // Creates the potential view (which is a row with the added textview and remove button
+                    // Creates the potential view
+                    // Which is a row with the added TextView and remove button
                     LayoutInflater layoutInflater =
                             (LayoutInflater) getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                     final View addView = layoutInflater.inflate(R.layout.row, null);
@@ -193,7 +196,7 @@ public class CreateQuestion extends AppCompatActivity implements
                             }
                         });
 
-                    textInKeyword.setText("");
+                        textInKeyword.setText("");
 
                     } else {
                         ((LinearLayout) addView.getParent()).removeView(addView);
@@ -208,7 +211,6 @@ public class CreateQuestion extends AppCompatActivity implements
 
             }
         });
-
 
 
         // Logic for the submit button
@@ -240,7 +242,7 @@ public class CreateQuestion extends AppCompatActivity implements
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch(requestCode) {
+        switch (requestCode) {
             case Constant.LOC_PERMISSION: {
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -288,7 +290,7 @@ public class CreateQuestion extends AppCompatActivity implements
         try {
             loc = LocationServices.FusedLocationApi.getLastLocation(
                     client);
-        } catch(SecurityException e) {
+        } catch (SecurityException e) {
             Helper.Log.d(Constant.DEBUG, "Location permission not granted.");
         }
 
@@ -307,7 +309,7 @@ public class CreateQuestion extends AppCompatActivity implements
 
 
     /**
-     * Retreives the date based on what the user has chosen using the date picker widget
+     * Retrieves the date based on what the user has chosen using the date picker widget
      *
      * @param v The view to use (mainly the Create Question Activity)
      */
@@ -329,7 +331,7 @@ public class CreateQuestion extends AppCompatActivity implements
 
                         if ((isValidDate(monthOfYear, dayOfMonth, aYear) && hour == -1)
                                 || (isValidTime(monthOfYear, dayOfMonth, aYear, hour, minute))) {
-                            // Display Selected date in textbox
+                            // Display Selected date in text box
                             textDate.setText((monthOfYear + 1) + "-"
                                     + (dayOfMonth) + "-" + aYear); // + 1 for display purposes for month
                             year = aYear;
@@ -455,7 +457,6 @@ public class CreateQuestion extends AppCompatActivity implements
 
                 }
 
-
             });
 
             return true;
@@ -545,7 +546,7 @@ public class CreateQuestion extends AppCompatActivity implements
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         long futureInMillis = SystemClock.elapsedRealtime() + delay;
-        AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, futureInMillis, pendingIntent);
     }
 

@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import Constants.Constant;
+import Helper.HelperMethods;
 import Objects.Adapters.CustomListViewAdapterComment;
 import Objects.Comment;
 
@@ -32,6 +33,7 @@ public class CommentActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        HelperMethods.setChosenTheme(this, getApplicationContext());
         setContentView(R.layout.activity_comment);
         mDatabase = FirebaseDatabase.getInstance().getReferenceFromUrl(Constant.DB_URL);
         Bundle bundle = getIntent().getExtras();
