@@ -23,23 +23,31 @@
         android:layout_alignParentStart="true"
         android:paddingTop="20dp" />
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:srcCompat="@drawable/ic_star_border"
-        android:id="@+id/imageView_favorite"
-        android:layout_marginEnd="30dp"
-        android:layout_alignParentEnd="true"
-        android:layout_alignBottom="@id/tv_Map_Question"/>
-
     <TextView
         android:text="TextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/textView_Rating"
         android:layout_below="@+id/imageView_favorite"
-        android:layout_marginLeft="8dp"
-        android:layout_marginEnd="30dp"
-        android:layout_alignStart="@+id/imageView_favorite" />
+        android:layout_marginRight="12dp"
+        android:layout_alignEnd="@+id/imageView_favorite" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/ic_star_border"
+        android:id="@+id/imageView_favorite"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/tv_Map_Question"
+        android:layout_marginStart="96dp" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/flag_button"
+        android:id="@+id/imageView_flag"
+        android:layout_marginStart="24dp"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/textView_Rating" />
 
 </RelativeLayout>

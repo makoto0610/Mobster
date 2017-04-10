@@ -41,6 +41,7 @@ public class CustomListViewAdapter extends ArrayAdapter<DisplayQuestion> {
     /*private view holder class*/
     private class ViewHolder {
         ImageView imageFavorite;
+        ImageView imageFlag;
         TextView textQuestion;
         TextView textDuration;
         TextView textRating;
@@ -60,6 +61,14 @@ public class CustomListViewAdapter extends ArrayAdapter<DisplayQuestion> {
                 @Override
                 public void onClick(View view) {
                     holder.imageFavorite.setImageResource(R.drawable.ic_star);
+                }
+            });
+
+            holder.imageFlag = (ImageView) convertView.findViewById(R.id.imageView_flag);
+            holder.imageFlag.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //handle code for flag button press
                 }
             });
 

@@ -147,62 +147,12 @@ public class TrendingFragment extends Fragment {
             public void onItemClick(AdapterView<?> parentAdapter, View view, int position,
                                     long id) {
                 buttonPressed = false;
-                // after we change the icon(s):
-                // 1) get the display question associated with the listview entry
-                // 2) increment the number of upvotes / downvotes
-                // a) TODO: Logic if the user has already voted on the question, then opposite one should be decremented (and vice versa)
-                // b) if the user hasn't voted yet we can just increment one of them
-                // 3) update the current rating
+
 
                 final DisplayQuestion dq = (DisplayQuestion) parentAdapter.getAdapter().getItem(position);
                 final String questionKey = dq.getQuestionId();
                 final String username = dq.getUsername();
                 LinkedList<String> votedUsernames = dq.getVotedUsers();
-
-                final ImageView favorite = (ImageView) view.findViewById(R.id.imageView_favorite);
-
-                final View relativeLayout = view;
-
-                favorite.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        buttonPressed = true;
-                        favorite.setImageResource(R.drawable.ic_star);
-
-                        //NOTE: rating display changed before the database gets updated
-                        // had to do it this way as a workaround
-                        // ideally, want database updated THEN rating display changed
-                        // database/display mismatch might occur if a database error occurs
-                        dq.setRating(dq.getRating() + 1);
-                        updateRating(relativeLayout, dq.getRating());
-
-                        //begin upvote transaction
-                        DatabaseReference accessUp = mDatabase.child("questions").child(questionKey).child("numFavorites");
-                        accessUp.runTransaction(new Transaction.Handler() {
-                            @Override
-                            public Transaction.Result doTransaction(MutableData mutableData) {
-                                Long currentValue = (Long) mutableData.getValue();
-                                if (currentValue == null) {
-                                    mutableData.setValue(1);
-                                } else {
-                                    mutableData.setValue(currentValue + 1);
-                                }
-                                return Transaction.success(mutableData);
-                            }
-
-                            @Override
-                            public void onComplete(DatabaseError databaseError, boolean b, DataSnapshot dataSnapshot) {
-                                if (databaseError == null) {
-                                    Helper.Log.d(Constant.DEBUG, "Transaction finished.");
-                                    //Helper.Log.d(Constant.DEBUG, dataSnapshot.toString());
-                                }
-                                else Helper.Log.d(Constant.DEBUG, "Transaction finished w/ database error " + databaseError.toString());
-                            }
-
-                        });
-
-                    }
-                });
 
                 if (!buttonPressed) {
                     DisplayQuestion data = (DisplayQuestion) parentAdapter.getItemAtPosition(position);
