@@ -238,6 +238,7 @@ public class NewFragment extends Fragment {
 
     }
 
+     /*
      * Returns whether or not the parent fragment is the Home Tab Fragment (or the My Questions Tab)
      *
      * @return true if the current fragment's parent is the HomeTabFragment. False if the parent
