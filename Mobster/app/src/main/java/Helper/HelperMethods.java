@@ -104,19 +104,21 @@ public class HelperMethods {
      */
     public static DisplayQuestion getQuestion(DataSnapshot postSnapshot, HashMap value, String keyQuestion) {
         Object start = value.get("start");
-//        long upvotes = (long) value.get("num_upvotes");
-        long upvotes = (long) 1;
-        long downvotes = (long) 1;
-//        long downvotes = (long) value.get("num_downvotes");
-        long rating = upvotes - downvotes;
+
+        Long ratingLong = 0L;
+        Object ratingObj = value.get("num_favorites");
+        if (ratingObj != null) ratingLong = (long) ratingObj;
+
         long access = (long) value.get("num_access");
         HashMap end =  (HashMap) value.get("end");
         long endTime = (long) end.get("timeInMillis");
         long duration = computeDuration(endTime);
         String username = (String) value.get("username");
         HashMap votedUsers = (HashMap) value.get("votedUsers");
-        return new DisplayQuestion((String) (value.get("question")), new Duration(duration),
-                rating, keyQuestion, access, username, votedUsers);
+        HashMap favoritedUsers = (HashMap) value.get("favoritedUsers");
+
+        return new DisplayQuestion((String) (value.get("question")), "key", new Duration(duration),
+                ratingLong, keyQuestion, access, username, votedUsers, favoritedUsers);
     }
 
     public static void setChosenTheme(Activity app, Context ctx) {

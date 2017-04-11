@@ -11,5 +11,6 @@
     <color name="colorHightlightLight">#44BBAA</color>
     <color name="colorAccentLight">#33605a</color>
     <color name="colorOrangeLight">#FFA500</color>
+    <color name="colorStarYellow">#FFFF00</color>
 
 </resources>
