@@ -53,7 +53,7 @@ public class CustomListViewAdapter extends ArrayAdapter<DisplayQuestion> {
     /*private view holder class*/
     private class ViewHolder {
         ImageView imageFavorite;
-        ImageView imageFlag;
+        ImageView flag;
         TextView textQuestion;
         TextView textDuration;
         TextView textRating;
@@ -195,11 +195,112 @@ public class CustomListViewAdapter extends ArrayAdapter<DisplayQuestion> {
                 }
             });
 
-            holder.imageFlag = (ImageView) convertView.findViewById(R.id.imageView_flag);
-            holder.imageFlag.setOnClickListener(new View.OnClickListener() {
+            holder.flag = (ImageView) convertView.findViewById(R.id.imageView_flag);
+            //flag
+            holder.flag = (ImageView) convertView.findViewById(R.id.imageView_flag);
+            holder.flag.setTag(1);
+
+            DatabaseReference flaggedRef = mDatabase.child("questions").child(question.getQuestionId())
+                    .child("flaggedByUsers");
+
+            flaggedRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                        String value = (String) postSnapshot.getValue();
+                        if(value.equals(currentUser)){
+                            holder.flag.setTag(2);
+                            holder.flag.setImageResource(R.drawable.flag_button_red);
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+
+            //Checking if the flag has been pressed or unpressed
+            holder.flag.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    //handle code for flag button press
+                    //if flag has been pressed update the image and add the user under flagged
+                    if(holder.flag.getTag().equals(1)) {
+                        holder.flag.setTag(2);
+                        holder.flag.setImageResource(R.drawable.flag_button_red);
+                        DatabaseReference flagged = mDatabase.child("questions").child(question.getQuestionId()).child("isFlagged");
+                        flagged.runTransaction(new Transaction.Handler() {
+
+                            @Override
+                            public Transaction.Result doTransaction(MutableData mutableData) {
+                                Long currentValue = (Long) mutableData.getValue();
+                                if (currentValue == null) {
+                                    mutableData.setValue(1);
+                                } else {
+                                    mutableData.setValue(currentValue + 1);
+                                }
+                                return Transaction.success(mutableData);
+                            }
+
+                            @Override
+                            public void onComplete(DatabaseError databaseError, boolean b, DataSnapshot dataSnapshot) {
+                                Log.d(Constant.AUTH_TAG, "Transaction finished.");
+                            }
+                        });
+                        DatabaseReference flaggedUsersRef = mDatabase.child("questions").child(question.getQuestionId())
+                                .child("flaggedByUsers").push();
+                        flaggedUsersRef.setValue(currentUser);
+                    } else {
+                        //if flag was pressed then unpressed by the same user then update image and delete the user from the database
+                        holder.flag.setTag(1);
+                        holder.flag.setImageResource(R.drawable.flag_button);
+                        DatabaseReference flagged = mDatabase.child("questions").child(question.getQuestionId()).child("isFlagged");
+                        flagged.runTransaction(new Transaction.Handler() {
+
+                            @Override
+                            public Transaction.Result doTransaction(MutableData mutableData) {
+                                Long currentValue = (Long) mutableData.getValue();
+                                if (currentValue != null) {
+                                    mutableData.setValue(currentValue - 1);
+                                }
+                                return Transaction.success(mutableData);
+                            }
+
+                            @Override
+                            public void onComplete(DatabaseError databaseError, boolean b, DataSnapshot dataSnapshot) {
+                                Log.d(Constant.AUTH_TAG, "Transaction finished.");
+                            }
+                        });
+                        DatabaseReference flaggedRef = mDatabase.child("questions").child(question.getQuestionId())
+                                .child("flaggedByUsers");
+
+                        //removing user from flaggedbyUsers table if the user unflags the question
+                        flaggedRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                                    String keyUser = postSnapshot.getKey();
+                                    String value = (String) postSnapshot.getValue();
+                                    if(value.equals(currentUser)){
+                                        mDatabase.child("questions").child(question.getQuestionId()).child("flaggedByUsers").child(keyUser).removeValue();
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
+
+
+
+                    }
+
+
+
+
                 }
             });
 
