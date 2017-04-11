@@ -24,25 +24,15 @@ public class MyQuestionsTabFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        /**
-         * Inflate home_tab_layout and setup Views.
-         */
+        // Inflate home_tab_layout and setup Views
         View x = inflater.inflate(R.layout.home_tab_layout, null);
         tabLayout = (TabLayout) x.findViewById(R.id.tabs);
         viewPager = (ViewPager) x.findViewById(R.id.viewpager);
 
-        /**
-         * Set an Adapater for the View Pager
-         */
+        // Set an Adapter for the View Pages
         viewPager.setAdapter(new MyAdapter(getChildFragmentManager()));
         viewPager.setOffscreenPageLimit(1);
 
-
-        /**
-         * Now , this is a workaround ,
-         * The setupWithViewPager dose't works without the runnable .
-         * Maybe a Support Library Bug .
-         */
 
         tabLayout.post(new Runnable() {
             @Override
@@ -61,10 +51,7 @@ public class MyQuestionsTabFragment extends Fragment {
             super(fm);
         }
 
-        /**
-         * Return fragment with respect to Position .
-         */
-
+        // Return fragment with respect to Position
         @Override
         public Fragment getItem(int position) {
             switch (position) {
@@ -83,10 +70,7 @@ public class MyQuestionsTabFragment extends Fragment {
 
         }
 
-        /**
-         * This method returns the title of the tab according to the position.
-         */
-
+        // This method returns the title of the tab according to the position
         @Override
         public CharSequence getPageTitle(int position) {
 

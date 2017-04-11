@@ -50,7 +50,7 @@ public class Ban extends AppCompatActivity {
     }
 
 
-
+    //if ban button is pressed delete ban the user and delete the questions from the database
     public void onBanButtonClick(View view) {
         BannedUser user = new BannedUser(userToBanPassed);
         mDatabase.child("admin").child("banned").child(userToBanPassed).setValue(user);
@@ -96,6 +96,13 @@ public class Ban extends AppCompatActivity {
         startActivity(intent);
     }
 
+    @Override
+    public void onBackPressed()
+    {
+        Intent intent = new Intent(this, AdminHome.class);
+        startActivity(intent);
+
+    }
 
 }
 

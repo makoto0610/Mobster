@@ -129,6 +129,24 @@ public class Question {
         return this.isFlagged;
     }
 
+
+    public void incrementFlagged() {
+        this.isFlagged++;
+    }
+
+    public void setNum_downvotes(long num_downvotes) {
+        this.num_downvotes = num_downvotes;
+    }
+
+    public long getNum_upvotes() {
+
+        return num_upvotes;
+    }
+
+    public long getNum_downvotes() {
+        return num_downvotes;
+    }
+
     public Location getLoc() {
         return loc;
     }

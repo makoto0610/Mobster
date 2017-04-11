@@ -58,13 +58,14 @@ public class deleteFlaggedQuestions extends AppCompatActivity {
                     String question = (String) value.get("question");
                     if(value.get("isFlagged")!= null) {
                         Long isFlagged = (Long) value.get("isFlagged");
-                        if (isFlagged == 1) {
+                        if (isFlagged >= 3) {
                             array[index] = question;
                             length++;
                         }
                         index++;
                     }
                 }
+
                 init_FlaggedQuestions_Display();
             }
 
@@ -85,6 +86,7 @@ public class deleteFlaggedQuestions extends AppCompatActivity {
         } else {
 
             // Get ListView object from xml
+
             listView = (ListView) findViewById(R.id.list);
 
             // Define a new Adapter
@@ -106,6 +108,8 @@ public class deleteFlaggedQuestions extends AppCompatActivity {
 
             // ListView Item Click Listener
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+
 
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view,
@@ -131,6 +135,14 @@ public class deleteFlaggedQuestions extends AppCompatActivity {
     public void  onBackButtonClickFlagged(View view) {
         Intent intent = new Intent(this, AdminHome.class);
         startActivity(intent);
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        Intent intent = new Intent(this, AdminHome.class);
+        startActivity(intent);
+
     }
 
 }

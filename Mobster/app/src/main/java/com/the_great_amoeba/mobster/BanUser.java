@@ -112,9 +112,12 @@ public class BanUser extends Activity {
         });
     }
 
-    public void onBackButtonClickBan(View view) {
+    @Override
+    public void onBackPressed()
+    {
         Intent intent = new Intent(this, AdminHome.class);
         startActivity(intent);
+
     }
 
 }

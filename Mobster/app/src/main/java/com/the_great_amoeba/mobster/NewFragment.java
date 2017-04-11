@@ -92,49 +92,33 @@ public class NewFragment extends Fragment {
                 }
 
                 // search keywords
-                boolean keywordStatus = getKeywordSearchStatus();
+//                boolean keywordStatus = getKeywordSearchStatus();
 
-                for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     String keyQuestion = postSnapshot.getKey();
                     HashMap value = (HashMap) postSnapshot.getValue();
                     String status = (String) value.get("status");
                     String username = (String) value.get("username");
                     String questionTitle = (String) value.get("question");
 
-                    boolean containsAll = keywordsMatch(keywordStatus, postSnapshot);
+//                    boolean containsAll = keywordsMatch(keywordStatus, postSnapshot);
 
-                    boolean noSearch = noSearchStatus(searchStatus, keywordStatus);
+//                    boolean noSearch = noSearchStatus(searchStatus, keywordStatus);
 
                     if (status.equals("NEW")) {
-                        if (noSearch) {
-                            if (isHomeFragment()) {
-                                DisplayQuestion question = HelperMethods.getQuestion(postSnapshot, value, keyQuestion);
-                                if (!checkDuratationAndUpdateStatus(question)) {
-                                    questions.add(question);
-                                }
-                            } else { // else it is to be displayed in the My Questions Fragment
-                                if (username.equals(user)) {
+                        if (searchStatus) {
+                            if (searchMatch(searchText, questionTitle, postSnapshot)) {
+                                if (isHomeFragment()) {
                                     DisplayQuestion question = HelperMethods.getQuestion(postSnapshot, value, keyQuestion);
-                                    if (!checkDuratationAndUpdateStatus(question)) {
+                                    questions.add(question);
+                                } else { // else it is to be displayed in the My Questions Fragment
+                                    if (username.equals(user)) {
+                                        DisplayQuestion question = HelperMethods.getQuestion(postSnapshot, value, keyQuestion);
                                         questions.add(question);
                                     }
                                 }
                             }
-                        } else if (searchStatus && questionTitle.contains(searchText)) {
-                            if (isHomeFragment()) {
-                                DisplayQuestion question = HelperMethods.getQuestion(postSnapshot, value, keyQuestion);
-                                if (!checkDuratationAndUpdateStatus(question)) {
-                                    questions.add(question);
-                                }
-                            } else { // else it is to be displayed in the My Questions Fragment
-                                if (username.equals(user)) {
-                                    DisplayQuestion question = HelperMethods.getQuestion(postSnapshot, value, keyQuestion);
-                                    if (!checkDuratationAndUpdateStatus(question)) {
-                                        questions.add(question);
-                                    }
-                                }
-                            }
-                        } else if (containsAll) {
+                        } else {
                             if (isHomeFragment()) {
                                 DisplayQuestion question = HelperMethods.getQuestion(postSnapshot, value, keyQuestion);
                                 if (!checkDuratationAndUpdateStatus(question)) {
@@ -149,6 +133,37 @@ public class NewFragment extends Fragment {
                                 }
                             }
                         }
+//                        if (noSearch) {
+//                            if (isHomeFragment()) {
+//                                DisplayQuestion question = HelperMethods.getQuestion(postSnapshot, value, keyQuestion);
+//                                questions.add(question);
+//                            } else { // else it is to be displayed in the My Questions Fragment
+//                                if (username.equals(user)) {
+//                                    DisplayQuestion question = HelperMethods.getQuestion(postSnapshot, value, keyQuestion);
+//                                    questions.add(question);
+//                                }
+//                            }
+//                        } else if (searchStatus && questionTitle.contains(searchText)) {
+//                            if (isHomeFragment()) {
+//                                DisplayQuestion question = HelperMethods.getQuestion(postSnapshot, value, keyQuestion);
+//                                questions.add(question);
+//                            } else { // else it is to be displayed in the My Questions Fragment
+//                                if (username.equals(user)) {
+//                                    DisplayQuestion question = HelperMethods.getQuestion(postSnapshot, value, keyQuestion);
+//                                    questions.add(question);
+//                                }
+//                            }
+//                        } else if (containsAll) {
+//                            if (isHomeFragment()) {
+//                                DisplayQuestion question = HelperMethods.getQuestion(postSnapshot, value, keyQuestion);
+//                                questions.add(question);
+//                            } else { // else it is to be displayed in the My Questions Fragment
+//                                if (username.equals(user)) {
+//                                    DisplayQuestion question = HelperMethods.getQuestion(postSnapshot, value, keyQuestion);
+//                                    questions.add(question);
+//                                }
+//                            }
+//                        }
                     }
 
                 }
@@ -159,7 +174,7 @@ public class NewFragment extends Fragment {
 
                 init_Questions_Display();
 
-                
+
             }
 
             @Override
@@ -174,7 +189,7 @@ public class NewFragment extends Fragment {
     }
 
 
-    /**
+ /**
      * Initialize all of the questions for display on the ListView
      */
     public void init_Questions_Display() {
@@ -223,60 +238,77 @@ public class NewFragment extends Fragment {
 
     }
 
-    /**
      * Returns whether or not the parent fragment is the Home Tab Fragment (or the My Questions Tab)
      *
      * @return true if the current fragment's parent is the HomeTabFragment. False if the parent
-     *          is the MyQuestionsFragment
+     * is the MyQuestionsFragment
      */
     private boolean isHomeFragment() {
         return getParentFragment().getClass().equals(new HomeTabFragment().getClass());
     }
 
 
-
     // Searching Helpers
     private String getSearchText() {
         String toReturn = "";
-        if (((MainActivity)getActivity()).isSearching()/* &&
+        if (((MainActivity) getActivity()).isSearching()/* &&
                 (((MainActivity)getActivity()).getSearchedArea() == 1)*/) {
-            toReturn = ((MainActivity)getActivity()).getSearchedText();
+            toReturn = ((MainActivity) getActivity()).getSearchedText();
         }
         return toReturn;
     }
 
-    private boolean getKeywordSearchStatus() {
-        if (((MainActivity)getActivity()).isSearchingKeyword()/* &&
-                (((MainActivity)getActivity()).getSearchedArea() == 1)*/) {
-            return true;
-        }
-        return false;
-    }
+//    private boolean getKeywordSearchStatus() {
+//        if (((MainActivity)getActivity()).isSearchingKeyword()/* &&
+//                (((MainActivity)getActivity()).getSearchedArea() == 1)*/) {
+//            return true;
+//        }
+//        return false;
+//    }
 
-    private boolean keywordsMatch(boolean keywordStatus, DataSnapshot postSnapshot) {
-        if (keywordStatus) {
-            String[] searchedKeywords = ((MainActivity)getActivity()).getKeywords();
-            String[] questionKeywords = new String[(int)postSnapshot.child("keywords").getChildrenCount()];
-            int arrayCount = 0;
-            for (DataSnapshot k : postSnapshot.child("keywords").getChildren()) {
-                questionKeywords[arrayCount] = (String)k.getValue();
-                arrayCount++;
+    private boolean searchMatch(String searched, String question, DataSnapshot postSnapshot) {
+        String[] words = searched.split("\\s*(,|\\?|\\s)\\s*");
+
+        // check keywords
+        boolean keywordsMatch = false;
+        for (DataSnapshot k : postSnapshot.child("keywords").getChildren()) {
+            if (Arrays.asList(words).contains((String)k.getValue())) {
+                keywordsMatch = true;
+                break;
             }
-            return Arrays.asList(questionKeywords)
-                    .containsAll(Arrays.asList(searchedKeywords));
         }
-        return false;
-    }
 
-    private boolean noSearchStatus(boolean searchText, boolean searchKeyword) {
-        if (searchText || searchKeyword) {
-            return false;
-        }
-        return true;
+        // check questions title
+        String[] title = question.split("\\s*(,|\\?|\\s)\\s*");
+
+        boolean titleMatch = Arrays.asList(title).containsAll(Arrays.asList(words));
+
+        return (keywordsMatch || titleMatch);
     }
+//    private boolean keywordsMatch(boolean keywordStatus, DataSnapshot postSnapshot) {
+//        if (keywordStatus) {
+//            String[] searchedKeywords = ((MainActivity)getActivity()).getKeywords();
+//            String[] questionKeywords = new String[(int)postSnapshot.child("keywords").getChildrenCount()];
+//            int arrayCount = 0;
+//            for (DataSnapshot k : postSnapshot.child("keywords").getChildren()) {
+//                questionKeywords[arrayCount] = (String)k.getValue();
+//                arrayCount++;
+//            }
+//            return Arrays.asList(questionKeywords)
+//                    .containsAll(Arrays.asList(searchedKeywords));
+//        }
+//        return false;
+//    }
+
+//    private boolean noSearchStatus(boolean searchText, boolean searchKeyword) {
+//        if (searchText || searchKeyword) {
+//            return false;
+//        }
+//        return true;
+//    }
 
     private boolean isSearchingHome() {
-        if ((((MainActivity)getActivity()).getSearchedArea() == 1)) {
+        if ((((MainActivity) getActivity()).getSearchedArea() == 1)) {
             return true;
         }
         return false;

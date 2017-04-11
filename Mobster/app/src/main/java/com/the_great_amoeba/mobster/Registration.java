@@ -1,17 +1,16 @@
 package com.the_great_amoeba.mobster;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 
+import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -24,8 +23,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-
-import java.util.HashMap;
 
 import Constants.Constant;
 import Objects.User;
@@ -85,6 +82,11 @@ public class Registration extends AppCompatActivity {
         confirm = (EditText) findViewById(R.id.register_confirm_password);
         email = (EditText) findViewById(R.id.register_email);
 
+        password.setTypeface(Typeface.DEFAULT);
+        password.setTransformationMethod(new PasswordTransformationMethod());
+        confirm.setTypeface(Typeface.DEFAULT);
+        confirm.setTransformationMethod(new PasswordTransformationMethod());
+
     }
 
     /**
@@ -104,16 +106,15 @@ public class Registration extends AppCompatActivity {
 
         String username = this.username.getText().toString();
         String password = this.password.getText().toString();
-        String confirm = this.confirm.getText().toString();
-        String email = this.email.getText().toString();
+        String confirm = this.confirm.getText().toString().toLowerCase();
+        String email = this.email.getText().toString().toLowerCase();
         Query contain = mDatabase.child("users").orderByKey().equalTo(username);
-        //usernameBanned = username;
 
-        if (username.length()== 0) {
+        if (username.length() == 0) {
             HelperMethods.errorDialog(this, "Username not entered",
                     "You did not enter a username.");
             this.confirm.setText("");
-        } else if(password.length()== 0 ||  confirm.length()== 0) {
+        } else if (password.length() == 0 || confirm.length() == 0) {
             HelperMethods.errorDialog(this, "Password or confirm password not entered",
                     "You did not enter a password.");
             this.confirm.setText("");
@@ -133,8 +134,8 @@ public class Registration extends AppCompatActivity {
             HelperMethods.errorDialog(this, "Email invalid",
                     "Email cannot be empty and must be valid.");
         } else {
-            User user = new User(username, password, email);
-            addNewUser(user);
+            User user = new User(username, email);
+            addNewUser(user, password);
         }
     }
 
@@ -146,10 +147,11 @@ public class Registration extends AppCompatActivity {
         mDatabase.child("users").child(enteredUsername).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists()){
+                if (dataSnapshot.exists()) {
                     isExist[0] = true;
                 }
             }
+
             @Override
             public void onCancelled(DatabaseError databaseError) {
             }
@@ -160,20 +162,21 @@ public class Registration extends AppCompatActivity {
     /**
      * Method that queries Firebase DB to see if entered username matches an existing username that was banned.
      */
-    public  void checkUsernameBanned(final String username, final String password, final String email) {
+    public void checkUsernameBanned(final String username, final String password, final String email) {
         //To check for banned Users
         mDatabase.child("admin").child("banned").child(username).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists()){
+                if (dataSnapshot.exists()) {
                     HelperMethods.errorDialog(context, "Username invalid",
                             "Username already exists");
                 } else {
                     //register the new user
-                    User user = new User(username, password, email);
-                    addNewUser(user);
+                    User user = new User(username, email);
+                    addNewUser(user, password);
                 }
             }
+
             @Override
             public void onCancelled(DatabaseError databaseError) {
             }
@@ -181,18 +184,17 @@ public class Registration extends AppCompatActivity {
     }
 
 
-
     /**
      * Adds a new user by first authenticating through Firebase, and then adding to the
      * users table in the DB.
+     *
      * @param user - User object to be used for insertion in Firebase DB.
      */
-    private void addNewUser(User user) {
-        boolean success = false;
+    private void addNewUser(User user, String password) {
         final String _username = user.getUsername();
         mDatabase.child("users").child(user.getUsername())
                 .setValue(user);
-        mAuth.createUserWithEmailAndPassword(user.getEmail(), user.getPassword())
+        mAuth.createUserWithEmailAndPassword(user.getEmail(), password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
@@ -231,5 +233,13 @@ public class Registration extends AppCompatActivity {
         if (mAuthListener != null) {
             mAuth.removeAuthStateListener(mAuthListener);
         }
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        Intent intent = new Intent(this, Login.class);
+        startActivity(intent);
+
     }
 }

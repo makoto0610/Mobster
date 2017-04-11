@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
@@ -17,7 +18,9 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 
 import com.github.mikephil.charting.data.PieEntry;
 import com.google.firebase.auth.FirebaseAuth;
@@ -38,28 +41,27 @@ public class MainActivity extends AppCompatActivity {
     private boolean searchingKeyword;
     private String[] keywords;
 
+    public static boolean homeFragmentShown=false ;
+    public static boolean otherFragmentShown=false ;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         HelperMethods.setChosenTheme(this, getApplicationContext());
         setContentView(R.layout.activity_main);
 
-        /**
-         * Setup the DrawerLayout and NavigationView
-         */
+        // Setup the DrawerLayout and NavigationView
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
         mNavigationView = (NavigationView) findViewById(R.id.nav_view);
 
-        /**
-         * Inflating the HomeFragment as the first Fragment
-         */
+        //Inflating the HomeFragment as the first Fragment
         mFragmentManager = getSupportFragmentManager();
         mFragmentTransaction = mFragmentManager.beginTransaction();
+        homeFragmentShown=true;
+
         mFragmentTransaction.replace(R.id.containerView, new HomeTabFragment()).commit();
 
-        /**
-         * Setup click events on the Navigation View Items.
-         */
+        //Setup click events on the Navigation View Items
         mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(MenuItem menuItem) {
@@ -71,17 +73,28 @@ public class MainActivity extends AppCompatActivity {
 
                     // text inputs
                     final EditText input = new EditText(MainActivity.this);
-                    if (searching || searchingKeyword) {
+                    if (searching) {
                         input.setText(searchedText);
                     } else {
                         input.setHint("Enter text here");
                     }
-
                     input.setInputType(InputType.TYPE_CLASS_TEXT);
-                    builder.setView(input);
+
+                    // adding margins to the input line
+                    FrameLayout container = new FrameLayout(MainActivity.this);
+                    FrameLayout.LayoutParams params = new  FrameLayout.LayoutParams
+                                    (ViewGroup.LayoutParams.MATCH_PARENT
+                                    , ViewGroup.LayoutParams.WRAP_CONTENT);
+                    params.leftMargin = getResources().getDimensionPixelSize(R.dimen.dialog_margin);
+                    params.rightMargin = getResources().getDimensionPixelSize(R.dimen.dialog_margin);
+                    input.setLayoutParams(params);
+                    container.addView(input);
+                    builder.setView(container);
+
+                    //builder.setView(input);
 
                     // radio buttons
-                    final String[] choices = {"Go to My Questions", "Go to Home"};
+                    final String[] choices = {"search my questions", "search all"};
                     builder.setSingleChoiceItems(choices, searchedArea, new DialogInterface.OnClickListener() {
 
                         @Override
@@ -91,17 +104,21 @@ public class MainActivity extends AppCompatActivity {
                     });
 
 
+
+
                     // search and cancel buttons
-                    builder.setPositiveButton("Search Question Name", new DialogInterface.OnClickListener() {
+                    builder.setPositiveButton("Search", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            searchedText = input.getText().toString();
-                            if (searchedText.equals("")) {
+
+                            searching = true;
+                            searchedText = input.getText().toString().toLowerCase();
+/*                            if (searchedText.equals("")) {
                                 searching = false;
                             } else {
                                 searching = true;
                             }
-                            searchingKeyword = false;
+                            searchingKeyword = false;*/
                             FragmentTransaction xfragmentTransaction = mFragmentManager.beginTransaction();
                             if (searchedArea == 0) {
                                 xfragmentTransaction.replace(R.id.containerView, new MyQuestionsTabFragment()).commit();
@@ -111,29 +128,48 @@ public class MainActivity extends AppCompatActivity {
                             }
                         }
                     });
-                    builder.setNegativeButton("Search Keywords (separate by commas)", new DialogInterface.OnClickListener() {
+                    builder.setNegativeButton("Clear Search", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            searchedText = input.getText().toString();
-                            if (searchedText.equals("")) {
-                                searchingKeyword = false;
-                                keywords = new String[0];
-                            } else {
-                                String[] keywordsRaw = searchedText.split(",");
-                                keywords = new String[keywordsRaw.length];
-                                for (int i = 0 ; i < keywordsRaw.length; i++) {
-                                    keywords[i] = keywordsRaw[i].trim();
-                                }
-                                searchingKeyword = true;
-                            }
+// <<<<<<< mraku3
+//                             searchedText = input.getText().toString().toLowerCase();
+//                             if (searchedText.equals("")) {
+//                                 searchingKeyword = false;
+//                                 keywords = new String[0];
+//                             } else {
+//                                 String[] keywordsRaw = searchedText.split(",");
+//                                 keywords = new String[keywordsRaw.length];
+//                                 for (int i = 0 ; i < keywordsRaw.length; i++) {
+//                                     keywords[i] = keywordsRaw[i].trim();
+//                                 }
+//                                 searchingKeyword = true;
+//                             }
+// =======
+                            input.setText("");
                             searching = false;
                             FragmentTransaction xfragmentTransaction = mFragmentManager.beginTransaction();
-                            if (searchedArea == 0) {
-                                xfragmentTransaction.replace(R.id.containerView, new MyQuestionsTabFragment()).commit();
+                            xfragmentTransaction.replace(R.id.containerView, new HomeTabFragment()).commit();
 
-                            } else {
-                                xfragmentTransaction.replace(R.id.containerView, new HomeTabFragment()).commit();
-                            }
+//                            searchedText = input.getText().toString();
+//                            if (searchedText.equals("")) {
+//                                searchingKeyword = false;
+//                                keywords = new String[0];
+//                            } else {
+//                                String[] keywordsRaw = searchedText.split(",");
+//                                keywords = new String[keywordsRaw.length];
+//                                for (int i = 0 ; i < keywordsRaw.length; i++) {
+//                                    keywords[i] = keywordsRaw[i].trim();
+//                                }
+//                                searchingKeyword = true;
+//                            }
+//                            searching = false;
+//                            FragmentTransaction xfragmentTransaction = mFragmentManager.beginTransaction();
+//                            if (searchedArea == 0) {
+//                                xfragmentTransaction.replace(R.id.containerView, new MyQuestionsTabFragment()).commit();
+//
+//                            } else {
+//                                xfragmentTransaction.replace(R.id.containerView, new HomeTabFragment()).commit();
+//                            }
                         }
                     });
                     //neutral is actually is negative
@@ -153,16 +189,22 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 if (menuItem.getItemId() == R.id.nav_item_my_questions) {
+                    otherFragmentShown=true;
+                    homeFragmentShown=false;
                     FragmentTransaction xfragmentTransaction = mFragmentManager.beginTransaction();
                     xfragmentTransaction.replace(R.id.containerView, new MyQuestionsTabFragment()).commit();
                 }
 
                 if (menuItem.getItemId() == R.id.nav_item_statistics) {
+                    otherFragmentShown=true;   //when moving to fragment1
+                    homeFragmentShown=false;
                     FragmentTransaction xfragmentTransaction = mFragmentManager.beginTransaction();
                     xfragmentTransaction.replace(R.id.containerView, new StatisticsFragment()).commit();
                 }
 
                 if (menuItem.getItemId() == R.id.nav_item_rules) {
+                    otherFragmentShown=true;   //when moving to fragment1
+                    homeFragmentShown=false;
                     FragmentTransaction xfragmentTransaction = mFragmentManager.beginTransaction();
                     xfragmentTransaction.replace(R.id.containerView, new RulesFragment()).commit();
                 }
@@ -171,7 +213,7 @@ public class MainActivity extends AppCompatActivity {
                     Intent intent = new Intent(getApplicationContext(), Login.class);
                     //Log out from Firebase Auth
                     FirebaseAuth.getInstance().signOut();
-                    SaveSharedPreferences.setUserName(getApplicationContext(),"");
+                    SaveSharedPreferences.setUserName(getApplicationContext(), "");
                     startActivity(intent);
                 }
 
@@ -182,6 +224,8 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 if (menuItem.getItemId() == R.id.nav_item_settings) {
+                    otherFragmentShown=true;   //when moving to fragment1
+                    homeFragmentShown=false;
                     Intent intent = new Intent(getApplicationContext(), SettingsActivity.class);
                     startActivity(intent);
                 }
@@ -192,9 +236,7 @@ public class MainActivity extends AppCompatActivity {
 
         });
 
-        /**
-         * Setup Drawer Toggle of the Toolbar
-         */
+        // Setup Drawer Toggle of the Toolbar
         android.support.v7.widget.Toolbar toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBarDrawerToggle mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar, R.string.app_name,
@@ -251,5 +293,39 @@ public class MainActivity extends AppCompatActivity {
     // 0 = my questions
     public int getSearchedArea() {
         return searchedArea;
+    }
+
+    @Override
+    public void onBackPressed() {
+            if(homeFragmentShown) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setCancelable(false);
+                builder.setMessage("Do you want to Exit?");
+                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //if user pressed "yes", then he is allowed to exit from application
+
+                        Intent intent = new Intent(Intent.ACTION_MAIN);
+                        intent.addCategory(Intent.CATEGORY_HOME);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                    }
+                });
+                builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //if user select "No", just cancel this dialog and continue with app
+                        dialog.cancel();
+                    }
+                });
+                AlertDialog alert = builder.create();
+                alert.show();
+            } else {
+                homeFragmentShown=true;
+                FragmentTransaction xfragmentTransaction = mFragmentManager.beginTransaction();
+                xfragmentTransaction.replace(R.id.containerView, new HomeTabFragment()).commit();
+            }
+
     }
 }

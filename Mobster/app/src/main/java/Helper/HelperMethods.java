@@ -104,9 +104,11 @@ public class HelperMethods {
      */
     public static DisplayQuestion getQuestion(DataSnapshot postSnapshot, HashMap value, String keyQuestion) {
         Object start = value.get("start");
+
         Long ratingLong = 0L;
         Object ratingObj = value.get("num_favorites");
         if (ratingObj != null) ratingLong = (long) ratingObj;
+
         long access = (long) value.get("num_access");
         HashMap end =  (HashMap) value.get("end");
         long endTime = (long) end.get("timeInMillis");

@@ -31,24 +31,14 @@
         android:layout_above="@+id/results_list"
         android:layout_below="@+id/results_title" />
 
-    <Button
-        android:text="Back"
+     <Button
+        android:text="Comments"
+        android:id="@+id/commentsButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/back_to_main"
         android:layout_marginBottom="20dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
-        android:layout_marginStart="74dp" />
-
-    <Button
-        android:text="Comments"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="53dp"
-        android:id="@+id/commentsButton"
-        android:layout_alignBaseline="@+id/back_to_main"
-        android:layout_alignBottom="@+id/back_to_main"
-        android:layout_toEndOf="@+id/back_to_main" />
+        android:layout_marginStart="140dp" />
 
 </RelativeLayout>
