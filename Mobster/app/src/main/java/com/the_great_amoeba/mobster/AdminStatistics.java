@@ -1,6 +1,7 @@
 package com.the_great_amoeba.mobster;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.TextView;
 
@@ -83,5 +84,11 @@ public class AdminStatistics extends Activity {
             }
         });
     }
+    @Override
+    public void onBackPressed()
+    {
+        Intent intent = new Intent(this, AdminHome.class);
+        startActivity(intent);
 
+    }
 }

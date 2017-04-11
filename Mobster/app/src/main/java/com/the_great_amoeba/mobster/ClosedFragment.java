@@ -4,10 +4,13 @@ package com.the_great_amoeba.mobster;
  * Created by C. Shih on 12/23/2016.
  */
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -46,13 +49,18 @@ public class ClosedFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
+        FragmentTransaction mFragmentTransaction = getFragmentManager()
+                .beginTransaction();
+        mFragmentTransaction.addToBackStack(null);
         mDatabase = FirebaseDatabase.getInstance()
                 .getReferenceFromUrl(Constant.DB_URL);
         this.view = inflater.inflate(R.layout.new_layout, null);
         Log.d(Constant.DEBUG, "in OncreateView of ClosedFragment");
         getNewQuestionsFromFirebase();
+
         this.user = SaveSharedPreferences.getUserName(getActivity().getApplicationContext());
         return view;
+
     }
 
 

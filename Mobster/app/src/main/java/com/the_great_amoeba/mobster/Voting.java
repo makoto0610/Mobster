@@ -24,6 +24,8 @@ import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.HashMap;
+
 import Constants.Constant;
 import Helper.HelperMethods;
 import Objects.Choice;
@@ -57,24 +59,120 @@ public class Voting extends Activity implements OnClickListener {
         commentText = (EditText) findViewById(R.id.commentText);
 
         final ImageView flag = (ImageView) findViewById(R.id.imageView_flag);
-
+        flag.setTag(1);
         mDatabase = FirebaseDatabase.getInstance().getReferenceFromUrl(DB_URL);
 
+        DatabaseReference flaggedRef = mDatabase.child("questions").child(questionKey)
+                .child("flaggedByUsers");
+
+        flaggedRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    String value = (String) postSnapshot.getValue();
+                    if(value.equals(SaveSharedPreferences.getUserName(getApplicationContext()))){
+                        flag.setTag(2);
+                        flag.setImageResource(R.drawable.flag_button_red);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        //Checking if the flag has been pressed or unpressed
         flag.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //buttonPressed = true;
-                flag.setImageResource(R.drawable.flag_button_red);
-                mDatabase.child("questions").child(questionKey).child("isFlagged")
-                        .setValue(1);
+                //if flag has been pressed update the image and add the user under flagged
+                if(flag.getTag().equals(1)) {
+                    flag.setTag(2);
+                    flag.setImageResource(R.drawable.flag_button_red);
+                    DatabaseReference flagged = mDatabase.child("questions").child(questionKey).child("isFlagged");
+                    flagged.runTransaction(new Transaction.Handler() {
+
+                        @Override
+                        public Transaction.Result doTransaction(MutableData mutableData) {
+                            Long currentValue = (Long) mutableData.getValue();
+                            if (currentValue == null) {
+                                mutableData.setValue(1);
+                            } else {
+                                mutableData.setValue(currentValue + 1);
+                            }
+                            return Transaction.success(mutableData);
+                        }
+
+                        @Override
+                        public void onComplete(DatabaseError databaseError, boolean b, DataSnapshot dataSnapshot) {
+                            Log.d(Constant.AUTH_TAG, "Transaction finished.");
+                        }
+                    });
+                    DatabaseReference flaggedUsersRef = mDatabase.child("questions").child(questionKey)
+                            .child("flaggedByUsers").push();
+                    flaggedUsersRef.setValue(SaveSharedPreferences.getUserName(getApplicationContext()));
+                } else {
+                    //if flag was pressed then unpressed by the same user then update image and delete the user from the database
+                    flag.setTag(1);
+                    flag.setImageResource(R.drawable.flag_button);
+                    DatabaseReference flagged = mDatabase.child("questions").child(questionKey).child("isFlagged");
+                    flagged.runTransaction(new Transaction.Handler() {
+
+                        @Override
+                        public Transaction.Result doTransaction(MutableData mutableData) {
+                            Long currentValue = (Long) mutableData.getValue();
+                            if (currentValue != null) {
+                                mutableData.setValue(currentValue - 1);
+                            }
+                            return Transaction.success(mutableData);
+                        }
+
+                        @Override
+                        public void onComplete(DatabaseError databaseError, boolean b, DataSnapshot dataSnapshot) {
+                            Log.d(Constant.AUTH_TAG, "Transaction finished.");
+                        }
+                    });
+                    DatabaseReference flaggedRef = mDatabase.child("questions").child(questionKey)
+                            .child("flaggedByUsers");
+
+                    //removing user from flaggedbyUsers table if the user unflags the question
+                    flaggedRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                                String keyUser = postSnapshot.getKey();
+                                String value = (String) postSnapshot.getValue();
+                                if(value.equals(SaveSharedPreferences.getUserName(getApplicationContext()))){
+                                    mDatabase.child("questions").child(questionKey).child("flaggedByUsers").child(keyUser).removeValue();
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+
+
+
+                }
+
+
+
 
             }
         });
 
 
+
+
+
         DatabaseReference choicesRef = mDatabase.child("questions").child(questionKey).child("choices");
 
-
+        //updates the number of accesses
         DatabaseReference access = mDatabase.child("questions").child(questionKey).child("num_access");
         access.runTransaction(new Transaction.Handler() {
             @Override
@@ -94,6 +192,7 @@ public class Voting extends Activity implements OnClickListener {
             }
         });
 
+        //pulls the choices from firebase and displays them
         choicesRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -136,6 +235,11 @@ public class Voting extends Activity implements OnClickListener {
         });
     }
 
+    /**
+     * Creates radiobuttons for choices.
+     *
+     * @param num The number of radio buttons to be created
+     */
     private void createRadioButtons(int num, String[] x, float[] y) {
         //add radio buttons
         final RadioButton[] rb = new RadioButton[num];
@@ -152,6 +256,11 @@ public class Voting extends Activity implements OnClickListener {
         ll.addView(rg);
     }
 
+    /**
+     * When submit is pressed the vote is recorded.
+     *
+     * @param v The current view
+     */
     public void onClick(View v) {
         Toast toast;
         Log.w("ANDROID DYNAMIC VIEWS:", "View Id: " + v.getId());
@@ -173,6 +282,11 @@ public class Voting extends Activity implements OnClickListener {
         }
     }
 
+    /**
+     * Saves the answer that the user entered.
+     *
+     *
+     */
     public void saveAnswers() {
         LinearLayout root = (LinearLayout) findViewById(R.id.linearLayout2);
         loopQuestions(root);
@@ -239,6 +353,11 @@ public class Voting extends Activity implements OnClickListener {
 
     }
 
+    /**
+     * Updates number of questions answered by the user in the database.
+     * @param current The current ount of the questions the user has voted on
+     * @param username The username who voted
+     */
     private void updateAnswered(int current, String username) {
         DatabaseReference toUpdate = mDatabase.child("users").child(username).child("answered");
         toUpdate.setValue(current);

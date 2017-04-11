@@ -124,6 +124,10 @@ public class Question {
         return this.isFlagged;
     }
 
+    public void incrementFlagged() {
+        this.isFlagged++;
+    }
+
     public void setNum_downvotes(long num_downvotes) {
         this.num_downvotes = num_downvotes;
     }

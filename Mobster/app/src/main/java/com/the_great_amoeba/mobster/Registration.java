@@ -234,4 +234,12 @@ public class Registration extends AppCompatActivity {
             mAuth.removeAuthStateListener(mAuthListener);
         }
     }
+
+    @Override
+    public void onBackPressed()
+    {
+        Intent intent = new Intent(this, Login.class);
+        startActivity(intent);
+
+    }
 }
