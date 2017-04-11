@@ -220,7 +220,7 @@ public class CustomListViewAdapter extends ArrayAdapter<DisplayQuestion> {
 
     private String getDurationDisplay(Duration duration) {
         long days = duration.getStandardDays();
-        long hours = duration.getStandardMinutes();
+        long hours = duration.getStandardHours();
         long minutes = duration.getStandardMinutes();
         long seconds = duration.getStandardSeconds();
         if (days != 0) {
