@@ -31,6 +31,8 @@ public class MyQuestionsTabFragment extends Fragment {
 
         // Set an Adapter for the View Pages
         viewPager.setAdapter(new MyAdapter(getChildFragmentManager()));
+        viewPager.setOffscreenPageLimit(1);
+
 
         tabLayout.post(new Runnable() {
             @Override

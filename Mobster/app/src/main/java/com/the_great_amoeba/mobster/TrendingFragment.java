@@ -13,20 +13,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Query;
-import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
-
-import org.joda.time.Duration;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -48,6 +44,9 @@ public class TrendingFragment extends Fragment {
     private DisplayQuestion[] array;
     private String user;
 
+    private ProgressBar progressBar;
+
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater,
@@ -55,11 +54,24 @@ public class TrendingFragment extends Fragment {
         mDatabase = FirebaseDatabase.getInstance()
                 .getReferenceFromUrl(Constant.DB_URL);
         this.view = inflater.inflate(R.layout.new_layout, null);
-        Log.d(Constant.DEBUG, "in OncreateView");
+        Log.d(Constant.DEBUG, "in OncreateView of TrendingFragment");
+
+        this.progressBar = (ProgressBar) this.view.findViewById(R.id.progressBar);
+        progressBar.setVisibility(View.INVISIBLE);
+
+
         this.user = SaveSharedPreferences.getUserName(getActivity().getApplicationContext());
         getNewQuestionsFromFirebase();
         return view;
     }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(Constant.DEBUG, "onResume TrendingFrag");
+    }
+
 
 
     /**
@@ -69,6 +81,9 @@ public class TrendingFragment extends Fragment {
         Query contain = mDatabase.child("questions").orderByKey()
                 .limitToFirst(Constant.NUM_OF_QUESTIONS);
         final LinkedList<DisplayQuestion> questions = new LinkedList<>();
+
+        progressBar.setVisibility(View.VISIBLE);
+
 
         contain.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -129,12 +144,16 @@ public class TrendingFragment extends Fragment {
                 });
                 array = new DisplayQuestion[questions.size()];
                 array = questions.toArray(array);
+
+                progressBar.setVisibility(View.GONE);
+
                 init_Questions_Display();
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 //TODO: questions not loading error message
+                progressBar.setVisibility(View.GONE);
             }
         });
 
@@ -153,134 +172,31 @@ public class TrendingFragment extends Fragment {
         // react to click
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             boolean buttonPressed;
-
             public void onItemClick(AdapterView<?> parentAdapter, View view, int position,
                                     long id) {
-                buttonPressed = false;
-                // after we change the icon(s):
-                // 1) get the display question associated with the listview entry
-                // 2) increment the number of upvotes / downvotes
-                // a) TODO: Logic if the user has already voted on the question, then opposite one should be decremented (and vice versa)
-                // b) if the user hasn't voted yet we can just increment one of them
-                // 3) update the current rating
+
 
                 final DisplayQuestion dq = (DisplayQuestion) parentAdapter.getAdapter().getItem(position);
                 final String questionKey = dq.getQuestionId();
                 final String username = dq.getUsername();
                 LinkedList<String> votedUsernames = dq.getVotedUsers();
 
-                final ImageView upVote = (ImageView) view.findViewById(R.id.imageView_upVote);
-                final ImageView downVote = (ImageView) view.findViewById(R.id.imageView_downVote);
-
-                final View relativeLayout = view;
-
-                upVote.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        buttonPressed = true;
-                        downVote.setImageResource(R.drawable.ic_down_vote_green);
-                        upVote.setImageResource(R.drawable.ic_up_vote_orange);
-
-                        //NOTE: rating display changed before the database gets updated
-                        // had to do it this way as a workaround
-                        // ideally, want database updated THEN rating display changed
-                        // database/display mismatch might occur if a database error occurs
-                        dq.setRating(dq.getRating() + 1);
-                        updateRating(relativeLayout, dq.getRating());
-
-                        //begin upvote transaction
-                        DatabaseReference accessUp = mDatabase.child("questions").child(questionKey).child("num_upvotes");
-                        accessUp.runTransaction(new Transaction.Handler() {
-                            @Override
-                            public Transaction.Result doTransaction(MutableData mutableData) {
-                                Long currentValue = (Long) mutableData.getValue();
-                                if (currentValue == null) {
-                                    mutableData.setValue(1);
-                                } else {
-                                    mutableData.setValue(currentValue + 1);
-                                }
-                                return Transaction.success(mutableData);
-                            }
-
-                            @Override
-                            public void onComplete(DatabaseError databaseError, boolean b, DataSnapshot dataSnapshot) {
-                                if (databaseError == null) {
-                                    Helper.Log.d(Constant.DEBUG, "Transaction finished.");
-                                    //Helper.Log.d(Constant.DEBUG, dataSnapshot.toString());
-                                } else
-                                    Helper.Log.d(Constant.DEBUG, "Transaction finished w/ database error " + databaseError.toString());
-                            }
-
-                        });
-
-                    }
-                });
-                downVote.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        buttonPressed = true;
-                        downVote.setImageResource(R.drawable.ic_down_vote_orange);
-                        upVote.setImageResource(R.drawable.ic_up_vote_green);
-
-                        dq.setRating(dq.getRating() - 1);
-                        updateRating(relativeLayout, dq.getRating());
-
-                        //begin downvote transaction
-                        DatabaseReference accessDown = mDatabase.child("questions").child(questionKey).child("num_downvotes");
-                        accessDown.runTransaction(new Transaction.Handler() {
-                            @Override
-                            public Transaction.Result doTransaction(MutableData mutableData) {
-                                Long currentValue = (Long) mutableData.getValue();
-                                if (currentValue == null) {
-                                    mutableData.setValue(1);
-                                } else {
-                                    mutableData.setValue(currentValue + 1);
-                                }
-                                return Transaction.success(mutableData);
-                            }
-
-                            @Override
-                            public void onComplete(DatabaseError databaseError, boolean b, DataSnapshot dataSnapshot) {
-                                if (databaseError == null) {
-                                    Helper.Log.d(Constant.DEBUG, "Transaction finished.");
-                                } else
-                                    Helper.Log.d(Constant.DEBUG, "Transaction finished w/ database error " + databaseError.toString());
-                            }
-
-                        });
-                    }
-                });
-
-                if (!buttonPressed) {
-                    DisplayQuestion data = (DisplayQuestion) parentAdapter.getItemAtPosition(position);
-                    Bundle bundle = new Bundle();
-                    bundle.putString("questionPassed", data.getQuestionId());
-                    System.out.println("User name is " + username);
-                    System.out.println("USER is " + user);
-                    if (username.equals(user) || votedUsernames.contains(user)) {
-                        Intent intent = new Intent(view.getContext(), Results.class);
-                        intent.putExtras(bundle);
-                        startActivity(intent);
-                    } else {
-                        Intent intent = new Intent(view.getContext(), Voting.class);
-                        intent.putExtras(bundle);
-                        startActivity(intent);
-                    }
+                DisplayQuestion data = (DisplayQuestion) parentAdapter.getItemAtPosition(position);
+                Bundle bundle = new Bundle();
+                bundle.putString("questionPassed", data.getQuestionId());
+                System.out.println("User name is " + username);
+                System.out.println("USER is " + user);
+                if (username.equals(user) || votedUsernames.contains(user)) {
+                    Intent intent = new Intent(view.getContext(), Results.class);
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                } else {
+                    Intent intent = new Intent(view.getContext(), Voting.class);
+                    intent.putExtras(bundle);
+                    startActivity(intent);
                 }
             }
         });
-    }
-
-    /**
-     * Method called after the upvote/downvote transactions are processed
-     *
-     * @param relativeLayout - the relativeLayout (the list view row) to update
-     * @param newRating      - the new rating to be displayed
-     */
-    private void updateRating(View relativeLayout, long newRating) {
-        Helper.Log.d(Constant.DEBUG, relativeLayout.toString());
-        TextView duration = (TextView) relativeLayout.findViewById(R.id.textView_Rating);
-        duration.setText("" + newRating);
     }
 
     // Searching Helpers
