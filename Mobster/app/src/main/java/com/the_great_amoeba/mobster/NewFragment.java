@@ -6,6 +6,8 @@ package com.the_great_amoeba.mobster;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -27,8 +29,11 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import Constants.Constant;
 import Objects.Adapters.CustomListViewAdapter;
@@ -41,6 +46,7 @@ public class NewFragment extends Fragment {
     private DatabaseReference mDatabase;
     private View view;
     private DisplayQuestion[] array;
+    private ListView listView;
 
     private String user;
 
@@ -57,17 +63,12 @@ public class NewFragment extends Fragment {
         Helper.Log.d(Constant.DEBUG, "in OncreateView of NewFragment");
 
         this.progressBar = (ProgressBar) this.view.findViewById(R.id.progressBar);
+        this.listView = (ListView) this.view.findViewById(R.id.mobile_list);
         progressBar.setVisibility(View.INVISIBLE);
 
         getNewQuestionsFromFirebase();
         this.user = SaveSharedPreferences.getUserName(getActivity().getApplicationContext());
         return view;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        Log.d(Constant.DEBUG, "onResume NewFrag");
     }
 
     /**
@@ -79,6 +80,7 @@ public class NewFragment extends Fragment {
         final LinkedList<DisplayQuestion> questions = new LinkedList<>();
 
         progressBar.setVisibility(View.VISIBLE);
+        listView.setVisibility(View.INVISIBLE);
 
         contain.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -170,10 +172,18 @@ public class NewFragment extends Fragment {
                 array = new DisplayQuestion[questions.size()];
                 array = questions.toArray(array);
 
-                progressBar.setVisibility(View.GONE);
+                //wait for a set amount of time before we display anything
+                Handler handler=new Handler();
+                Runnable r=new Runnable() {
+                    public void run() {
+                        progressBar.setVisibility(View.GONE);
+                        listView.setVisibility(View.VISIBLE);
 
-                init_Questions_Display();
+                        init_Questions_Display();
 
+                    }
+                };
+                handler.postDelayed(r, Constant.DEFAULT_LOADING_WAIT);
 
             }
 
@@ -181,6 +191,7 @@ public class NewFragment extends Fragment {
             public void onCancelled(DatabaseError databaseError) {
                 //TODO: Error message
                 progressBar.setVisibility(View.GONE);
+                listView.setVisibility(View.VISIBLE);
             }
 
 
@@ -197,12 +208,11 @@ public class NewFragment extends Fragment {
         CustomListViewAdapter questions = new CustomListViewAdapter(getContext(), R.layout.list_view,
                 Arrays.asList(this.array));
 
-        final ListView listView = (ListView) this.view.findViewById(R.id.mobile_list);
-        listView.setAdapter(questions);
+        this.listView.setAdapter(questions);
 
 
         // react to click
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        this.listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             boolean buttonPressed;
             public void onItemClick(AdapterView<?> parentAdapter, View view, int position,
                                     long id) {

@@ -27,6 +27,8 @@ public class HomeTabFragment extends Fragment {
     public static TabLayout tabLayout;
     public static ViewPager viewPager;
 
+    public static Fragment[] fragArray;
+
     public static int int_items = 3;
 
     @Nullable
@@ -34,6 +36,8 @@ public class HomeTabFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         // Inflate home_tab_layout and setup Views.
+
+        this.fragArray = new Fragment[3];
 
         View x = inflater.inflate(R.layout.home_tab_layout, null);
 
@@ -43,6 +47,32 @@ public class HomeTabFragment extends Fragment {
         //makes it so that the fragments are not created every time we switch a tab
         viewPager.setOffscreenPageLimit(2);
 
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                switch(position) {
+                    case 0:
+                        NewFragment nf = (NewFragment) fragArray[0];
+                        nf.getNewQuestionsFromFirebase();
+                    case 1:
+                        TrendingFragment tf = (TrendingFragment) fragArray[1];
+                        tf.getNewQuestionsFromFirebase();
+                    default:
+                        break;
+                }
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
         /**
          *Set an Apater for the View Pager
          */
@@ -78,14 +108,17 @@ public class HomeTabFragment extends Fragment {
         public Fragment getItem(int position) {
             switch (position) {
                 case 0:
-                    Log.d(Constant.DEBUG, "Case 0");
-                    return new NewFragment();
+                    Fragment newFrag = new NewFragment();
+                    fragArray[0] = newFrag;
+                    return newFrag;
                 case 1:
-                    Log.d(Constant.DEBUG, "Case 1");
-                    return new TrendingFragment();
+                    Fragment trendFrag = new TrendingFragment();
+                    fragArray[1] = trendFrag;
+                    return trendFrag;
                 case 2:
-                    Log.d(Constant.DEBUG, "Case 2");
-                    return new ClosedFragment();
+                    Fragment closedFrag = new ClosedFragment();
+                    fragArray[2] = closedFrag;
+                    return closedFrag;
             }
             return null;
         }
