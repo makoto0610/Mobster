@@ -102,7 +102,7 @@ public class TrendingFragment extends Fragment {
                     String keyQuestion = postSnapshot.getKey();
                     HashMap value = (HashMap) postSnapshot.getValue();
                     String status = (String) value.get("status");
-                    if (status.equals(Question.Status.CLOSED)) {
+                    if (status.equals(Question.Status.CLOSED.toString())) {
                         continue;
                     }
                     String questionTitle = (String) value.get("question");
