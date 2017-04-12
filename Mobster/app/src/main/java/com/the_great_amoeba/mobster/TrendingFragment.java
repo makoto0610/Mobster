@@ -6,6 +6,7 @@ package com.the_great_amoeba.mobster;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -25,10 +26,13 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import Constants.Constant;
 import Helper.HelperMethods;
@@ -42,6 +46,8 @@ public class TrendingFragment extends Fragment {
     private DatabaseReference mDatabase;
     private View view;
     private DisplayQuestion[] array;
+    private ListView listView;
+
     private String user;
 
     private ProgressBar progressBar;
@@ -55,8 +61,8 @@ public class TrendingFragment extends Fragment {
                 .getReferenceFromUrl(Constant.DB_URL);
         this.view = inflater.inflate(R.layout.new_layout, null);
         Log.d(Constant.DEBUG, "in OncreateView of TrendingFragment");
-
         this.progressBar = (ProgressBar) this.view.findViewById(R.id.progressBar);
+        this.listView = (ListView) this.view.findViewById(R.id.mobile_list);
         progressBar.setVisibility(View.INVISIBLE);
 
 
@@ -64,14 +70,6 @@ public class TrendingFragment extends Fragment {
         getNewQuestionsFromFirebase();
         return view;
     }
-
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        Log.d(Constant.DEBUG, "onResume TrendingFrag");
-    }
-
 
 
     /**
@@ -82,6 +80,7 @@ public class TrendingFragment extends Fragment {
                 .limitToFirst(Constant.NUM_OF_QUESTIONS);
         final LinkedList<DisplayQuestion> questions = new LinkedList<>();
 
+        listView.setVisibility(View.INVISIBLE);
         progressBar.setVisibility(View.VISIBLE);
 
 
@@ -145,15 +144,26 @@ public class TrendingFragment extends Fragment {
                 array = new DisplayQuestion[questions.size()];
                 array = questions.toArray(array);
 
-                progressBar.setVisibility(View.GONE);
+                //wait for a set amount of time before we display anything
+                Handler handler=new Handler();
+                Runnable r=new Runnable() {
+                    public void run() {
+                        progressBar.setVisibility(View.GONE);
+                        listView.setVisibility(View.VISIBLE);
 
-                init_Questions_Display();
+                        init_Questions_Display();
+
+                    }
+                };
+                handler.postDelayed(r, Constant.DEFAULT_LOADING_WAIT);
+
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 //TODO: questions not loading error message
                 progressBar.setVisibility(View.GONE);
+                listView.setVisibility(View.VISIBLE);
             }
         });
 
@@ -167,10 +177,9 @@ public class TrendingFragment extends Fragment {
         CustomListViewAdapter questions = new CustomListViewAdapter(getContext(), R.layout.list_view,
                 Arrays.asList(this.array));
 
-        ListView listView = (ListView) this.view.findViewById(R.id.mobile_list);
-        listView.setAdapter(questions);
+        this.listView.setAdapter(questions);
         // react to click
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        this.listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             boolean buttonPressed;
             public void onItemClick(AdapterView<?> parentAdapter, View view, int position,
                                     long id) {

@@ -15,4 +15,5 @@ public class Constant {
     public static final double ATLANTA_LAT = 33.7490;
     public static final double ATLANTA_LONG = -84.3880;
     public static final float DEFAULT_ZOOM = 10;
+    public static final long DEFAULT_LOADING_WAIT = 1000;
 }

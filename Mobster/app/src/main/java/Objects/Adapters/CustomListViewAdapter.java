@@ -85,7 +85,7 @@ public class CustomListViewAdapter extends ArrayAdapter<DisplayQuestion> {
             holder.imageFavorite.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
+                    holder.imageFavorite.setClickable(false);
                     if (question.getFavoritedUsers().contains(currentUser)) {
                         //if the user has alreadyFavorited, we must "unfavorite"
 
@@ -139,6 +139,8 @@ public class CustomListViewAdapter extends ArrayAdapter<DisplayQuestion> {
                                                     question.setRating(question.getRating() - 1);
                                                     question.getFavoritedUsers().remove(currentUser);
                                                     holder.textRating.setText(question.getRating() + "");
+                                                    holder.imageFavorite.setClickable(true);
+
                                                 }
                                             });
                                         }
@@ -156,10 +158,6 @@ public class CustomListViewAdapter extends ArrayAdapter<DisplayQuestion> {
 
 
                     } else {
-                        holder.imageFavorite.setImageResource(R.drawable.ic_star);
-
-                        question.setRating(question.getRating() + 1);
-                        holder.textRating.setText(question.getRating() + "");
 
                         //begin favorite transaction
                         DatabaseReference accessFavorite = mDatabase.child("questions").child(question.getQuestionId()).child("num_favorites");
@@ -185,6 +183,13 @@ public class CustomListViewAdapter extends ArrayAdapter<DisplayQuestion> {
                                             .child("favoritedUsers").push();
                                     votedUsersRef.setValue(currentUser);
                                     question.getFavoritedUsers().add(currentUser);
+                                    holder.imageFavorite.setClickable(true);
+
+                                    holder.imageFavorite.setImageResource(R.drawable.ic_star);
+
+                                    question.setRating(question.getRating() + 1);
+                                    holder.textRating.setText(question.getRating() + "");
+
                                 } else
                                     Helper.Log.d(Constant.DEBUG, "Transaction finished w/ database error " + databaseError.toString());
                             }
