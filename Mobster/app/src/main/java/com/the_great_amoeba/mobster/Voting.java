@@ -325,7 +325,7 @@ public class Voting extends Activity implements OnClickListener {
         comment = commentText.getText().toString();
         if (!comment.equals("")) {
             DatabaseReference cref = mDatabase.child("questions").child(questionKey).child("comments").push();
-            Comment c = new Comment(comment, SaveSharedPreferences.getUserName(getApplicationContext()));
+            Comment c = new Comment(comment);
             cref.setValue(c);
         }
 

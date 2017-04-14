@@ -13,4 +13,7 @@
     <string name="title_activity_maps">Map</string>
     <string name="keywordsHelp">Write your keyword here!
         \n eg: food, travel, gadgets</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
