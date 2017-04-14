@@ -1,13 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:weightSum="1">
+
+    <TextView
+        android:text=" Ban Users"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/admin_ban_title"
+        android:textAlignment="viewEnd"
+        android:textSize="36sp"
+        android:layout_marginTop="18dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
 
     <ListView
         android:id="@+id/list"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent">
+        android:layout_height="262dp"
+        android:layout_width="match_parent"
+        android:layout_weight="0.96"
+        android:layout_marginTop="22dp"
+        android:layout_below="@+id/admin_ban_title"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true">
     </ListView>
 
-</LinearLayout>
+</RelativeLayout>
