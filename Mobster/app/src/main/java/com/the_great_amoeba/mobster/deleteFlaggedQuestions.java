@@ -132,11 +132,6 @@ public class deleteFlaggedQuestions extends AppCompatActivity {
         }
     }
 
-    public void  onBackButtonClickFlagged(View view) {
-        Intent intent = new Intent(this, AdminHome.class);
-        startActivity(intent);
-    }
-
     @Override
     public void onBackPressed()
     {

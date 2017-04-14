@@ -1,6 +1,8 @@
 package com.the_great_amoeba.mobster;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -26,6 +28,7 @@ import java.util.LinkedList;
 
 import Constants.Constant;
 import Objects.Adapters.CustomListViewAdapter;
+import Objects.BannedUser;
 import Objects.DisplayQuestion;
 
 /**
@@ -37,6 +40,10 @@ public class BanUser extends Activity {
     private String[] array;
     private DatabaseReference mDatabase;
     public static final String DB_URL = "https://mobster-3ba43.firebaseio.com/";
+
+    private int length;
+    private String[] questionsToDelete;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,15 +104,65 @@ public class BanUser extends Activity {
                                     int position, long id) {
 
                 // ListView Clicked item index
-                int itemPosition     = position;
+                int itemPosition = position;
 
                 // ListView Clicked item value
-                String  data    = (String) listView.getItemAtPosition(position);
-                Intent intent = new Intent(view.getContext(), Ban.class);
-                Bundle bundle = new Bundle();
-                bundle.putString("userToBan", data);
-                intent.putExtras(bundle);
-                startActivity(intent);
+                final String data = (String) listView.getItemAtPosition(position);
+                AlertDialog.Builder builder = new AlertDialog.Builder(BanUser.this);
+                builder.setTitle("Are you sure you want to ban " + data + "?");
+                builder.setPositiveButton("BAN", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        BannedUser user = new BannedUser(data);
+                        mDatabase.child("admin").child("banned").child(data).setValue(user);
+                        mDatabase.child("users").child(data).removeValue();
+                        Query contain = mDatabase.child("questions").orderByKey()
+                                .limitToFirst(Constant.NUM_OF_QUESTIONS);
+
+                        contain.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                int index = 0;
+                                length = 0;
+                                int childCount = (int)(dataSnapshot.getChildrenCount());
+                                questionsToDelete = new String[childCount];
+                                for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
+                                    String keyQuestion = postSnapshot.getKey();
+                                    HashMap value = (HashMap) postSnapshot.getValue();
+                                    String username = (String) value.get("username");
+                                    if (data.equals(username)) {
+                                        questionsToDelete[index] = keyQuestion;
+                                        length++;
+                                    }
+                                }
+                                userBanned(data);
+                            }
+
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                                //TODO: questions not loading error message
+                            }
+                        });
+
+
+                    }
+                });
+                builder.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+                builder.setIcon(R.drawable.ic_warning);
+                builder.show();
+
+
+//                Intent intent = new Intent(view.getContext(), Ban.class);
+//                Bundle bundle = new Bundle();
+//                bundle.putString("userToBan", data);
+//                intent.putExtras(bundle);
+//                startActivity(intent);
 
             }
 
@@ -118,6 +175,19 @@ public class BanUser extends Activity {
         Intent intent = new Intent(this, AdminHome.class);
         startActivity(intent);
 
+    }
+
+
+
+    private void userBanned(String userToBanPassed){
+        for (int i = 0; i < length; i++) {
+            mDatabase.child("questions").child(questionsToDelete[i]).setValue(null);
+        }
+        Toast.makeText(getApplicationContext(),
+                userToBanPassed+ " Banned." , Toast.LENGTH_LONG)
+                .show();
+        Intent intent = new Intent(this, BanUser.class);
+        startActivity(intent);
     }
 
 }
