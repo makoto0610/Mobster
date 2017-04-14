@@ -1,7 +1,7 @@
 package com.the_great_amoeba.mobster;
 
 /**
- * Created by C. Shih on 12/23/2016.
+ * Created by Ani Reddy on 4/13/17
  */
 
 import android.os.Bundle;
@@ -14,22 +14,17 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
 
-import Constants.Constant;
-import Helper.Log;
 
-import static android.R.attr.progress;
-import static android.R.attr.tag;
-
-public class HomeTabFragment extends Fragment {
+public class ResultsCommentTabFragment extends Fragment {
 
     public static TabLayout tabLayout;
     public static ViewPager viewPager;
 
     public static Fragment[] fragArray;
 
-    public static int int_items = 3;
+    public static int int_items = 2;
+
 
     @Nullable
     @Override
@@ -37,15 +32,15 @@ public class HomeTabFragment extends Fragment {
 
         // Inflate home_tab_layout and setup Views.
 
-        this.fragArray = new Fragment[3];
+        this.fragArray = new Fragment[2];
 
-        View x = inflater.inflate(R.layout.home_tab_layout, null);
+        View x = inflater.inflate(R.layout.results_comments_tab_layout, null);
 
-        tabLayout = (TabLayout) x.findViewById(R.id.tabs);
-        viewPager = (ViewPager) x.findViewById(R.id.viewpager);
+        tabLayout = (TabLayout) x.findViewById(R.id.results_tabs);
+        viewPager = (ViewPager) x.findViewById(R.id.results_viewpager);
 
         //makes it so that the fragments are not created every time we switch a tab
-        viewPager.setOffscreenPageLimit(2);
+        viewPager.setOffscreenPageLimit(1);
 
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -57,11 +52,9 @@ public class HomeTabFragment extends Fragment {
             public void onPageSelected(int position) {
                 switch(position) {
                     case 0:
-                        NewFragment nf = (NewFragment) fragArray[0];
-                        nf.getNewQuestionsFromFirebase();
+
                     case 1:
-                        TrendingFragment tf = (TrendingFragment) fragArray[1];
-                        tf.getNewQuestionsFromFirebase();
+
                     default:
                         break;
                 }
@@ -108,17 +101,15 @@ public class HomeTabFragment extends Fragment {
         public Fragment getItem(int position) {
             switch (position) {
                 case 0:
-                    Fragment newFrag = new NewFragment();
-                    fragArray[0] = newFrag;
-                    return newFrag;
+                    Fragment resultsFrag = new ResultsFragment();
+                    resultsFrag.setArguments(getArguments());
+                    fragArray[0] = resultsFrag;
+                    return resultsFrag;
                 case 1:
-                    Fragment trendFrag = new TrendingFragment();
-                    fragArray[1] = trendFrag;
-                    return trendFrag;
-                case 2:
-                    Fragment closedFrag = new ClosedFragment();
-                    fragArray[2] = closedFrag;
-                    return closedFrag;
+                    Fragment commentFrag = new CommentFragment();
+                    commentFrag.setArguments(getArguments());
+                    fragArray[1] = commentFrag;
+                    return commentFrag;
             }
             return null;
         }
@@ -138,11 +129,10 @@ public class HomeTabFragment extends Fragment {
 
             switch (position) {
                 case 0:
-                    return "New";
+                    return "Results";
                 case 1:
-                    return "Trending";
-                case 2:
-                    return "Closed";
+                    return "Comments";
+
             }
             return null;
         }

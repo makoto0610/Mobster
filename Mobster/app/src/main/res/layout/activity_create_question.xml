@@ -22,17 +22,6 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/create_question_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="10dp"
-                android:text="Create Question"
-                android:textAlignment="center"
-                android:textSize="36sp" />
-
 
             <LinearLayout
                 android:id="@+id/container_list"
@@ -163,6 +152,16 @@
                 android:text="PICK THE END TIME"
                 android:layout_below="@+id/date_picker"
                 android:layout_alignParentStart="true" />
+
+            <TextView
+                android:id="@+id/create_question_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Create Question"
+                android:gravity="center"
+                android:textSize="36sp"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true" />
 
         </RelativeLayout>
 
