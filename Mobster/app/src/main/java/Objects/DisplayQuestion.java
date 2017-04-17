@@ -6,9 +6,11 @@ import java.util.HashMap;
 import java.util.LinkedList;
 
 /**
- * Created by anireddy on 2/14/17.
+ * Display question object for displaying questions in list view.
+ *
+ * @author Ani
+ * @version 1.0
  */
-
 public class DisplayQuestion {
     private String question;
     private Duration duration;
@@ -19,6 +21,19 @@ public class DisplayQuestion {
     private LinkedList<String> votedUsers;
     private LinkedList<String> favoritedUsers;
 
+    /**
+     * 
+     *
+     * @param question
+     * @param questionKey
+     * @param duration
+     * @param rating
+     * @param questionId
+     * @param num_access
+     * @param username
+     * @param votedUsers
+     * @param favoritedUsers
+     */
     public DisplayQuestion(String question, String questionKey, Duration duration, long rating, String questionId,
                            long num_access, String username, HashMap votedUsers, HashMap favoritedUsers) {
         this.question = question;
