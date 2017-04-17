@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -54,8 +55,8 @@ public class ForgotPassword extends AppCompatActivity {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 if (task.isSuccessful()) {
-                                    HelperMethods.errorDialog(ForgotPassword.this, "Instructions sent",
-                                            "Instructions to reset your password has been sent.");
+                                    Toast.makeText(ForgotPassword.this, "Instructions to reset your password has been sent.",
+                                            Toast.LENGTH_LONG).show();
                                 } else {
                                     HelperMethods.errorDialog(ForgotPassword.this, "Email Failed",
                                             "The instructions failed to send.");
