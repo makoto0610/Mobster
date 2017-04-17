@@ -16,7 +16,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import Constants.Constant;
 
@@ -26,8 +28,7 @@ import Constants.Constant;
 
 public class deleteFlaggedQuestions extends AppCompatActivity {
     private ListView listView ;
-    private int length;
-    private String[] array;
+    private List<String> array;
     private DatabaseReference mDatabase;
     public static final String DB_URL = "https://mobster-3ba43.firebaseio.com/";
 
@@ -36,6 +37,7 @@ public class deleteFlaggedQuestions extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         this.setTheme(R.style.AppTheme);
         setContentView(R.layout.activity_flagged_questions);
+        this.array = new ArrayList<>();
         getFlaggedQuestionsFirebase();
 
     }
@@ -48,10 +50,8 @@ public class deleteFlaggedQuestions extends AppCompatActivity {
         contain.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                length = 0;
                 int index = 0;
                 int childCount = (int)(dataSnapshot.getChildrenCount());
-                array = new String[childCount];
                 for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
                     String keyQuestion = postSnapshot.getKey();
                     HashMap value = (HashMap) postSnapshot.getValue();
@@ -59,11 +59,11 @@ public class deleteFlaggedQuestions extends AppCompatActivity {
                     if(value.get("isFlagged")!= null) {
                         Long isFlagged = (Long) value.get("isFlagged");
                         if (isFlagged >= 3) {
-                            array[index] = question;
-                            length++;
+                            array.add(question);
                         }
                         index++;
                     }
+                    Helper.Log.d(Constant.DEBUG, "" + index);
                 }
 
                 init_FlaggedQuestions_Display();
@@ -79,57 +79,48 @@ public class deleteFlaggedQuestions extends AppCompatActivity {
     }
 
     public void init_FlaggedQuestions_Display() {
-        if(length == 0) {
-            Toast.makeText(getApplicationContext(),
-                    "No Flagged Questions", Toast.LENGTH_LONG)
-                    .show();
-        } else {
 
-            // Get ListView object from xml
+        // Get ListView object from xml
 
-            listView = (ListView) findViewById(R.id.list);
+        listView = (ListView) findViewById(R.id.list);
 
-            // Define a new Adapter
-            // First parameter - Context
-            // Second parameter - Layout for the row
-            // Third parameter - ID of the TextView to which the data is written
-            // Forth - the Array of data
-            String[] flaggedArr = new String[length];
-            for(int i = 0; i < length; i++){
-                flaggedArr[i] = array[i];
+        // Define a new Adapter
+        // First parameter - Context
+        // Second parameter - Layout for the row
+        // Third parameter - ID of the TextView to which the data is written
+        // Forth - the Array of data
+
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_list_item_1, array);
+
+
+        // Assign adapter to ListView
+        listView.setAdapter(adapter);
+
+        // ListView Item Click Listener
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view,
+                                    int position, long id) {
+
+                // ListView Clicked item index
+                int itemPosition = position;
+
+                // ListView Clicked item value
+                String data = (String) listView.getItemAtPosition(position);
+                Intent intent = new Intent(view.getContext(), AdminDeleteFlagged.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("questionsToDelete", data);
+                intent.putExtras(bundle);
+                startActivity(intent);
+
             }
 
-            ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-                    android.R.layout.simple_list_item_1, android.R.id.text1, flaggedArr);
-
-
-            // Assign adapter to ListView
-            listView.setAdapter(adapter);
-
-            // ListView Item Click Listener
-            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-
-
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view,
-                                        int position, long id) {
-
-                    // ListView Clicked item index
-                    int itemPosition = position;
-
-                    // ListView Clicked item value
-                    String data = (String) listView.getItemAtPosition(position);
-                    Intent intent = new Intent(view.getContext(), AdminDeleteFlagged.class);
-                    Bundle bundle = new Bundle();
-                    bundle.putString("questionsToDelete", data);
-                    intent.putExtras(bundle);
-                    startActivity(intent);
-
-                }
-
-            });
-        }
+        });
     }
 
     @Override
