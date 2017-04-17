@@ -2,10 +2,8 @@ package Helper;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Application;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.view.View;
 
 import com.google.firebase.database.DataSnapshot;
 import com.the_great_amoeba.mobster.R;
@@ -16,13 +14,14 @@ import org.joda.time.Duration;
 import java.util.Calendar;
 import java.util.HashMap;
 
-import Constants.Constant;
 import Objects.DisplayQuestion;
 
 /**
- * Created by christineshih on 2/6/17.
+ * Keeps track of commonly used helper methods.
+ *
+ * @author Christine
+ * @version 1.0
  */
-
 public class HelperMethods {
 
     /**
@@ -46,6 +45,7 @@ public class HelperMethods {
 
     /**
      * Calculates duration (end time - current time)
+     *
      * @param end endTime in millis
      * @return time left as a long (milliseconds)
      */
@@ -121,6 +121,12 @@ public class HelperMethods {
                 ratingLong, keyQuestion, access, username, votedUsers, favoritedUsers);
     }
 
+    /**
+     * Set the theme of the application accordingly
+     *
+     * @param app the activity
+     * @param ctx context which the method is invoked from
+     */
     public static void setChosenTheme(Activity app, Context ctx) {
         String currentTheme = SaveSharedPreferences.getChosenTheme(ctx);
         if (currentTheme.equals("dark")) {
@@ -129,6 +135,5 @@ public class HelperMethods {
             app.setTheme(R.style.AppThemeLight);
         }
     }
-
 }
 
