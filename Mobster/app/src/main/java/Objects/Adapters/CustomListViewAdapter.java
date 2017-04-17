@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -23,7 +22,6 @@ import com.the_great_amoeba.mobster.SaveSharedPreferences;
 
 import org.joda.time.Duration;
 
-import java.util.LinkedList;
 import java.util.List;
 
 import Constants.Constant;
@@ -31,17 +29,24 @@ import Helper.Log;
 import Objects.DisplayQuestion;
 
 /**
- * Created by anireddy on 2/14/17.
+ * Custom List View Adapter for display questions
+ *
+ * @author Ani
+ * @version 1.0
  */
-
 public class CustomListViewAdapter extends ArrayAdapter<DisplayQuestion> {
-
 
     Context context;
     private DatabaseReference mDatabase;
 
-
-    public CustomListViewAdapter(Context context, int resourceId, //resourceId=your layout
+    /**
+     * Constructor for the custom list view adapter
+     *
+     * @param context from which the method is invoked.
+     * @param resourceId resource identification
+     * @param items list of display questions
+     */
+    public CustomListViewAdapter(Context context, int resourceId,
                              List<DisplayQuestion> items) {
         super(context, resourceId, items);
         this.context = context;
@@ -59,6 +64,14 @@ public class CustomListViewAdapter extends ArrayAdapter<DisplayQuestion> {
         TextView textRating;
     }
 
+    /**
+     * Get view of the display questions
+     *
+     * @param position integer representing the position
+     * @param convertView view of the application
+     * @param parent view group
+     * @return the modified covertView
+     */
     public View getView(int position, View convertView, ViewGroup parent) {
         final DisplayQuestion question = getItem(position);
 
@@ -66,8 +79,6 @@ public class CustomListViewAdapter extends ArrayAdapter<DisplayQuestion> {
         LayoutInflater mInflater = (LayoutInflater) context
                 .getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
         if (convertView == null) {
-
-
             convertView = mInflater.inflate(R.layout.list_view, null);
             holder = new ViewHolder();
 
@@ -324,6 +335,12 @@ public class CustomListViewAdapter extends ArrayAdapter<DisplayQuestion> {
         return convertView;
     }
 
+    /**
+     * Private helper method for displaying appropriate duration based on time
+     *
+     * @param duration duration of the question in milliseconds
+     * @return the appropriately formatted duration
+     */
     private String getDurationDisplay(Duration duration) {
         long days = duration.getStandardDays();
         long hours = duration.getStandardHours();

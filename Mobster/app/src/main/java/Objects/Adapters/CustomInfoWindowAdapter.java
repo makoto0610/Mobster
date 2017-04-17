@@ -7,8 +7,6 @@ import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.GoogleMap;
@@ -20,11 +18,10 @@ import Constants.Constant;
 import Objects.DisplayQuestion;
 
 /**
- * Created by anireddy on 2/19/17.
- */
-
-/**
- * I don't know what this class does anymore - Ani
+ * Custom Information Window Adapter for Location service
+ *
+ * @author Ani
+ * @version 1.0
  */
 public class CustomInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
 
@@ -38,15 +35,24 @@ public class CustomInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
         TextView snippet;
     }
 
+    /**
+     * Setter method for display question on Location activity.
+     *
+     * @param dq the display question to set to
+     */
     public void setDq(DisplayQuestion dq) {
         this.dq = dq;
     }
 
+    /**
+     * Constructor for the Custom Info Window Adapter.
+     *
+     * @param context from which the method is invoked
+     */
     public CustomInfoWindowAdapter(Context context) {
         LayoutInflater li = (LayoutInflater)
                 context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
         this.layout = li.inflate(R.layout.info_window, null);
-
     }
 
 
@@ -58,6 +64,9 @@ public class CustomInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
         return null;
     }
 
+    /**
+     * Populate the layout of the map for testing purposes
+     */
     public void populateLayout() {
         vh = new ViewHolder();
 //        vh.textQuestion = (TextView) ...
@@ -72,8 +81,6 @@ public class CustomInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
 
         layout.setTag(vh);
     }
-
-
 
     @Override
     public View getInfoContents(Marker marker) {
