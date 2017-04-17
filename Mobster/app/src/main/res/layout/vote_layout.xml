@@ -78,7 +78,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/MY_BUTTON"
         android:onClick="onClick"
-        android:layout_alignParentBottom="true"
+        android:layout_below="@+id/commentText"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="17dp" />
 
