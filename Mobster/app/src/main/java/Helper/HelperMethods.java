@@ -116,9 +116,10 @@ public class HelperMethods {
         String username = (String) value.get("username");
         HashMap votedUsers = (HashMap) value.get("votedUsers");
         HashMap favoritedUsers = (HashMap) value.get("favoritedUsers");
+        String status = (String) value.get("status");
 
         return new DisplayQuestion((String) (value.get("question")), "key", new Duration(duration),
-                ratingLong, keyQuestion, access, username, votedUsers, favoritedUsers);
+                ratingLong, keyQuestion, access, username, votedUsers, favoritedUsers, status);
     }
 
     public static void setChosenTheme(Activity app, Context ctx) {

@@ -18,9 +18,14 @@ public class DisplayQuestion {
     private String username;
     private LinkedList<String> votedUsers;
     private LinkedList<String> favoritedUsers;
+    private String status;
+
+    public String getStatus() {
+        return status;
+    }
 
     public DisplayQuestion(String question, String questionKey, Duration duration, long rating, String questionId,
-                           long num_access, String username, HashMap votedUsers, HashMap favoritedUsers) {
+                           long num_access, String username, HashMap votedUsers, HashMap favoritedUsers, String status) {
         this.question = question;
         this.duration = duration;
         this.rating = rating;
@@ -39,6 +44,7 @@ public class DisplayQuestion {
                 this.favoritedUsers.add((String) favoritedUsers.get(key));
             }
         }
+        this.status = status;
     }
 
     public LinkedList<String> getFavoritedUsers() {

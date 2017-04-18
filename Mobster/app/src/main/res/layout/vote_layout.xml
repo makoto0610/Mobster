@@ -80,7 +80,7 @@
         android:onClick="onClick"
         android:layout_below="@+id/commentText"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="17dp" />
+        />
 
     <!--<Button-->
         <!--android:text="Button"-->
