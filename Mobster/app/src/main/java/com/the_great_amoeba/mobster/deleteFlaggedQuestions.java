@@ -25,9 +25,11 @@ import java.util.List;
 import Constants.Constant;
 
 /**
- * Created by singh on 2/22/2017.
+ * Activity to delete flagged questions.
+ *
+ * @author Esha
+ * @version 1.0
  */
-
 public class deleteFlaggedQuestions extends AppCompatActivity {
     private ListView listView ;
     private List<String> array;
@@ -43,9 +45,11 @@ public class deleteFlaggedQuestions extends AppCompatActivity {
         setContentView(R.layout.activity_flagged_questions);
         this.array = new ArrayList<>();
         getFlaggedQuestionsFirebase();
-
     }
 
+    /**
+     * Get flagged questions from the firebase database.
+     */
     public void getFlaggedQuestionsFirebase() {
         mDatabase = FirebaseDatabase.getInstance().getReferenceFromUrl(DB_URL);
         Query contain = mDatabase.child("questions").orderByKey()
@@ -78,10 +82,11 @@ public class deleteFlaggedQuestions extends AppCompatActivity {
                 //TODO: questions not loading error message
             }
         });
-
-
     }
 
+    /**
+     * Initialize flagged questions display
+     */
     public void init_FlaggedQuestions_Display() {
 
         // Get ListView object from xml
@@ -155,21 +160,21 @@ public class deleteFlaggedQuestions extends AppCompatActivity {
 
                 builder.setIcon(R.drawable.ic_warning);
                 builder.show();
-
-
             }
 
         });
     }
 
     @Override
-    public void onBackPressed()
-    {
+    public void onBackPressed() {
         Intent intent = new Intent(this, AdminHome.class);
         startActivity(intent);
-
     }
 
+    /**
+     * Delete a question.
+     * @param deleteQuestion question to be deleted
+     */
     private void deleteQuestion(String deleteQuestion){
         if(questionKeyToDelete != null) {
             mDatabase.child("questions").child(questionKeyToDelete).removeValue();
@@ -180,5 +185,4 @@ public class deleteFlaggedQuestions extends AppCompatActivity {
             startActivity(intent);
         }
     }
-
 }

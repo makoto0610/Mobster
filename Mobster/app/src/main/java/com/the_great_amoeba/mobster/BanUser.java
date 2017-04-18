@@ -26,7 +26,7 @@ import Objects.BannedUser;
 /**
  * Admin ban user page.
  *
- * @author Esha
+ * @author Christine
  * @version 1.0
  */
 public class BanUser extends Activity {

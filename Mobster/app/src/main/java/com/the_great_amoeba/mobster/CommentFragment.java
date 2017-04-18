@@ -1,11 +1,5 @@
 package com.the_great_amoeba.mobster;
 
-/**
- * Created by Ani Reddy on 4/13/17
- */
-
-
-
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -33,8 +27,13 @@ import java.util.List;
 import Constants.Constant;
 import Objects.Comment;
 
+/**
+ * Comment fragment class for comments.
+ *
+ * @author Ani
+ * @version 1.0
+ */
 public class CommentFragment extends Fragment {
-
 
     TextView noCommentsText;
 
@@ -101,7 +100,11 @@ public class CommentFragment extends Fragment {
         return view;
     }
 
-
+    /**
+     * Add a comment to comment section.
+     *
+     * @param comment a new comment to add
+     */
     private void addComment(String comment) {
         if (!comment.equals("")) {
             DatabaseReference cref = mDatabase.child("questions").child(questionPassed).child("comments").push();
@@ -118,6 +121,9 @@ public class CommentFragment extends Fragment {
         }
     }
 
+    /**
+     * Initialize all the comments from the database
+     */
     private void initCommentsFromFB() {
         DatabaseReference commentsRef = mDatabase.child("questions")
                 .child(questionPassed).child("comments");
@@ -141,21 +147,27 @@ public class CommentFragment extends Fragment {
         });
     }
 
+    /**
+     * Create an array adapter for display comments
+     *
+     * @return an array adapter
+     */
     private ArrayAdapter<String> generateArrayAdapter() {
         return new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1,
                 this.commentsStrings);
     }
 
 
+    /**
+     * Initialize comments display
+     */
     private void initCommentDisplay() {
         this.listView.setAdapter(generateArrayAdapter());
-
         if (!comments.isEmpty()) {
             noCommentsText.setVisibility(View.GONE);
         } else {
             noCommentsText.setVisibility(View.VISIBLE);
         }
-
     }
 
 }

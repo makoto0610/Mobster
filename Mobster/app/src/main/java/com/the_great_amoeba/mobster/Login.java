@@ -2,7 +2,6 @@ package com.the_great_amoeba.mobster;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -30,7 +29,12 @@ import java.util.HashMap;
 import Constants.Constant;
 import Helper.HelperMethods;
 
-
+/**
+ * Login activity for the application.
+ *
+ * @author Christine
+ * @version 1.0
+ */
 public class Login extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
@@ -125,10 +129,11 @@ public class Login extends AppCompatActivity {
     }
 
     /**
-     * TODO
-     * @param username
-     * @param password
-     * @return
+     * Validate the user input
+     *
+     * @param username username inputted
+     * @param password password inputted
+     * @return true if valid, otherwise false
      */
     public boolean validateInput(String username, String password) {
         boolean error = false;
@@ -143,7 +148,6 @@ public class Login extends AppCompatActivity {
         }
         return error;
     }
-
 
     /**
      * Checks if the user is admin
@@ -260,5 +264,4 @@ public class Login extends AppCompatActivity {
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
-
 }
