@@ -1,5 +1,7 @@
 package com.the_great_amoeba.mobster;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -31,6 +33,8 @@ public class deleteFlaggedQuestions extends AppCompatActivity {
     private List<String> array;
     private DatabaseReference mDatabase;
     public static final String DB_URL = "https://mobster-3ba43.firebaseio.com/";
+
+    private String questionKeyToDelete;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,12 +115,47 @@ public class deleteFlaggedQuestions extends AppCompatActivity {
                 int itemPosition = position;
 
                 // ListView Clicked item value
-                String data = (String) listView.getItemAtPosition(position);
-                Intent intent = new Intent(view.getContext(), AdminDeleteFlagged.class);
-                Bundle bundle = new Bundle();
-                bundle.putString("questionsToDelete", data);
-                intent.putExtras(bundle);
-                startActivity(intent);
+                final String data = (String) listView.getItemAtPosition(position);
+                AlertDialog.Builder builder = new AlertDialog.Builder(deleteFlaggedQuestions.this);
+                builder.setTitle("Are you sure you want to delete question: "
+                            + "\"" + data + "\"" + "?");
+                builder.setPositiveButton("delete", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Query contain = mDatabase.child("questions").orderByKey()
+                                .limitToFirst(Constant.NUM_OF_QUESTIONS);
+
+                        contain.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
+                                    String keyQuestion = postSnapshot.getKey();
+                                    HashMap value = (HashMap) postSnapshot.getValue();
+                                    String queriedquestion = (String) value.get("question");
+                                    if (data.equals(queriedquestion)) {
+                                        questionKeyToDelete = keyQuestion;
+                                    }
+                                }
+                                deleteQuestion(data);
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                                //TODO: questions not loading error message
+                            }
+                        });
+                    }
+                });
+                builder.setNeutralButton("cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+
+                builder.setIcon(R.drawable.ic_warning);
+                builder.show();
+
 
             }
 
@@ -129,6 +168,17 @@ public class deleteFlaggedQuestions extends AppCompatActivity {
         Intent intent = new Intent(this, AdminHome.class);
         startActivity(intent);
 
+    }
+
+    private void deleteQuestion(String deleteQuestion){
+        if(questionKeyToDelete != null) {
+            mDatabase.child("questions").child(questionKeyToDelete).removeValue();
+            Toast.makeText(getApplicationContext(),
+                    "\"" + deleteQuestion + "\"" + " deleted.", Toast.LENGTH_LONG)
+                    .show();
+            Intent intent = new Intent(this, deleteFlaggedQuestions.class);
+            startActivity(intent);
+        }
     }
 
 }
