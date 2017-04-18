@@ -1,9 +1,12 @@
 package Constants;
 
 /**
- * Created by makoto on 2/11/17.
+ * Constant Variable file to keep track of all of the constants.
+ * In a separate package for organization purposes.
+ *
+ * @author makoto
+ * @version 1.0
  */
-
 public class Constant {
     public static final String DB_URL = "https://mobster-3ba43.firebaseio.com/";
     public static final String AUTH_TAG = "AUTH";

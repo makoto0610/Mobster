@@ -18,23 +18,17 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-import org.joda.time.Duration;
-
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
-import java.util.LinkedList;
 
 import Constants.Constant;
-import Objects.Adapters.CustomListViewAdapter;
 import Objects.BannedUser;
-import Objects.DisplayQuestion;
 
 /**
- * Created by singh on 2/22/2017.
+ * Admin ban user page.
+ *
+ * @author Esha
+ * @version 1.0
  */
-
 public class BanUser extends Activity {
     private ListView listView ;
     private String[] array;
@@ -53,6 +47,9 @@ public class BanUser extends Activity {
 
     }
 
+    /**
+     * Get list of users from the firebase
+     */
     public void getUsersFirebase() {
         mDatabase = FirebaseDatabase.getInstance().getReferenceFromUrl(DB_URL);
         Query contain = mDatabase.child("users");
@@ -78,6 +75,9 @@ public class BanUser extends Activity {
 
     }
 
+    /**
+     * Initiate the users display in a list view format
+     */
     public void init_Users_Display() {
 
         // Get ListView object from xml
@@ -170,15 +170,17 @@ public class BanUser extends Activity {
     }
 
     @Override
-    public void onBackPressed()
-    {
+    public void onBackPressed() {
         Intent intent = new Intent(this, AdminHome.class);
         startActivity(intent);
 
     }
 
-
-
+    /**
+     * Private helper method for banning users
+     *
+     * @param userToBanPassed username of user to be banned
+     */
     private void userBanned(String userToBanPassed){
         for (int i = 0; i < length; i++) {
             mDatabase.child("questions").child(questionsToDelete[i]).setValue(null);

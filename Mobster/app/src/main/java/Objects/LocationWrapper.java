@@ -3,13 +3,15 @@ package Objects;
 import android.location.Location;
 
 /**
- * Created by anireddy on 2/19/17.
- */
-
-/**
  * Wrapper around android.location.Location which adds a no-args constructor
  * (required for Firebase deserialization)
+ * 
+ * @author Ani
+ * @version 1.0
  */
 public class LocationWrapper extends Location {
+    /**
+     * Constructor for Location Wrapper class
+     */
     public LocationWrapper() {super("");}
 }
