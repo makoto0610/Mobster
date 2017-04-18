@@ -1,30 +1,27 @@
 package com.the_great_amoeba.mobster;
 
-/**
- * Created by C. Shih on 12/23/2016.
- */
-
-import android.content.Intent;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import Constants.Constant;
 
+/**
+ * Statistics fragment for users.
+ *
+ * @author Christine
+ * @version 1.0
+ */
 public class StatisticsFragment extends Fragment {
 
     private DatabaseReference mDatabase;
@@ -79,8 +76,6 @@ public class StatisticsFragment extends Fragment {
         });
 
         return view;
-
     }
-
 }
 

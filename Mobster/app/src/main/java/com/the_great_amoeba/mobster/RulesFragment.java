@@ -1,13 +1,8 @@
 package com.the_great_amoeba.mobster;
 
-/**
- * Created by C. Shih on 12/23/2016.
- */
-
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -17,8 +12,13 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import java.util.HashMap;
-import java.util.List;
 
+/**
+ * Rules fragment class.
+ *
+ * @author Christine
+ * @version 1.0
+ */
 public class RulesFragment extends Fragment {
 
     private HashMap<Integer, String> map;
@@ -26,7 +26,6 @@ public class RulesFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         initDetails();
         View view = inflater.inflate(R.layout.rules_layout, container, false);
         ListView lv = (ListView) view.findViewById(R.id.faq_list);
@@ -39,7 +38,11 @@ public class RulesFragment extends Fragment {
         return view;
     }
 
-
+    /**
+     * On click method for the rule.
+     * @param view current view.
+     * @param pos position of the click.
+     */
     private void onRuleClick(View view, int pos) {
         AlertDialog details = new AlertDialog.Builder(getActivity()).create();
         details.setTitle("Answer");
@@ -53,6 +56,9 @@ public class RulesFragment extends Fragment {
         details.show();
     }
 
+    /**
+     * Initialize all the contents of the rules.
+     */
     private void initDetails() {
         map = new HashMap<>();
         map.put(0, "1. No personal information should be disclosed. \n\n"

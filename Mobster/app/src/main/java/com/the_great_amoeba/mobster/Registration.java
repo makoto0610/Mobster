@@ -28,6 +28,12 @@ import Constants.Constant;
 import Objects.User;
 import Helper.HelperMethods;
 
+/**
+ * Registration screen.
+ *
+ * @author Christine
+ * @version 1.0
+ */
 public class Registration extends AppCompatActivity {
 
     private DatabaseReference mDatabase;
@@ -86,13 +92,14 @@ public class Registration extends AppCompatActivity {
         password.setTransformationMethod(new PasswordTransformationMethod());
         confirm.setTypeface(Typeface.DEFAULT);
         confirm.setTransformationMethod(new PasswordTransformationMethod());
-
     }
 
     /**
      * Method called after create button pressed.
      * Handles input validation and displays appropriate error messages or if everything is fine,
      * creates a new user and starts MainActivity.
+     *
+     * @param view the current view
      */
     public void onCreateAccountClick(View view) {
         /* ***************
@@ -141,6 +148,9 @@ public class Registration extends AppCompatActivity {
 
     /**
      * Method that queries Firebase DB to see if entered username matches an existing username.
+     *
+     * @param enteredUsername entered username by user
+     * @return true if username is taken, false otherwise.
      */
     public boolean checkUsernameExists(final String enteredUsername) {
         final Boolean[] isExist = {false};
@@ -160,11 +170,17 @@ public class Registration extends AppCompatActivity {
     }
 
     /**
-     * Method that queries Firebase DB to see if entered username matches an existing username that was banned.
+     * Method that queries Firebase DB to see if entered username matches an existing username
+     * that was banned.
+     *
+     * @param username username to look for
+     * @param password password of the user
+     * @param email email for the user
      */
     public void checkUsernameBanned(final String username, final String password, final String email) {
         //To check for banned Users
-        mDatabase.child("admin").child("banned").child(username).addListenerForSingleValueEvent(new ValueEventListener() {
+        mDatabase.child("admin").child("banned").child(username).addListenerForSingleValueEvent(
+                new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
@@ -189,6 +205,7 @@ public class Registration extends AppCompatActivity {
      * users table in the DB.
      *
      * @param user - User object to be used for insertion in Firebase DB.
+     * @param password password of the user
      */
     private void addNewUser(User user, String password) {
         final String _username = user.getUsername();
@@ -215,7 +232,6 @@ public class Registration extends AppCompatActivity {
                             SaveSharedPreferences.setNotification(getApplicationContext(), "on");
                             startActivity(intent);
                         }
-
                     }
                 });
     }
@@ -236,10 +252,8 @@ public class Registration extends AppCompatActivity {
     }
 
     @Override
-    public void onBackPressed()
-    {
+    public void onBackPressed() {
         Intent intent = new Intent(this, Login.class);
         startActivity(intent);
-
     }
 }

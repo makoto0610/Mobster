@@ -1,9 +1,5 @@
 package com.the_great_amoeba.mobster;
 
-/**
- * Created by C. Shih on 12/23/2016.
- */
-
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
@@ -15,6 +11,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+/**
+ * My questions tab to display users' questions.
+ *
+ * @author Christine
+ * @version 1.0
+ */
 public class MyQuestionsTabFragment extends Fragment {
 
     public static TabLayout tabLayout;
@@ -42,7 +44,6 @@ public class MyQuestionsTabFragment extends Fragment {
         });
 
         return x;
-
     }
 
     class MyAdapter extends FragmentPagerAdapter {
@@ -83,5 +84,4 @@ public class MyQuestionsTabFragment extends Fragment {
             return null;
         }
     }
-
 }

@@ -1,9 +1,5 @@
 package com.the_great_amoeba.mobster;
 
-/**
- * Created by Ani Reddy on 4/13/17
- */
-
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
@@ -15,7 +11,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-
+/**
+ * Result comment tab for the screen.
+ *
+ * @author Ani
+ * @version 1.0
+ */
 public class ResultsCommentTabFragment extends Fragment {
 
     public static TabLayout tabLayout;
@@ -84,7 +85,6 @@ public class ResultsCommentTabFragment extends Fragment {
         });
 
         return x;
-
     }
 
 
@@ -116,9 +116,7 @@ public class ResultsCommentTabFragment extends Fragment {
 
         @Override
         public int getCount() {
-
             return int_items;
-
         }
 
         // This method returns the title of the tab according to the position.
@@ -126,7 +124,6 @@ public class ResultsCommentTabFragment extends Fragment {
 
         @Override
         public CharSequence getPageTitle(int position) {
-
             switch (position) {
                 case 0:
                     return "Results";
@@ -137,5 +134,4 @@ public class ResultsCommentTabFragment extends Fragment {
             return null;
         }
     }
-
 }

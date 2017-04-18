@@ -1,24 +1,16 @@
 package com.the_great_amoeba.mobster;
 
-/**
- * Created by C. Shih on 12/23/2016.
- */
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 
 import com.google.firebase.database.DataSnapshot;
@@ -29,11 +21,8 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import Constants.Constant;
 import Objects.Adapters.CustomListViewAdapter;
@@ -41,6 +30,12 @@ import Objects.DisplayQuestion;
 import Helper.HelperMethods;
 import Objects.Question;
 
+/**
+ * Tab content for new questions.
+ *
+ * @author Christine
+ * @version 1.0
+ */
 public class NewFragment extends Fragment {
 
     private DatabaseReference mDatabase;
@@ -94,7 +89,6 @@ public class NewFragment extends Fragment {
                 }
 
                 // search keywords
-//                boolean keywordStatus = getKeywordSearchStatus();
 
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     String keyQuestion = postSnapshot.getKey();
@@ -103,9 +97,6 @@ public class NewFragment extends Fragment {
                     String username = (String) value.get("username");
                     String questionTitle = (String) value.get("question");
 
-//                    boolean containsAll = keywordsMatch(keywordStatus, postSnapshot);
-
-//                    boolean noSearch = noSearchStatus(searchStatus, keywordStatus);
 
                     if (status.equals("NEW")) {
                         if (searchStatus) {
@@ -135,39 +126,7 @@ public class NewFragment extends Fragment {
                                 }
                             }
                         }
-//                        if (noSearch) {
-//                            if (isHomeFragment()) {
-//                                DisplayQuestion question = HelperMethods.getQuestion(postSnapshot, value, keyQuestion);
-//                                questions.add(question);
-//                            } else { // else it is to be displayed in the My Questions Fragment
-//                                if (username.equals(user)) {
-//                                    DisplayQuestion question = HelperMethods.getQuestion(postSnapshot, value, keyQuestion);
-//                                    questions.add(question);
-//                                }
-//                            }
-//                        } else if (searchStatus && questionTitle.contains(searchText)) {
-//                            if (isHomeFragment()) {
-//                                DisplayQuestion question = HelperMethods.getQuestion(postSnapshot, value, keyQuestion);
-//                                questions.add(question);
-//                            } else { // else it is to be displayed in the My Questions Fragment
-//                                if (username.equals(user)) {
-//                                    DisplayQuestion question = HelperMethods.getQuestion(postSnapshot, value, keyQuestion);
-//                                    questions.add(question);
-//                                }
-//                            }
-//                        } else if (containsAll) {
-//                            if (isHomeFragment()) {
-//                                DisplayQuestion question = HelperMethods.getQuestion(postSnapshot, value, keyQuestion);
-//                                questions.add(question);
-//                            } else { // else it is to be displayed in the My Questions Fragment
-//                                if (username.equals(user)) {
-//                                    DisplayQuestion question = HelperMethods.getQuestion(postSnapshot, value, keyQuestion);
-//                                    questions.add(question);
-//                                }
-//                            }
-//                        }
                     }
-
                 }
                 array = new DisplayQuestion[questions.size()];
                 array = questions.toArray(array);
@@ -180,7 +139,6 @@ public class NewFragment extends Fragment {
                         listView.setVisibility(View.VISIBLE);
 
                         init_Questions_Display();
-
                     }
                 };
                 handler.postDelayed(r, Constant.DEFAULT_LOADING_WAIT);
@@ -193,14 +151,11 @@ public class NewFragment extends Fragment {
                 progressBar.setVisibility(View.GONE);
                 listView.setVisibility(View.VISIBLE);
             }
-
-
         });
-
     }
 
 
- /**
+    /**
      * Initialize all of the questions for display on the ListView
      */
     public void init_Questions_Display() {
@@ -209,7 +164,6 @@ public class NewFragment extends Fragment {
                 Arrays.asList(this.array));
 
         this.listView.setAdapter(questions);
-
 
         // react to click
         this.listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -245,10 +199,9 @@ public class NewFragment extends Fragment {
                 }
             }
         });
-
     }
 
-     /*
+    /**
      * Returns whether or not the parent fragment is the Home Tab Fragment (or the My Questions Tab)
      *
      * @return true if the current fragment's parent is the HomeTabFragment. False if the parent
@@ -259,7 +212,11 @@ public class NewFragment extends Fragment {
     }
 
 
-    // Searching Helpers
+    /**
+     * Private helper for searching method
+     *
+     * @return searched text
+     */
     private String getSearchText() {
         String toReturn = "";
         if (((MainActivity) getActivity()).isSearching()/* &&
@@ -269,14 +226,14 @@ public class NewFragment extends Fragment {
         return toReturn;
     }
 
-//    private boolean getKeywordSearchStatus() {
-//        if (((MainActivity)getActivity()).isSearchingKeyword()/* &&
-//                (((MainActivity)getActivity()).getSearchedArea() == 1)*/) {
-//            return true;
-//        }
-//        return false;
-//    }
-
+    /**
+     * Search helper method for finding matches
+     *
+     * @param searched searched string word
+     * @param question the question content
+     * @param postSnapshot data snap shot
+     * @return true if match, false otherwise
+     */
     private boolean searchMatch(String searched, String question, DataSnapshot postSnapshot) {
         String[] words = searched.split("\\s*(,|\\?|\\s)\\s*");
 
@@ -291,33 +248,15 @@ public class NewFragment extends Fragment {
 
         // check questions title
         String[] title = question.split("\\s*(,|\\?|\\s)\\s*");
-
         boolean titleMatch = Arrays.asList(title).containsAll(Arrays.asList(words));
-
         return (keywordsMatch || titleMatch);
     }
-//    private boolean keywordsMatch(boolean keywordStatus, DataSnapshot postSnapshot) {
-//        if (keywordStatus) {
-//            String[] searchedKeywords = ((MainActivity)getActivity()).getKeywords();
-//            String[] questionKeywords = new String[(int)postSnapshot.child("keywords").getChildrenCount()];
-//            int arrayCount = 0;
-//            for (DataSnapshot k : postSnapshot.child("keywords").getChildren()) {
-//                questionKeywords[arrayCount] = (String)k.getValue();
-//                arrayCount++;
-//            }
-//            return Arrays.asList(questionKeywords)
-//                    .containsAll(Arrays.asList(searchedKeywords));
-//        }
-//        return false;
-//    }
 
-//    private boolean noSearchStatus(boolean searchText, boolean searchKeyword) {
-//        if (searchText || searchKeyword) {
-//            return false;
-//        }
-//        return true;
-//    }
-
+    /**
+     * Boolean helper method for whether it is at searching home page or not
+     *
+     * @return true if it is at searching home page otherwise false
+     */
     private boolean isSearchingHome() {
         if ((((MainActivity) getActivity()).getSearchedArea() == 1)) {
             return true;
@@ -325,7 +264,13 @@ public class NewFragment extends Fragment {
         return false;
     }
 
-
+    /**
+     * Check for duration and update the status of the question
+     *
+     * @param question display question
+     * @return if the status will be changed to closed return true,
+     * otherwise false
+     */
     private boolean checkDuratationAndUpdateStatus(DisplayQuestion question) {
         if (question.getDuration().getMillis() == 0) {
             mDatabase.child("questions")
