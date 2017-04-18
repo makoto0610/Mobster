@@ -1,35 +1,30 @@
 package com.the_great_amoeba.mobster;
 
-        import android.content.Intent;
-        import android.os.Bundle;
-        import android.support.v7.app.AppCompatActivity;
-        import android.view.View;
-        import android.widget.TextView;
-        import android.widget.Toast;
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.TextView;
+import android.widget.Toast;
 
-        import com.google.firebase.database.DataSnapshot;
-        import com.google.firebase.database.DatabaseError;
-        import com.google.firebase.database.DatabaseReference;
-        import com.google.firebase.database.FirebaseDatabase;
-        import com.google.firebase.database.Query;
-        import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
-        import org.joda.time.Duration;
+import java.util.HashMap;
 
-        import java.util.Collections;
-        import java.util.Comparator;
-        import java.util.HashMap;
-        import java.util.LinkedList;
-
-        import Constants.Constant;
-        import Objects.BannedUser;
-        import Objects.DisplayQuestion;
-        import Objects.User;
+import Constants.Constant;
+import Objects.BannedUser;
 
 /**
- * Created by singh on 2/22/2017.
+ * Admin banning user activity.
+ *
+ * @author Esha
+ * @version 1.0
  */
-
 public class Ban extends AppCompatActivity {
     public static final String DB_URL = "https://mobster-3ba43.firebaseio.com/";
     private DatabaseReference mDatabase;
@@ -49,8 +44,11 @@ public class Ban extends AppCompatActivity {
         myTextView.setText("Are you sure you want to ban user "+ userToBanPassed + "?");
     }
 
-
-    //if ban button is pressed delete ban the user and delete the questions from the database
+    /**
+     * If ban button is pressed delete ban the user and delete the questions from the database
+     *
+     * @param view view that is on
+     */
     public void onBanButtonClick(View view) {
         BannedUser user = new BannedUser(userToBanPassed);
         mDatabase.child("admin").child("banned").child(userToBanPassed).setValue(user);
@@ -82,9 +80,11 @@ public class Ban extends AppCompatActivity {
                 //TODO: questions not loading error message
             }
         });
-
     }
 
+    /**
+     * Start a toast and a new activity after banning user
+     */
     private void userBanned(){
         for (int i = 0; i < length; i++) {
             mDatabase.child("questions").child(questionsToDelete[i]).setValue(null);
@@ -97,11 +97,9 @@ public class Ban extends AppCompatActivity {
     }
 
     @Override
-    public void onBackPressed()
-    {
+    public void onBackPressed() {
         Intent intent = new Intent(this, AdminHome.class);
         startActivity(intent);
-
     }
 
 }

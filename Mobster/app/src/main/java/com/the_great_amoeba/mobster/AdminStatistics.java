@@ -14,9 +14,11 @@ import com.google.firebase.database.ValueEventListener;
 import Constants.Constant;
 
 /**
- * Created by natalie on 3/6/2017.
+ * Admin statistics class page.
+ *
+ * @author Natalie
+ * @version 1.0
  */
-
 public class AdminStatistics extends Activity {
 
     private DatabaseReference mDatabase;
@@ -38,6 +40,11 @@ public class AdminStatistics extends Activity {
     }
 
 
+    /**
+     *  Get the statistics based on the data in the database
+     *
+     * @param db reference to the database
+     */
     private void getNumbers(DatabaseReference db) {
         DatabaseReference usersRef = db.child("users");
         usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -85,10 +92,8 @@ public class AdminStatistics extends Activity {
         });
     }
     @Override
-    public void onBackPressed()
-    {
+    public void onBackPressed() {
         Intent intent = new Intent(this, AdminHome.class);
         startActivity(intent);
-
     }
 }

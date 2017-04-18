@@ -19,9 +19,11 @@ import java.util.HashMap;
 import Constants.Constant;
 
 /**
- * Created by singh on 2/22/2017.
+ * Admin functionality for deleting flagged questions
+ *
+ * @author Esha
+ * @version 1.0
  */
-
 public class AdminDeleteFlagged extends Activity{
     public static final String DB_URL = "https://mobster-3ba43.firebaseio.com/";
     private DatabaseReference mDatabase;
@@ -39,7 +41,11 @@ public class AdminDeleteFlagged extends Activity{
         myTextView.setText("Are you sure you want to delete question: "+ deleteQuestion + "?");
     }
 
-    //if delete button is pressed get the question info from the database that needs to be deleted
+    /**
+     * On delete button click function for admin functionality
+     *
+     * @param view from which the method is invoked
+     */
     public void onDeleteButtonClick(View view) {
         Query contain = mDatabase.child("questions").orderByKey()
                 .limitToFirst(Constant.NUM_OF_QUESTIONS);
@@ -66,7 +72,9 @@ public class AdminDeleteFlagged extends Activity{
 
     }
 
-    //Delete the question selected by the admin
+    /**
+     * Private helper method to remove a question from database
+     */
     private void deleteQuestion(){
         if(questionKeyToDelete != null) {
             mDatabase.child("questions").child(questionKeyToDelete).removeValue();
@@ -79,10 +87,8 @@ public class AdminDeleteFlagged extends Activity{
     }
 
     @Override
-    public void onBackPressed()
-    {
+    public void onBackPressed() {
         Intent intent = new Intent(this, AdminHome.class);
         startActivity(intent);
-
     }
 }
