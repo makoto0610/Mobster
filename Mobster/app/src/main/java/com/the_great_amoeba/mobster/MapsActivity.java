@@ -99,9 +99,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap = googleMap;
 
 
-        //Add a dummy marker for Atlanta and move the camera
+        // Move the camera to Atlanta
         LatLng atlanta = new LatLng(Constant.ATLANTA_LAT, Constant.ATLANTA_LONG);
-//        mMap.addMarker(new MarkerOptions().position(atlanta).title("Marker in Atlanta"));
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(atlanta, Constant.DEFAULT_ZOOM));
 
 
@@ -171,8 +170,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             mMap.addMarker(new MarkerOptions().position(ll).title(question).icon(
                     BitmapDescriptorFactory.defaultMarker(color)));
         }
-
-
     }
 
 

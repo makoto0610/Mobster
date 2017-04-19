@@ -21,7 +21,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.Arrays;
-import java.util.Calendar;
+
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -149,7 +149,6 @@ public class NewFragment extends Fragment {
                         listView.setVisibility(View.VISIBLE);
 
                         init_Questions_Display();
-
                     }
                 };
                 handler.postDelayed(r, Constant.DEFAULT_LOADING_WAIT);
@@ -162,14 +161,11 @@ public class NewFragment extends Fragment {
                 progressBar.setVisibility(View.GONE);
                 listView.setVisibility(View.VISIBLE);
             }
-
-
         });
-
     }
 
 
- /**
+    /**
      * Initialize all of the questions for display on the ListView
      */
     public void init_Questions_Display() {
@@ -178,7 +174,6 @@ public class NewFragment extends Fragment {
                 Arrays.asList(this.array));
 
         this.listView.setAdapter(questions);
-
 
         // react to click
         this.listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -213,7 +208,6 @@ public class NewFragment extends Fragment {
                 }
             }
         });
-
     }
 
     /**
@@ -263,9 +257,7 @@ public class NewFragment extends Fragment {
 
         // check questions title
         String[] title = question.split("\\s*(,|\\?|\\s)\\s*");
-
         boolean titleMatch = Arrays.asList(title).containsAll(Arrays.asList(words));
-
         return (keywordsMatch || titleMatch);
     }
 
