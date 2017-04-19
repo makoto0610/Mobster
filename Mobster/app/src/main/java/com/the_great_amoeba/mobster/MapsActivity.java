@@ -39,19 +39,29 @@ import static com.google.android.gms.maps.model.BitmapDescriptorFactory.HUE_ROSE
 import static com.google.android.gms.maps.model.BitmapDescriptorFactory.HUE_VIOLET;
 import static com.google.android.gms.maps.model.BitmapDescriptorFactory.HUE_YELLOW;
 
+/**
+ * Map activity for the application.
+ *
+ * @author Ani
+ * @version 1.0
+ */
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,
         GoogleMap.OnMarkerClickListener,
         GoogleMap.OnInfoWindowClickListener {
 
     private GoogleMap mMap;
     private DatabaseReference mDatabase;
-    /* TODO: Location, questionID, and duration should be put into an object instead of 3 diff. hashmaps */
+    /* NOTE: Location, questionID, and duration should be put into an object instead of 3 diff. hashmaps */
     private Map<String, LocationWrapper> questionLocationMap;
     private Map<String, String> questionQuestionIdMap;
     private Map<String, Long> questionDurationMap;
+    private Map<String, String> questionUserAskedMap;
 
     private CustomInfoWindowAdapter infoWinAdapter;
 
+    /**
+     * Float array of colors
+     */
     private static float[] colors = {
         HUE_AZURE, HUE_GREEN, HUE_CYAN, HUE_BLUE, HUE_MAGENTA, HUE_ORANGE,
             HUE_RED, HUE_ROSE, HUE_VIOLET, HUE_YELLOW
@@ -66,6 +76,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         questionLocationMap = new HashMap<>();
         questionQuestionIdMap = new HashMap<>();
         questionDurationMap = new HashMap<>();
+        questionUserAskedMap = new HashMap<>();
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -102,7 +113,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
 
-
+    /**
+     * Get questions' location from the firebase database
+     */
     public void getQuestionLocationsFromFirebase() {
         Helper.Log.d(Constant.DEBUG, "inMapActivity, getting Questions from FB");
         Query question = mDatabase.child("questions").orderByKey().limitToFirst(
@@ -130,6 +143,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     HashMap end = (HashMap) postSnapshot.child("end").getValue();
                     long endTime = (long) end.get("timeInMillis");
                     questionDurationMap.put(keyQuestion, HelperMethods.computeDuration(endTime));
+                    String userAsked = (String) postSnapshot.child("username").getValue();
+                    questionUserAskedMap.put(keyQuestion, userAsked);
                 }
                 initializeQuestionMarkers();
 
@@ -142,6 +157,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         });
     }
 
+    /**
+     * Initialize question markers based on their locations
+     */
     public void initializeQuestionMarkers() {
         int i = 0;
         for (Map.Entry<String, LocationWrapper> e : questionLocationMap.entrySet()) {
@@ -149,7 +167,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             String question = e.getKey();
             LocationWrapper locWrap = e.getValue();
             LatLng ll = new LatLng(locWrap.getLatitude(), locWrap.getLongitude());
-            long endTime = questionDurationMap.get(question);
             float color = colors[ ((i++) % colors.length)];
             mMap.addMarker(new MarkerOptions().position(ll).title(question).icon(
                     BitmapDescriptorFactory.defaultMarker(color)));
@@ -176,10 +193,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Helper.Log.d(Constant.DEBUG, "in onInfoWindowClick with marker: " + marker.getTitle());
         final String question = marker.getTitle();
         String questionID = this.questionQuestionIdMap.get(question);
-        Intent intent = new Intent(getApplicationContext(), Voting.class);
+        String user = this.questionUserAskedMap.get(question);
+
+        //if the question is the current user's question, go to the results page instead of voting page
         Bundle bundle = new Bundle();
         bundle.putString("questionPassed", questionID);
-        intent.putExtras(bundle);
-        startActivity(intent);
+        if (SaveSharedPreferences.getUserName(this).equals(user)) {
+            Intent intent = new Intent(getApplicationContext(), Results.class);
+            intent.putExtras(bundle);
+            startActivity(intent);
+        } else {
+            Intent intent = new Intent(getApplicationContext(), Voting.class);
+            intent.putExtras(bundle);
+            startActivity(intent);
+        }
     }
 }

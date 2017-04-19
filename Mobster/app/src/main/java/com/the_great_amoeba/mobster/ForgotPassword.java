@@ -16,6 +16,12 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import Helper.HelperMethods;
 
+/**
+ * Activity to resolve forgot password.
+ *
+ * @author Christine
+ * @version 1.0
+ */
 public class ForgotPassword extends AppCompatActivity {
 
     private EditText emailInput;
@@ -68,6 +74,4 @@ public class ForgotPassword extends AppCompatActivity {
             }
         });
     }
-
-
 }

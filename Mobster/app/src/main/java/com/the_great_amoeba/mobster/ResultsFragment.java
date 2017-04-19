@@ -1,10 +1,5 @@
 package com.the_great_amoeba.mobster;
 
-/**
- * Created by Ani Reddy on 4/13/17
- */
-
-
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -40,6 +35,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * Result fragment class.
+ *
+ * @author Ani
+ * @version 1.0
+ */
 public class ResultsFragment extends Fragment {
 
     private PieChart chart;
@@ -95,7 +96,9 @@ public class ResultsFragment extends Fragment {
         return view;
     }
 
-
+    /**
+     * Create the pi graph for the result screen.
+     */
     private void createGraph() {
         map = new HashMap<>();
         HashMap<String, Float> mapList = new HashMap<>();
@@ -106,7 +109,6 @@ public class ResultsFragment extends Fragment {
 
             }
         }
-
         // set data in chart
         chart = (PieChart) this.view.findViewById(R.id.chart);
         List<PieEntry> entries = new ArrayList<>();
@@ -200,10 +202,7 @@ public class ResultsFragment extends Fragment {
         list.setAdapter(new ArrayAdapter<>(getContext(),
                 android.R.layout.simple_list_item_1, displayed_arr));
 
-
         chart.setData(pieData);
         chart.invalidate();
     }
-
-
 }

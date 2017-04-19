@@ -3,32 +3,63 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <Button
-        android:text="Ban Users"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/button4"
+        android:layout_height="match_parent">
 
-        android:onClick="onBanUsersButtonClick" />
+        <Button
+            android:id="@+id/button3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
 
-    <Button
-        android:text="Flagged Questions"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/button6"
-        android:onClick="onFlaggedQuestionsButtonClick" />
+            android:layout_alignParentStart="true"
+            android:onClick="onLogoutButtonClick"
+            android:text="LOGOUT"
+            android:layout_below="@+id/admin_stats_button"/>
 
-    <Button
-        android:text="STATISTICS"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/admin_stats_button"
-        android:onClick="onStatisticsButtonClick"/>
+        <Button
+            android:id="@+id/button6"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
 
-    <Button
-        android:text="LOGOUT"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/button3"
-        android:onClick="onLogoutButtonClick" />
+            android:onClick="onFlaggedQuestionsButtonClick"
+            android:text="Flagged Questions"
+            android:layout_marginTop="51dp"
+            android:layout_below="@+id/adminFeaturesText"
+            android:layout_alignParentStart="true" />
+        <Button
+            android:id="@+id/button4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:onClick="onBanUsersButtonClick"
+            android:text="Ban Users"
+            android:layout_alignParentStart="true"
+            android:layout_below="@id/button6"/>
+
+        <Button
+            android:id="@+id/admin_stats_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:layout_alignParentStart="true"
+            android:onClick="onStatisticsButtonClick"
+            android:text="STATISTICS"
+            android:layout_below="@id/button4"/>
+
+        <TextView
+            android:id="@+id/adminFeaturesText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:gravity="center_horizontal"
+            android:inputType="textPersonName"
+            android:text="Admin Functions"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:layout_marginTop="110dp"
+            android:layout_centerHorizontal="true" />
+
+    </RelativeLayout>
+
 </LinearLayout>

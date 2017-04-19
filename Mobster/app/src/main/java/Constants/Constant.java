@@ -19,4 +19,6 @@ public class Constant {
     public static final double ATLANTA_LONG = -84.3880;
     public static final float DEFAULT_ZOOM = 10;
     public static final long DEFAULT_LOADING_WAIT = 1000;
+    public static final String ADMIN_USERNAME = "admin";
+    public static final String ADMIN_PASSWORD = "password";
 }

@@ -1,9 +1,5 @@
 package com.the_great_amoeba.mobster;
 
-/**
- * Created by C. Shih on 12/23/2016.
- */
-
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
@@ -14,14 +10,13 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
 
-import Constants.Constant;
-import Helper.Log;
-
-import static android.R.attr.progress;
-import static android.R.attr.tag;
-
+/**
+ * Fragment for the main home tabs.
+ *
+ * @author Christine
+ * @version 1.0
+ */
 public class HomeTabFragment extends Fragment {
 
     public static TabLayout tabLayout;
@@ -91,7 +86,6 @@ public class HomeTabFragment extends Fragment {
         });
 
         return x;
-
     }
 
 
@@ -147,5 +141,4 @@ public class HomeTabFragment extends Fragment {
             return null;
         }
     }
-
 }

@@ -24,13 +24,17 @@ import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.HashMap;
-
 import Constants.Constant;
 import Helper.HelperMethods;
 import Objects.Choice;
 import Objects.Comment;
 
+/**
+ * Voting page for the users.
+ *
+ * @author Esha
+ * @version 1.0
+ */
 public class Voting extends Activity implements OnClickListener {
 
     public static final String DB_URL = "https://mobster-3ba43.firebaseio.com/";
@@ -159,16 +163,8 @@ public class Voting extends Activity implements OnClickListener {
 
 
                 }
-
-
-
-
             }
         });
-
-
-
-
 
         DatabaseReference choicesRef = mDatabase.child("questions").child(questionKey).child("choices");
 
@@ -236,9 +232,11 @@ public class Voting extends Activity implements OnClickListener {
     }
 
     /**
-     * Creates radiobuttons for choices.
+     * Creates radio buttons for choices.
      *
      * @param num The number of radio buttons to be created
+     * @param x coordinates
+     * @param y coordinates
      */
     private void createRadioButtons(int num, String[] x, float[] y) {
         //add radio buttons
@@ -284,14 +282,16 @@ public class Voting extends Activity implements OnClickListener {
 
     /**
      * Saves the answer that the user entered.
-     *
-     *
      */
     public void saveAnswers() {
         LinearLayout root = (LinearLayout) findViewById(R.id.linearLayout2);
         loopQuestions(root);
     }
 
+    /**
+     * Loop questions.
+     * @param parent parent of the view group
+     */
     private void loopQuestions(ViewGroup parent) {
         for (int i = 0; i < parent.getChildCount(); i++) {
             View child = parent.getChildAt(i);
@@ -303,7 +303,6 @@ public class Voting extends Activity implements OnClickListener {
                 }
             }
 
-
             if (child instanceof ViewGroup) {
                 ViewGroup group = (ViewGroup) child;
                 loopQuestions(group);
@@ -311,6 +310,12 @@ public class Voting extends Activity implements OnClickListener {
         }
     }
 
+    /**
+     * Store the voted result
+     *
+     * @param question question voted
+     * @param answer answer chosen
+     */
     private void storeAnswer(int question, int answer) {
         Log.w("ANDROID DYNAMIC VIEWS:", "Question: " + String.valueOf(question) + " * " + "Answer: "
                 + String.valueOf(answer));
@@ -350,18 +355,16 @@ public class Voting extends Activity implements OnClickListener {
 
             }
         });
-
     }
 
     /**
      * Updates number of questions answered by the user in the database.
+     *
      * @param current The current ount of the questions the user has voted on
      * @param username The username who voted
      */
     private void updateAnswered(int current, String username) {
         DatabaseReference toUpdate = mDatabase.child("users").child(username).child("answered");
         toUpdate.setValue(current);
-
     }
-
 }

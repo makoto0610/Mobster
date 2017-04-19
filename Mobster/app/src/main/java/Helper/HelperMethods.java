@@ -103,7 +103,6 @@ public class HelperMethods {
      * @return the Question object to add
      */
     public static DisplayQuestion getQuestion(DataSnapshot postSnapshot, HashMap value, String keyQuestion) {
-        Object start = value.get("start");
 
         Long ratingLong = 0L;
         Object ratingObj = value.get("num_favorites");
@@ -118,8 +117,12 @@ public class HelperMethods {
         HashMap favoritedUsers = (HashMap) value.get("favoritedUsers");
         String status = (String) value.get("status");
 
+        HashMap start = (HashMap) value.get("start");
+        long startTimeinMillis = (long) start.get("timeInMillis");
+
+
         return new DisplayQuestion((String) (value.get("question")), "key", new Duration(duration),
-                ratingLong, keyQuestion, access, username, votedUsers, favoritedUsers, status);
+                ratingLong, keyQuestion, access, username, votedUsers, favoritedUsers, status, startTimeinMillis);
     }
 
     /**
