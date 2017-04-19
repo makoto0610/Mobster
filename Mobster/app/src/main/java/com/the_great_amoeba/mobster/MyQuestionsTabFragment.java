@@ -11,6 +11,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import Constants.Constant;
+import Helper.Log;
+
 /**
  * My questions tab to display users' questions.
  *
@@ -26,6 +29,23 @@ public class MyQuestionsTabFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        Bundle b = getArguments();
+        if (b != null) {
+            boolean searchStatus = b.getBoolean("search");
+            try {
+                ((MainActivity) getActivity()).searching = searchStatus;
+            } catch (Exception e){
+                Helper.Log.d(Constant.DEBUG, e.getLocalizedMessage());
+            }
+        } else {
+            try {
+                ((MainActivity) getActivity()).searching = false;
+            } catch (Exception e){
+                Helper.Log.d(Constant.DEBUG, e.getLocalizedMessage());
+            }
+        }
+
         // Inflate home_tab_layout and setup Views
         View x = inflater.inflate(R.layout.home_tab_layout, null);
         tabLayout = (TabLayout) x.findViewById(R.id.tabs);
@@ -34,7 +54,6 @@ public class MyQuestionsTabFragment extends Fragment {
         // Set an Adapter for the View Pages
         viewPager.setAdapter(new MyAdapter(getChildFragmentManager()));
         viewPager.setOffscreenPageLimit(1);
-
 
         tabLayout.post(new Runnable() {
             @Override

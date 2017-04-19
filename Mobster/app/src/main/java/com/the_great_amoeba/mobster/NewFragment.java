@@ -90,7 +90,6 @@ public class NewFragment extends Fragment {
                 if (!searchText.equals("")) {
                     searchStatus = true;
                 }
-
                 // search keywords
 
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
@@ -228,8 +227,7 @@ public class NewFragment extends Fragment {
      */
     private String getSearchText() {
         String toReturn = "";
-        if (((MainActivity) getActivity()).isSearching()/* &&
-                (((MainActivity)getActivity()).getSearchedArea() == 1)*/) {
+        if (((MainActivity) getActivity()).isSearching()) {
             toReturn = ((MainActivity) getActivity()).getSearchedText();
         }
         return toReturn;
