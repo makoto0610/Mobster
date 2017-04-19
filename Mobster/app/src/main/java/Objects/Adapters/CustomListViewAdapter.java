@@ -132,7 +132,7 @@ public class CustomListViewAdapter extends ArrayAdapter<DisplayQuestion> {
                                             public void onDataChange(DataSnapshot dataSnapshot) {
                                                 //find corresponding user in DB list
                                                 DataSnapshot snapshot = dataSnapshot;
-                                                for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
+                                                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                                                     String user = (String) postSnapshot.getValue();
                                                     Log.d(Constant.DEBUG, user);
                                                     Log.d(Constant.DEBUG, postSnapshot.getKey());
@@ -164,8 +164,8 @@ public class CustomListViewAdapter extends ArrayAdapter<DisplayQuestion> {
                                             }
                                         });
 
-                                    }
-                                    else Helper.Log.d(Constant.DEBUG, "Transaction finished w/ database error " + databaseError.toString());
+                                    } else
+                                        Helper.Log.d(Constant.DEBUG, "Transaction finished w/ database error " + databaseError.toString());
                                 }
                             });
 
@@ -227,7 +227,7 @@ public class CustomListViewAdapter extends ArrayAdapter<DisplayQuestion> {
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                         String value = (String) postSnapshot.getValue();
-                        if(value.equals(currentUser)){
+                        if (value.equals(currentUser)) {
                             holder.flag.setTag(2);
                             holder.flag.setImageResource(R.drawable.flag_button_red);
                         }
@@ -246,7 +246,7 @@ public class CustomListViewAdapter extends ArrayAdapter<DisplayQuestion> {
                     @Override
                     public void onClick(View view) {
                         //if flag has been pressed update the image and add the user under flagged
-                        if(holder.flag.getTag().equals(1)) {
+                        if (holder.flag.getTag().equals(1)) {
                             holder.flag.setTag(2);
                             holder.flag.setImageResource(R.drawable.flag_button_red);
                             DatabaseReference flagged = mDatabase.child("questions").child(question.getQuestionId()).child("isFlagged");
@@ -302,7 +302,7 @@ public class CustomListViewAdapter extends ArrayAdapter<DisplayQuestion> {
                                     for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                                         String keyUser = postSnapshot.getKey();
                                         String value = (String) postSnapshot.getValue();
-                                        if(value.equals(currentUser)){
+                                        if (value.equals(currentUser)) {
                                             mDatabase.child("questions").child(question.getQuestionId()).child("flaggedByUsers").child(keyUser).removeValue();
                                         }
                                     }
@@ -315,10 +315,7 @@ public class CustomListViewAdapter extends ArrayAdapter<DisplayQuestion> {
                             });
 
 
-
                         }
-
-
 
 
                     }

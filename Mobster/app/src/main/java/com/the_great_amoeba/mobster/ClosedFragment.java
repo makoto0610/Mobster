@@ -190,8 +190,7 @@ public class ClosedFragment extends Fragment {
      */
     private String getSearchText() {
         String toReturn = "";
-        if (((MainActivity)getActivity()).isSearching() &&
-                (((MainActivity)getActivity()).getSearchedArea() == 1)) {
+        if (((MainActivity)getActivity()).isSearching()) {
             toReturn = ((MainActivity)getActivity()).getSearchedText();
         }
         return toReturn;

@@ -30,6 +30,14 @@ public class HomeTabFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
+        Bundle b = getArguments();
+        if (b != null) {
+            boolean searchStatus = b.getBoolean("search");
+            ((MainActivity) getActivity()).searching = searchStatus;
+        } else {
+            ((MainActivity) getActivity()).searching = false;
+        }
+
         // Inflate home_tab_layout and setup Views.
 
         this.fragArray = new Fragment[3];

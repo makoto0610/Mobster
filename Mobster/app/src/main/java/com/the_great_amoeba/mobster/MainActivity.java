@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
 
     private String searchedText;
     private int searchedArea;
-    private boolean searching;
+    public boolean searching;
     private boolean searchingKeyword;
     private String[] keywords;
 
@@ -110,25 +110,23 @@ public class MainActivity extends AppCompatActivity {
                             searchedText = input.getText().toString().toLowerCase();
                             FragmentTransaction xfragmentTransaction = mFragmentManager.beginTransaction();
                             if (searchedArea == 0) {
-                                xfragmentTransaction.replace(R.id.containerView, new MyQuestionsTabFragment()).commit();
+                                Bundle b = new Bundle();
+                                b.putBoolean("search", true);
+                                MyQuestionsTabFragment myqtbFrag = new MyQuestionsTabFragment();
+                                myqtbFrag.setArguments(b);
+                                xfragmentTransaction.replace(R.id.containerView, myqtbFrag).commit();
 
                             } else {
-                                xfragmentTransaction.replace(R.id.containerView, new HomeTabFragment()).commit();
+                                Bundle b = new Bundle();
+                                b.putBoolean("search", true);
+                                HomeTabFragment homeFrag = new HomeTabFragment();
+                                homeFrag.setArguments(b);
+                                xfragmentTransaction.replace(R.id.containerView, homeFrag).commit();
                             }
                         }
                     });
-                    builder.setNegativeButton("Clear Search", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
 
-                            input.setText("");
-                            searching = false;
-                            FragmentTransaction xfragmentTransaction = mFragmentManager.beginTransaction();
-                            xfragmentTransaction.replace(R.id.containerView, new HomeTabFragment()).commit();
-                        }
-                    });
-                    //neutral is actually is negative
-                    builder.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
+                    builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.cancel();
