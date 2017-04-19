@@ -18,7 +18,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import Constants.Constant;
 import Objects.BannedUser;
@@ -35,13 +37,14 @@ public class BanUser extends Activity {
     private DatabaseReference mDatabase;
 
     private int length;
-    private String[] questionsToDelete;
+    private List<String> questionsToDelete;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ban_user);
+        this.questionsToDelete = new ArrayList<>();
         getUsersFirebase();
 
     }
@@ -124,13 +127,12 @@ public class BanUser extends Activity {
                                 int index = 0;
                                 length = 0;
                                 int childCount = (int)(dataSnapshot.getChildrenCount());
-                                questionsToDelete = new String[childCount];
                                 for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
                                     String keyQuestion = postSnapshot.getKey();
                                     HashMap value = (HashMap) postSnapshot.getValue();
                                     String username = (String) value.get("username");
                                     if (data.equals(username)) {
-                                        questionsToDelete[index] = keyQuestion;
+                                        questionsToDelete.add(keyQuestion);
                                         length++;
                                     }
                                 }
@@ -181,8 +183,8 @@ public class BanUser extends Activity {
      * @param userToBanPassed username of user to be banned
      */
     private void userBanned(String userToBanPassed){
-        for (int i = 0; i < length; i++) {
-            mDatabase.child("questions").child(questionsToDelete[i]).setValue(null);
+        for (int i = 0; i < questionsToDelete.size(); i++) {
+            mDatabase.child("questions").child(questionsToDelete.get(i)).setValue(null);
         }
         Toast.makeText(getApplicationContext(),
                 userToBanPassed+ " Banned." , Toast.LENGTH_LONG)
