@@ -359,4 +359,17 @@ public class CustomListViewAdapter extends ArrayAdapter<DisplayQuestion> {
         }
         return minutes + " minutes";
     }
+
+    @Override
+    public int getViewTypeCount() {
+        if (getCount() < 1) {
+            return 1;
+        }
+        return getCount();
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return position;
+    }
 }
