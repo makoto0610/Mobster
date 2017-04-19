@@ -26,7 +26,6 @@ import Objects.BannedUser;
  * @version 1.0
  */
 public class Ban extends AppCompatActivity {
-    public static final String DB_URL = "https://mobster-3ba43.firebaseio.com/";
     private DatabaseReference mDatabase;
     private String userToBanPassed;
     private String[] questionsToDelete;
@@ -39,7 +38,7 @@ public class Ban extends AppCompatActivity {
         setContentView(R.layout.activity_ban);
         Bundle bundle = getIntent().getExtras();
         userToBanPassed = bundle.getString("userToBan");
-        mDatabase = FirebaseDatabase.getInstance().getReferenceFromUrl(DB_URL);
+        mDatabase = FirebaseDatabase.getInstance().getReferenceFromUrl(Constant.DB_URL);
         TextView myTextView = (TextView)findViewById(R.id.textView);
         myTextView.setText("Are you sure you want to ban user "+ userToBanPassed + "?");
     }

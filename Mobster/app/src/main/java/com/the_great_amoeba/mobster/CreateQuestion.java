@@ -45,6 +45,12 @@ import Helper.HelperMethods;
 import Objects.Choice;
 import Objects.Question;
 
+/**
+ * Create question activity.
+ *
+ * @author Christine
+ * @version 1.0
+ */
 public class CreateQuestion extends AppCompatActivity implements
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
@@ -258,7 +264,6 @@ public class CreateQuestion extends AppCompatActivity implements
                 Helper.Log.d(Constant.DEBUG, "Unknown permission request.");
             }
         }
-
     }
 
     @Override
@@ -306,7 +311,6 @@ public class CreateQuestion extends AppCompatActivity implements
         Helper.Log.d(Constant.DEBUG, "Connection to Google API client failed.");
         return;
     }
-
 
     /**
      * Retrieves the date based on what the user has chosen using the date picker widget
@@ -469,6 +473,12 @@ public class CreateQuestion extends AppCompatActivity implements
         }
     }
 
+    /**
+     * Update number of asked questions
+     *
+     * @param current updated number of asked questions
+     * @param username username of the user
+     */
     private void updateAsked(int current, String username) {
         DatabaseReference toUpdate = mDatabase.child("users").child(username).child("asked");
         toUpdate.setValue(current);
@@ -538,7 +548,12 @@ public class CreateQuestion extends AppCompatActivity implements
         }
     }
 
-    // Notification creation and scheduling
+    /**
+     * Notification creation and scheduling
+     *
+     * @param notification notification
+     * @param delay length of the delay
+     */
     private void scheduleNotification(Notification notification, long delay) {
         Intent notificationIntent = new Intent(this, NotificationPublisher.class);
         notificationIntent.putExtra(NotificationPublisher.NOTIFICATION_ID, 1);
@@ -550,6 +565,12 @@ public class CreateQuestion extends AppCompatActivity implements
         alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, futureInMillis, pendingIntent);
     }
 
+    /**
+     * Create a new notification
+     *
+     * @param note string of the content
+     * @return a newly created notification
+     */
     private Notification createNotification(String note) {
         Notification.Builder builder = new Notification.Builder(this);
         builder.setContentTitle("Question " + "'" + note + "'" + " has expired.");
@@ -565,6 +586,11 @@ public class CreateQuestion extends AppCompatActivity implements
         return builder.build();
     }
 
+    /**
+     * Getter method for delay
+     *
+     * @return delay from end_time - start_time
+     */
     private long getDelay() {
         Calendar start = Calendar.getInstance();
         Calendar end = Calendar.getInstance();
@@ -573,11 +599,8 @@ public class CreateQuestion extends AppCompatActivity implements
     }
 
     @Override
-    public void onBackPressed()
-    {
+    public void onBackPressed() {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
-
     }
-
 }

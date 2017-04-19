@@ -26,14 +26,13 @@ import Objects.BannedUser;
 /**
  * Admin ban user page.
  *
- * @author Esha
+ * @author Christine
  * @version 1.0
  */
 public class BanUser extends Activity {
     private ListView listView ;
     private String[] array;
     private DatabaseReference mDatabase;
-    public static final String DB_URL = "https://mobster-3ba43.firebaseio.com/";
 
     private int length;
     private String[] questionsToDelete;
@@ -51,7 +50,7 @@ public class BanUser extends Activity {
      * Get list of users from the firebase
      */
     public void getUsersFirebase() {
-        mDatabase = FirebaseDatabase.getInstance().getReferenceFromUrl(DB_URL);
+        mDatabase = FirebaseDatabase.getInstance().getReferenceFromUrl(Constant.DB_URL);
         Query contain = mDatabase.child("users");
 
         contain.addListenerForSingleValueEvent(new ValueEventListener() {

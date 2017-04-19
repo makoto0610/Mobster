@@ -30,11 +30,12 @@ import Constants.Constant;
 import Helper.HelperMethods;
 
 /**
- * Created by natalie on 3/22/2017.
+ * Setting activity for the users.
+ *
+ * @author Natalie
+ * @version 1.0
  */
-
 public class SettingsActivity extends AppCompatActivity {
-
 
     private Button verify;
     private Button changeEmail;
@@ -113,12 +114,12 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
 
-
         onClickSave();
-
-
     }
 
+    /**
+     * On click method for the save button.
+     */
     private void onClickSave() {
         if (SaveSharedPreferences.getChosenTheme(getApplicationContext()).equals("dark")) {
             RadioButton butt = (RadioButton) findViewById(R.id.dark_theme);
@@ -134,7 +135,6 @@ public class SettingsActivity extends AppCompatActivity {
         } else {
             note.setChecked(false);
         }
-
         RadioGroup themes = (RadioGroup) findViewById(R.id.theme_choices);
         themes.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -229,6 +229,4 @@ public class SettingsActivity extends AppCompatActivity {
             mAuth.removeAuthStateListener(mAuthListener);
         }
     }
-
-
 }

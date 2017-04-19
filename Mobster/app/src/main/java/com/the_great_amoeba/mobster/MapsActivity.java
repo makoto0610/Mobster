@@ -39,19 +39,28 @@ import static com.google.android.gms.maps.model.BitmapDescriptorFactory.HUE_ROSE
 import static com.google.android.gms.maps.model.BitmapDescriptorFactory.HUE_VIOLET;
 import static com.google.android.gms.maps.model.BitmapDescriptorFactory.HUE_YELLOW;
 
+/**
+ * Map activity for the application.
+ *
+ * @author Ani
+ * @version 1.0
+ */
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,
         GoogleMap.OnMarkerClickListener,
         GoogleMap.OnInfoWindowClickListener {
 
     private GoogleMap mMap;
     private DatabaseReference mDatabase;
-    /* TODO: Location, questionID, and duration should be put into an object instead of 3 diff. hashmaps */
+    /* NOTE: Location, questionID, and duration should be put into an object instead of 3 diff. hashmaps */
     private Map<String, LocationWrapper> questionLocationMap;
     private Map<String, String> questionQuestionIdMap;
     private Map<String, Long> questionDurationMap;
 
     private CustomInfoWindowAdapter infoWinAdapter;
 
+    /**
+     * float of colors
+     */
     private static float[] colors = {
         HUE_AZURE, HUE_GREEN, HUE_CYAN, HUE_BLUE, HUE_MAGENTA, HUE_ORANGE,
             HUE_RED, HUE_ROSE, HUE_VIOLET, HUE_YELLOW
@@ -102,7 +111,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
 
-
+    /**
+     * Get questions' location from the firebase database
+     */
     public void getQuestionLocationsFromFirebase() {
         Helper.Log.d(Constant.DEBUG, "inMapActivity, getting Questions from FB");
         Query question = mDatabase.child("questions").orderByKey().limitToFirst(
@@ -142,6 +153,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         });
     }
 
+    /**
+     * Initialize question markers based on their locations
+     */
     public void initializeQuestionMarkers() {
         int i = 0;
         for (Map.Entry<String, LocationWrapper> e : questionLocationMap.entrySet()) {
@@ -154,8 +168,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             mMap.addMarker(new MarkerOptions().position(ll).title(question).icon(
                     BitmapDescriptorFactory.defaultMarker(color)));
         }
-
-
     }
 
 

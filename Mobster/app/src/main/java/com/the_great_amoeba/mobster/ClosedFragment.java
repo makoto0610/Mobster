@@ -1,16 +1,10 @@
 package com.the_great_amoeba.mobster;
 
-/**
- * Created by C. Shih on 12/23/2016.
- */
-
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,7 +31,12 @@ import Helper.HelperMethods;
 import Objects.Adapters.CustomListViewAdapter;
 import Objects.DisplayQuestion;
 
-
+/**
+ * Closed fragments for the main pages.
+ *
+ * @author Christine
+ * @version 1.0
+ */
 public class ClosedFragment extends Fragment {
 
     private DatabaseReference mDatabase;
@@ -47,7 +46,6 @@ public class ClosedFragment extends Fragment {
     private String user;
 
     private ProgressBar progressBar;
-
 
     @Nullable
     @Override
@@ -69,7 +67,6 @@ public class ClosedFragment extends Fragment {
 
         this.user = SaveSharedPreferences.getUserName(getActivity().getApplicationContext());
         return view;
-
     }
 
 
@@ -94,7 +91,6 @@ public class ClosedFragment extends Fragment {
                 }
 
                 // search keywords
-//                boolean keywordStatus = getKeywordSearchStatus();
 
                 for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
                     String keyQuestion = postSnapshot.getKey();
@@ -103,10 +99,6 @@ public class ClosedFragment extends Fragment {
                     String status = (String) value.get("status");
 
                     String questionTitle = (String) value.get("question");
-
-//                    boolean containsAll = keywordsMatch(keywordStatus, postSnapshot);
-//
-//                    boolean noSearch = noSearchStatus(searchStatus, keywordStatus);
 
                     if (status.equals("CLOSED")) {
                         if (searchStatus) {
@@ -135,37 +127,6 @@ public class ClosedFragment extends Fragment {
                                 }
                             }
                         }
-//                        if (noSearch) {
-//                            if (isHomeFragment()) {
-//                                DisplayQuestion question = HelperMethods.getQuestion(postSnapshot, value, keyQuestion);
-//                                questions.add(question);
-//                            } else { // else it is to be displayed in the My Questions Fragment
-//                                if (username.equals(user)) {
-//                                    DisplayQuestion question = HelperMethods.getQuestion(postSnapshot, value, keyQuestion);
-//                                    questions.add(question);
-//                                }
-//                            }
-//                        } else if (searchStatus && questionTitle.contains(searchText)) {
-//                            if (isHomeFragment()) {
-//                                DisplayQuestion question = HelperMethods.getQuestion(postSnapshot, value, keyQuestion);
-//                                questions.add(question);
-//                            } else { // else it is to be displayed in the My Questions Fragment
-//                                if (username.equals(user)) {
-//                                    DisplayQuestion question = HelperMethods.getQuestion(postSnapshot, value, keyQuestion);
-//                                    questions.add(question);
-//                                }
-//                            }
-//                        } else if (containsAll) {
-//                            if (isHomeFragment()) {
-//                                DisplayQuestion question = HelperMethods.getQuestion(postSnapshot, value, keyQuestion);
-//                                questions.add(question);
-//                            } else { // else it is to be displayed in the My Questions Fragment
-//                                if (username.equals(user)) {
-//                                    DisplayQuestion question = HelperMethods.getQuestion(postSnapshot, value, keyQuestion);
-//                                    questions.add(question);
-//                                }
-//                            }
-//                        }
                     }
 
                 }
@@ -222,7 +183,11 @@ public class ClosedFragment extends Fragment {
         return getParentFragment().getClass().equals(new HomeTabFragment().getClass());
     }
 
-    // Searching Helpers
+    /**
+     * Searching text helper method
+     *
+     * @return string to search for
+     */
     private String getSearchText() {
         String toReturn = "";
         if (((MainActivity)getActivity()).isSearching() &&
@@ -232,6 +197,14 @@ public class ClosedFragment extends Fragment {
         return toReturn;
     }
 
+    /**
+     * Searching function with regex
+     *
+     * @param searched searched words
+     * @param question questions to be searched
+     * @param postSnapshot data snap shot
+     * @return boolean of whether criteria is matched
+     */
     private boolean searchMatch(String searched, String question, DataSnapshot postSnapshot) {
         String[] words = searched.split("\\s*(,|\\?|\\s)\\s*");
 
@@ -251,34 +224,4 @@ public class ClosedFragment extends Fragment {
 
         return (keywordsMatch || titleMatch);
     }
-
-//    private boolean getKeywordSearchStatus() {
-//        if (((MainActivity)getActivity()).isSearchingKeyword() &&
-//                (((MainActivity)getActivity()).getSearchedArea() == 1)) {
-//            return true;
-//        }
-//        return false;
-//    }
-//
-//    private boolean keywordsMatch(boolean keywordStatus, DataSnapshot postSnapshot) {
-//        if (keywordStatus) {
-//            String[] searchedKeywords = ((MainActivity)getActivity()).getKeywords();
-//            String[] questionKeywords = new String[(int)postSnapshot.child("keywords").getChildrenCount()];
-//            int arrayCount = 0;
-//            for (DataSnapshot k : postSnapshot.child("keywords").getChildren()) {
-//                questionKeywords[arrayCount] = (String)k.getValue();
-//                arrayCount++;
-//            }
-//            return Arrays.asList(questionKeywords)
-//                    .containsAll(Arrays.asList(searchedKeywords));
-//        }
-//        return false;
-//    }
-//
-//    private boolean noSearchStatus(boolean searchText, boolean searchKeyword) {
-//        if (searchText || searchKeyword) {
-//            return false;
-//        }
-//        return true;
-//    }
 }
