@@ -55,11 +55,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private Map<String, LocationWrapper> questionLocationMap;
     private Map<String, String> questionQuestionIdMap;
     private Map<String, Long> questionDurationMap;
+    private Map<String, String> questionUserAskedMap;
 
     private CustomInfoWindowAdapter infoWinAdapter;
 
     /**
-     * float of colors
+     * Float array of colors
      */
     private static float[] colors = {
         HUE_AZURE, HUE_GREEN, HUE_CYAN, HUE_BLUE, HUE_MAGENTA, HUE_ORANGE,
@@ -75,6 +76,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         questionLocationMap = new HashMap<>();
         questionQuestionIdMap = new HashMap<>();
         questionDurationMap = new HashMap<>();
+        questionUserAskedMap = new HashMap<>();
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -97,9 +99,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap = googleMap;
 
 
-        //Add a dummy marker for Atlanta and move the camera
+        // Move the camera to Atlanta
         LatLng atlanta = new LatLng(Constant.ATLANTA_LAT, Constant.ATLANTA_LONG);
-//        mMap.addMarker(new MarkerOptions().position(atlanta).title("Marker in Atlanta"));
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(atlanta, Constant.DEFAULT_ZOOM));
 
 
@@ -141,6 +142,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     HashMap end = (HashMap) postSnapshot.child("end").getValue();
                     long endTime = (long) end.get("timeInMillis");
                     questionDurationMap.put(keyQuestion, HelperMethods.computeDuration(endTime));
+                    String userAsked = (String) postSnapshot.child("username").getValue();
+                    questionUserAskedMap.put(keyQuestion, userAsked);
                 }
                 initializeQuestionMarkers();
 
@@ -163,7 +166,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             String question = e.getKey();
             LocationWrapper locWrap = e.getValue();
             LatLng ll = new LatLng(locWrap.getLatitude(), locWrap.getLongitude());
-            long endTime = questionDurationMap.get(question);
             float color = colors[ ((i++) % colors.length)];
             mMap.addMarker(new MarkerOptions().position(ll).title(question).icon(
                     BitmapDescriptorFactory.defaultMarker(color)));
@@ -188,10 +190,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Helper.Log.d(Constant.DEBUG, "in onInfoWindowClick with marker: " + marker.getTitle());
         final String question = marker.getTitle();
         String questionID = this.questionQuestionIdMap.get(question);
-        Intent intent = new Intent(getApplicationContext(), Voting.class);
+        String user = this.questionUserAskedMap.get(question);
+
+        //if the question is the current user's question, go to the results page instead of voting page
         Bundle bundle = new Bundle();
         bundle.putString("questionPassed", questionID);
-        intent.putExtras(bundle);
-        startActivity(intent);
+        if (SaveSharedPreferences.getUserName(this).equals(user)) {
+            Intent intent = new Intent(getApplicationContext(), Results.class);
+            intent.putExtras(bundle);
+            startActivity(intent);
+        } else {
+            Intent intent = new Intent(getApplicationContext(), Voting.class);
+            intent.putExtras(bundle);
+            startActivity(intent);
+        }
     }
 }

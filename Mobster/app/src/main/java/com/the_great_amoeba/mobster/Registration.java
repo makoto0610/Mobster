@@ -7,6 +7,7 @@ import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.ThemedSpinnerAdapter;
 import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.View;
@@ -125,6 +126,9 @@ public class Registration extends AppCompatActivity {
             HelperMethods.errorDialog(this, "Password or confirm password not entered",
                     "You did not enter a password.");
             this.confirm.setText("");
+        } else if (username.equals(Constant.ADMIN_USERNAME)) {
+            HelperMethods.errorDialog(this, "Username invalid",
+                    "That username is reserved for the admin!");
         } else if (username.contains(" ")) {
             HelperMethods.errorDialog(this, "Username invalid",
                     "You cannot have any whitespace in username.");

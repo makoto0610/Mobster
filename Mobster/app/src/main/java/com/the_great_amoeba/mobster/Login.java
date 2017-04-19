@@ -158,7 +158,7 @@ public class Login extends AppCompatActivity {
      * @param password password entered
      */
     public void checkLogin(final String username, final String password) {
-        if (!flagBanned && username.equals("admin") && password.equals("password")) {
+        if (!flagBanned && username.equals(Constant.ADMIN_USERNAME) && password.equals(Constant.ADMIN_PASSWORD)) {
             Intent intent = new Intent(Login.this, AdminHome.class);
             startActivity(intent);
         } else if (!flagBanned) {

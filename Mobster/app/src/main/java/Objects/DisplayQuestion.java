@@ -21,6 +21,7 @@ public class DisplayQuestion {
     private LinkedList<String> votedUsers;
     private LinkedList<String> favoritedUsers;
     private String status;
+    private long starttime;
 
     public String getStatus() {
         return status;
@@ -38,9 +39,10 @@ public class DisplayQuestion {
      * @param username username of the person posted the question
      * @param votedUsers list of users who voted for the question
      * @param favoritedUsers list of users who favorited the question
+     * @param start_time the start time of this question
      */
     public DisplayQuestion(String question, String questionKey, Duration duration, long rating, String questionId,
-                           long num_access, String username, HashMap votedUsers, HashMap favoritedUsers, String status) {
+                           long num_access, String username, HashMap votedUsers, HashMap favoritedUsers, String status, long start_time) {
         this.question = question;
         this.duration = duration;
         this.rating = rating;
@@ -60,6 +62,16 @@ public class DisplayQuestion {
             }
         }
         this.status = status;
+        this.starttime = start_time;
+    }
+
+
+    /**
+     * Get the start time of this question in millis
+     * @return starttime
+     */
+    public long getStarttime() {
+        return starttime;
     }
 
     /**
