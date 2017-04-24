@@ -5,6 +5,7 @@ Mobster is an Android application based on our client’s ([Dr. Nick Jones](http
 - Creating a Mobster account and logging into and out of the application
 - Viewing "New", "Trending", and "Closed" questions
 - Creating your own decision making question and giving your own options for others to vote on
+- Voting on others' questions and commenting on their decisions
 - Viewing your own "Open" and "Closed" questions
 - Favoriting your favorite question and flagging inappropriate questions
 - Viewing questions that have been posted around your location
