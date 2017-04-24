@@ -30,14 +30,14 @@ Mobster is an Android application based on our client’s ([Dr. Nick Jones](http
 
 ## Installation
 ### Using the Application
-To use the application on mobile, please simply go to the Google Play Store and search for "Mobster" and follow the standard application installation procedure. (WILL BE RELEASED SOON)
+To use the application on mobile (Android), please simply go to the Google Play Store and search for "Mobster" and follow the standard application installation procedure. (WILL BE RELEASED SOON)
 
 ### Contribute to the Development
 This Android application is developed in Android Studio and we highly recommend you to use Android Studio for both development and testing.
 To clone the repository please use
 '''git clone https://github.com/makoto0610/Mobster''' in the directory you want to clone the repository to.
 To download Android Studio, please use the following: [here](https://developer.android.com/studio/index.html)
-Once Android Studio and repository are set-up, please open the project using Android Studio to run the application. NOTE: You can easily open our project by selecting '''Import project''' and then selecting the appropriate '''build.gradle''' file.
+Once Android Studio and repository are set-up, please open the project using Android Studio to run the application. NOTE: You can easily open our project by selecting '''Import project''' and then selecting the appropriate '''build.gradle''' file. This gradle file will build all of the required dependencies when imported into Android Studio. 
 
 ## Contributing
 
@@ -51,7 +51,7 @@ Once Android Studio and repository are set-up, please open the project using And
 Version 1.0 of the application under development.
 
 ## Credits
-[Makoto, R](https://github.com/makoto0610), [Esha, S](https://github.com/esingh7), [Christine, S](https://github.com/cshih299), [Natalie, Y](https://github.com/nathyu), [Ani, R](https://github.com/anir1296)
+[Makoto, R](https://github.com/makoto0610), [Ani, R](https://github.com/anir1296), [Christine, S](https://github.com/cshih299), [Esha, S](https://github.com/esingh7), [Natalie, Y](https://github.com/nathyu)
 
 ## License
 All rights reserved.
