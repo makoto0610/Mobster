@@ -30,7 +30,9 @@ Mobster is an Android application based on our client’s ([Dr. Nick Jones](http
 
 ## Installation
 ### Using the Application
-To use the application on mobile (Android), please simply go to the Google Play Store and search for "Mobster" and follow the standard application installation procedure. (WILL BE RELEASED SOON)
+To use the application on mobile (Android), please simply go to the Google Play Store and search for "Mobster" and follow the standard application installation procedure. 
+
+Google Play store link: https://play.google.com/store/apps/details?id=com.the_great_amoeba.mobster
 
 ### Contribute to the Development
 This Android application is developed in Android Studio and we highly recommend you to use Android Studio for both development and testing.
